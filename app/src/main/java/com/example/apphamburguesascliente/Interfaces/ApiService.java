@@ -1,14 +1,11 @@
 package com.example.apphamburguesascliente.Interfaces;
 
-import com.example.apphamburguesascliente.Modelos.ProductoModelo;
-
-import java.util.List;
+import com.google.gson.JsonObject;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 
 public interface ApiService {
     @GET("producto/listar/")
-    Call<List<ProductoModelo>> obtenerProductos();
-
+    Call<JsonObject> obtenerProductos(); // Cambiado a JsonObject
 }

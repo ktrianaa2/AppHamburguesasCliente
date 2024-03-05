@@ -1,10 +1,13 @@
 package com.example.apphamburguesascliente.Modelos;
 
-import org.json.JSONArray;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProductoModelo {
     private int idProducto;
@@ -21,29 +24,34 @@ public class ProductoModelo {
 
     private String imagenp;
 
-    public static ArrayList<ProductoModelo> fromJsonArray(JSONArray jsonArray) throws JSONException {
-        ArrayList<ProductoModelo> productos = new ArrayList<>();
+    public static List<ProductoModelo> fromJsonArray(JsonArray productosArray) {
+        List<ProductoModelo> listaProductos = new ArrayList<>();
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonProducto = jsonArray.getJSONObject(i);
+        try {
+            for (int i = 0; i < productosArray.size(); i++) {
+                JsonObject jsonProducto = productosArray.get(i).getAsJsonObject();
 
-            ProductoModelo producto = new ProductoModelo();
-            producto.setIdProducto(jsonProducto.getInt("idProducto"));
-            producto.setIdCategoria(jsonProducto.getInt("idCategoria"));
-            producto.setIdUm(jsonProducto.getInt("idUm"));
-            producto.setPuntosp(jsonProducto.getString("puntosp"));
-            producto.setCodPrincipal(jsonProducto.getString("codPrincipal"));
-            producto.setNombreProducto(jsonProducto.getString("nombreProducto"));
-            producto.setDescripcionProducto(jsonProducto.getString("descripcionProducto"));
-            producto.setPrecioUnitario(jsonProducto.getString("precioUnitario"));
-            producto.setIva(jsonProducto.getString("iva"));
-            producto.setIce(jsonProducto.getString("ice"));
-            producto.setIrbpnr(jsonProducto.getString("irbpnr"));
-            producto.setImagenp(jsonProducto.getString("imagenp"));
+                ProductoModelo producto = new ProductoModelo();
+                producto.setIdProducto(jsonProducto.get("idProducto").getAsInt());
+                producto.setIdCategoria(jsonProducto.get("idCategoria").getAsInt());
+                producto.setIdUm(jsonProducto.get("idUm").getAsInt());
+                producto.setPuntosp(jsonProducto.get("puntosp").getAsString());
+                producto.setCodPrincipal(jsonProducto.get("codPrincipal").getAsString());
+                producto.setNombreProducto(jsonProducto.get("nombreProducto").getAsString());
+                producto.setDescripcionProducto(jsonProducto.get("descripcionProducto").getAsString());
+                producto.setPrecioUnitario(jsonProducto.get("precioUnitario").getAsString());
+                producto.setIva(jsonProducto.get("iva").getAsString());
+                producto.setIce(jsonProducto.get("ice").getAsString());
+                producto.setIrbpnr(jsonProducto.get("irbpnr").getAsString());
+                producto.setImagenp(jsonProducto.get("imagenp").getAsString());
 
-            productos.add(producto);
+                listaProductos.add(producto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return productos;
+
+        return listaProductos;
     }
 
     public String getImagenp() {

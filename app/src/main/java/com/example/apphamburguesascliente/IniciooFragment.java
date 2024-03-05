@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,10 @@ import android.view.ViewGroup;
 import com.example.apphamburguesascliente.Adaptadores.ProductoAdaptador;
 import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.ProductoModelo;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +43,7 @@ public class IniciooFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_inicioo, container, false);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://nxcs4pj0-8000.use2.devtunnels.ms/")
+                .baseUrl("https://cvpdjw94-8000.use2.devtunnels.ms/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -56,22 +61,35 @@ public class IniciooFragment extends Fragment {
     }
 
     private void obtenerProductosDesdeAPI() {
-        Call<List<ProductoModelo>> call = apiService.obtenerProductos();
+        Call<JsonObject> call = apiService.obtenerProductos();
 
-        call.enqueue(new Callback<List<ProductoModelo>>() {
+        call.enqueue(new Callback<JsonObject>() {
             @Override
-            public void onResponse(Call<List<ProductoModelo>> call, Response<List<ProductoModelo>> response) {
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    actualizarLista(response.body());
+                    JsonObject jsonResponse = response.body();
+
+                    try {
+                        JsonArray productosArray = jsonResponse.getAsJsonArray("productos");
+
+                        if (productosArray != null && productosArray.size() > 0) {
+                            List<ProductoModelo> listaProductos = ProductoModelo.fromJsonArray(productosArray);
+                            actualizarLista(listaProductos);
+                        }
+                    } catch (com.google.gson.JsonSyntaxException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<List<ProductoModelo>> call, Throwable t) {
+            public void onFailure(Call<JsonObject> call, Throwable t) {
                 // Manejar el error
+                t.printStackTrace();
             }
         });
     }
+
 
     private void actualizarLista(List<ProductoModelo> listaProductos) {
         adaptador.setProductos(listaProductos);
