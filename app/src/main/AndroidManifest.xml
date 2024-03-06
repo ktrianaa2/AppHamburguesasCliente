@@ -25,6 +25,9 @@
             android:name=".IniciarSesionActivity"
             android:exported="false" />
         <activity
+            android:name=".DetallesProductoComboActivity"
+            android:exported="false" />
+        <activity
             android:name=".PaginaPrincipalActivity"
             android:exported="true">
             <intent-filter>

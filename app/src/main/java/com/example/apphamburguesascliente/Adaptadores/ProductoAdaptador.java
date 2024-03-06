@@ -3,13 +3,15 @@ package com.example.apphamburguesascliente.Adaptadores;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.apphamburguesascliente.Modelos.ProductoModelo;
 import com.example.apphamburguesascliente.R;
+
 import java.util.List;
 
 public class ProductoAdaptador extends RecyclerView.Adapter<ProductoAdaptador.ProductViewHolder> {
@@ -41,8 +43,8 @@ public class ProductoAdaptador extends RecyclerView.Adapter<ProductoAdaptador.Pr
 
         // Configurar todas las vistas necesarias
         holder.allMenuName.setText(product.getNombreProducto());
-        // holder.allMenuDescription.setText(product.getDescripcionProducto());
-        // holder.allMenuPrice.setText(String.valueOf(product.getPrecioProducto()));
+        holder.allMenuDescription.setText(product.getDescripcionProducto());
+        holder.allMenuPrice.setText("$" + product.getPrecioProducto());
 
         // Puedes configurar la imagen si tienes una
         // holder.allMenuImage.setImageResource(product.getImageResource());
@@ -54,7 +56,6 @@ public class ProductoAdaptador extends RecyclerView.Adapter<ProductoAdaptador.Pr
             }
         });
     }
-
 
     @Override
     public int getItemCount() {

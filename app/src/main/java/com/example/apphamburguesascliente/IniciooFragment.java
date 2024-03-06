@@ -81,7 +81,9 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
                             for (ProductoModelo producto : listaProductos) {
                                 Log.d("Producto", "ID: " + producto.getIdProducto());
                                 Log.d("Producto", "Nombre: " + producto.getNombreProducto());
-                                // Agrega más atributos según sea necesario
+                                Log.d("Producto", "Precio: " + producto.getPrecioProducto());
+                                Log.d("Producto", "Descripcion: " + producto.getDescripcionProducto());
+
                             }
 
                             // Actualizar el RecyclerView
@@ -109,8 +111,10 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
     public void onItemClick(ProductoModelo producto) {
         Intent intent = new Intent(getActivity(), DetallesProductoComboActivity.class);
         intent.putExtra("name", producto.getNombreProducto());
-        // intent.putExtra("price", String.valueOf(producto.getPrecioProducto()));
-        // intent.putExtra("image", producto.getImageUrl());
+        intent.putExtra("price", String.valueOf(producto.getPrecioProducto())); // Convertir a String
+        intent.putExtra("description", producto.getDescripcionProducto());
         startActivity(intent);
     }
+
+
 }

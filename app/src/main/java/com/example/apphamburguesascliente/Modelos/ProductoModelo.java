@@ -9,6 +9,8 @@ import java.util.List;
 public class ProductoModelo {
     private int idProducto;
     private String nombreProducto;
+    private String descripcionProducto;
+    private double precioProducto;
 
     public static List<ProductoModelo> fromJsonArray(JsonArray productosArray) {
         List<ProductoModelo> listaProductos = new ArrayList<>();
@@ -20,6 +22,8 @@ public class ProductoModelo {
                 ProductoModelo producto = new ProductoModelo();
                 producto.setIdProducto(jsonProducto.get("id_producto").getAsInt());
                 producto.setNombreProducto(jsonProducto.get("nombreproducto").getAsString());
+                producto.setDescripcionProducto(jsonProducto.get("descripcionproducto").getAsString());
+                producto.setPrecioProducto(jsonProducto.get("preciounitario").getAsDouble());
 
                 listaProductos.add(producto);
             }
@@ -46,5 +50,19 @@ public class ProductoModelo {
         this.nombreProducto = nombreProducto;
     }
 
+    public String getDescripcionProducto() {
+        return descripcionProducto;
+    }
 
+    public void setDescripcionProducto(String descripcionProducto) {
+        this.descripcionProducto = descripcionProducto;
+    }
+
+    public double getPrecioProducto() {
+        return precioProducto;
+    }
+
+    public void setPrecioProducto(double precioProducto) {
+        this.precioProducto = precioProducto;
+    }
 }

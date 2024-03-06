@@ -13,9 +13,9 @@ import androidx.fragment.app.FragmentManager;
 
 public class DetallesProductoComboActivity extends AppCompatActivity {
     ImageView imageView;
-    TextView itemName, itemPrice;
+    TextView itemName, itemPrice, itemDescription;
 
-    String name, price, rating, imageUrl;
+    String name, price, rating, imageUrl, description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,34 +25,22 @@ public class DetallesProductoComboActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         name = intent.getStringExtra("name");
-        // price = intent.getStringExtra("price");
-      //  imageUrl = intent.getStringExtra("image");
+        price = intent.getStringExtra("price");
+        description = intent.getStringExtra("description");
 
-        imageView = findViewById(R.id.imageView5);
+        // Convertir el precio de String a double
+        double priceDouble = Double.parseDouble(price);
+
+        // Resto del código
         itemName = findViewById(R.id.name);
         itemPrice = findViewById(R.id.price);
+        itemDescription = findViewById(R.id.description);
 
         itemName.setText(name);
-        itemPrice.setText("$ "+price);
-
-
-        ImageView flechaImageView = findViewById(R.id.imageView2);
-        flechaImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed(); // Esto hará que vuelva a la actividad anterior
-            }
-        });
-
-        Button addToCartButton = findViewById(R.id.button);
-        addToCartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Mostrar el DialogFragment del carrito
-                showCartDialog();
-            }
-        });
+        itemPrice.setText("$ " + priceDouble); // Mostrar el precio convertido
+        itemDescription.setText(description);
     }
+
 
     private void showCartDialog() {
         FragmentManager fragmentManager = getSupportFragmentManager();
