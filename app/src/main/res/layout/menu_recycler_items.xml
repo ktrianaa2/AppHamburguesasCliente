@@ -10,7 +10,6 @@
     android:layout_marginRight="8dp"
     android:background="@drawable/recycler_bg2">
 
-
     <ImageView
         android:id="@+id/all_menu_image"
         android:layout_width="86dp"
@@ -22,21 +21,24 @@
 
     <TextView
         android:id="@+id/all_menu_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:text="Nombre del Producto"
         app:layout_constraintStart_toEndOf="@+id/all_menu_image"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/all_menu_price"
+        app:layout_constraintHorizontal_chainStyle="packed" />
 
     <TextView
         android:id="@+id/all_menu_description"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="TextView"
+        android:text="Descripción del Producto"
         app:layout_constraintStart_toStartOf="@+id/all_menu_name"
+        app:layout_constraintEnd_toEndOf="@+id/all_menu_name"
         app:layout_constraintTop_toBottomOf="@+id/all_menu_name" />
 
     <TextView
@@ -46,7 +48,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="166"
+        android:text="$166"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
