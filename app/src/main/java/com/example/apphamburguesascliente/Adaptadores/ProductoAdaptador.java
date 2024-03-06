@@ -29,8 +29,11 @@ public class ProductoAdaptador extends RecyclerView.Adapter<ProductoAdaptador.Pr
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         ProductoModelo product = productList.get(position);
 
+        // Configurar todas las vistas necesarias
         holder.allMenuName.setText(product.getNombreProducto());
-        holder.allMenuDescription.setText(product.getDescripcionProducto());
+
+        // Aquí puedes configurar la imagen si tienes una
+        // holder.allMenuImage.setImageResource(product.getImageResource());
     }
 
     @Override
@@ -41,14 +44,17 @@ public class ProductoAdaptador extends RecyclerView.Adapter<ProductoAdaptador.Pr
     public class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView allMenuName;
         TextView allMenuDescription;
+        TextView allMenuPrice;
+        ImageView allMenuImage;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             allMenuName = itemView.findViewById(R.id.all_menu_name);
             allMenuDescription = itemView.findViewById(R.id.all_menu_description);
+            allMenuPrice = itemView.findViewById(R.id.all_menu_price);
+            allMenuImage = itemView.findViewById(R.id.all_menu_image);
         }
     }
-
 
     public void setProductos(List<ProductoModelo> productList) {
         this.productList = productList;

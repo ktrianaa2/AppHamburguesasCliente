@@ -17,8 +17,6 @@ import com.example.apphamburguesascliente.Modelos.ProductoModelo;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +41,7 @@ public class IniciooFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_inicioo, container, false);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://cvpdjw94-8000.use2.devtunnels.ms/")
+                .baseUrl("https://9jpn4ctd-8000.use2.devtunnels.ms/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -74,6 +72,15 @@ public class IniciooFragment extends Fragment {
 
                         if (productosArray != null && productosArray.size() > 0) {
                             List<ProductoModelo> listaProductos = ProductoModelo.fromJsonArray(productosArray);
+
+                            // Imprimir los productos en la consola
+                            for (ProductoModelo producto : listaProductos) {
+                                Log.d("Producto", "ID: " + producto.getIdProducto());
+                                Log.d("Producto", "Nombre: " + producto.getNombreProducto());
+                                // Agrega más atributos según sea necesario
+                            }
+
+                            // Actualizar el RecyclerView
                             actualizarLista(listaProductos);
                         }
                     } catch (com.google.gson.JsonSyntaxException e) {
@@ -89,7 +96,6 @@ public class IniciooFragment extends Fragment {
             }
         });
     }
-
 
     private void actualizarLista(List<ProductoModelo> listaProductos) {
         adaptador.setProductos(listaProductos);
