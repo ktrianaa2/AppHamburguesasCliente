@@ -1,5 +1,7 @@
 package com.example.apphamburguesascliente;
 
+import static java.sql.Types.NULL;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -12,11 +14,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class PaginaPrincipalActivity extends AppCompatActivity {
 
+    private int idCliente = NULL;
     BottomNavigationView bottomNav;
 
     FragmentTransaction transaction;
     Fragment fragmentInicio, fragmentCarritoC, fragmentPerfil;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +45,19 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
                     if (itemId == R.id.item_inicio) {
                         transaction.replace(R.id.fragmentContainer, fragmentInicio);
                     } else if (itemId == R.id.item_carrito) {
-                        transaction.replace(R.id.fragmentContainer, fragmentCarritoC);
+                        if (idCliente == NULL) {
+                            // Si idCliente es nulo, cargar el NoIdClienteFragment para carrito
+                            transaction.replace(R.id.fragmentContainer, new NoIdClienteFragment());
+                        } else {
+                            transaction.replace(R.id.fragmentContainer, fragmentCarritoC);
+                        }
                     } else if (itemId == R.id.item_perfil) {
-                        transaction.replace(R.id.fragmentContainer, fragmentPerfil);
+                        if (idCliente == NULL) {
+                            // Si idCliente es nulo, cargar el NoIdClienteFragment para perfil
+                            transaction.replace(R.id.fragmentContainer, new NoIdClienteFragment());
+                        } else {
+                            transaction.replace(R.id.fragmentContainer, fragmentPerfil);
+                        }
                     }
 
                     transaction.addToBackStack(null);

@@ -35,7 +35,18 @@ public class IniciarSesionActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
                     Toast.makeText(IniciarSesionActivity.this, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(IniciarSesionActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+                    // Validación de usuario y contraseña
+
+                    if (username.equals("usuario") && password.equals("123456")) {
+                        Toast.makeText(IniciarSesionActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+
+                        // Abrir la actividad de la página principal
+                        Intent intent = new Intent(IniciarSesionActivity.this, PaginaPrincipalActivity.class);
+                        startActivity(intent);
+                        finish(); // Cierra la actividad actual para evitar que el usuario regrese al inicio de sesión al presionar el botón "Atrás"
+                    } else {
+                        Toast.makeText(IniciarSesionActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
