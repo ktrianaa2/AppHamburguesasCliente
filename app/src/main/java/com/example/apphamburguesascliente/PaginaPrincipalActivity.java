@@ -24,6 +24,9 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pagina_principal);
 
+        // Intenta recibir idCliente, si no hay, queda como NULL.
+        idCliente = getIntent().getIntExtra("idCliente", NULL);
+
         bottomNav = findViewById(R.id.bottomNav);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
@@ -31,9 +34,9 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
         fragmentPerfil = new PerfillFragment();
         fragmentCarritoC = new CarritoCFragment();
 
+        // Iniciar con el fragmento de inicio sin importar el estado de inicio de sesión.
         getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, fragmentInicio).commit();
     }
-
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -64,6 +67,5 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
                     transaction.commit();
                     return true;
                 }
-            };
-
+    };
 }

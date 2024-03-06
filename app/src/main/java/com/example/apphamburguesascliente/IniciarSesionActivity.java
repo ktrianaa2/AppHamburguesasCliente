@@ -65,9 +65,13 @@ public class IniciarSesionActivity extends AppCompatActivity {
                                     String nombreUsuario = loginResponse.getNombreusuario();
                                     int idCuenta = loginResponse.getId_cuenta();
 
-                                    System.out.println("Token: " + token);
-                                    System.out.println("Nombre de usuario: " + nombreUsuario);
-                                    System.out.println("ID de cuenta: " + idCuenta);
+                                    // Mostrar notificación de inicio de sesión correcto
+                                    mostrarNotificacion();
+                                    // Preparar el intent con idCuenta
+                                    Intent intent = new Intent(IniciarSesionActivity.this, PaginaPrincipalActivity.class);
+                                    intent.putExtra("idCliente", idCuenta); // Pasar el idCuenta
+                                    startActivity(intent);
+                                    finish(); // Cerrar esta actividad
                                 }
                             } else {
                                 Toast.makeText(IniciarSesionActivity.this, "Error en inicio de sesión", Toast.LENGTH_SHORT).show();
@@ -98,5 +102,10 @@ public class IniciarSesionActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void mostrarNotificacion() {
+        // Aquí puedes mostrar una notificación al usuario
+        Toast.makeText(this, "Inicio de sesión correcto", Toast.LENGTH_SHORT).show();
     }
 }
