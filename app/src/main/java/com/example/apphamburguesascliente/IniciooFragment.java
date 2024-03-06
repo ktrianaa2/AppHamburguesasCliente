@@ -1,5 +1,6 @@
 package com.example.apphamburguesascliente;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -26,7 +27,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class IniciooFragment extends Fragment {
+public class IniciooFragment extends Fragment implements ProductoAdaptador.OnItemClickListener {
 
     private ApiService apiService;
     private RecyclerView allMenuRecycler;
@@ -52,6 +53,9 @@ public class IniciooFragment extends Fragment {
         adaptador = new ProductoAdaptador(new ArrayList<>());
         allMenuRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         allMenuRecycler.setAdapter(adaptador);
+
+        adaptador.setOnItemClickListener(this);
+
 
         // Obtener datos desde la API
         obtenerProductosDesdeAPI();
@@ -101,4 +105,12 @@ public class IniciooFragment extends Fragment {
         adaptador.setProductos(listaProductos);
     }
 
+    @Override
+    public void onItemClick(ProductoModelo producto) {
+        Intent intent = new Intent(getActivity(), DetallesProductoComboActivity.class);
+        intent.putExtra("name", producto.getNombreProducto());
+        // intent.putExtra("price", String.valueOf(producto.getPrecioProducto()));
+        // intent.putExtra("image", producto.getImageUrl());
+        startActivity(intent);
+    }
 }

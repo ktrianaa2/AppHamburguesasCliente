@@ -45,4 +45,6 @@ public class ProductoModelo {
     public void setNombreProducto(String nombreProducto) {
         this.nombreProducto = nombreProducto;
     }
+
+
 }

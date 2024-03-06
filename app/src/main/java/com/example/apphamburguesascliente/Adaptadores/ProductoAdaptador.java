@@ -3,6 +3,7 @@ package com.example.apphamburguesascliente.Adaptadores;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -13,9 +14,18 @@ import java.util.List;
 
 public class ProductoAdaptador extends RecyclerView.Adapter<ProductoAdaptador.ProductViewHolder> {
     private List<ProductoModelo> productList;
+    private OnItemClickListener listener;
 
     public ProductoAdaptador(List<ProductoModelo> productList) {
         this.productList = productList;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(ProductoModelo producto);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -31,10 +41,20 @@ public class ProductoAdaptador extends RecyclerView.Adapter<ProductoAdaptador.Pr
 
         // Configurar todas las vistas necesarias
         holder.allMenuName.setText(product.getNombreProducto());
+        // holder.allMenuDescription.setText(product.getDescripcionProducto());
+        // holder.allMenuPrice.setText(String.valueOf(product.getPrecioProducto()));
 
-        // Aquí puedes configurar la imagen si tienes una
+        // Puedes configurar la imagen si tienes una
         // holder.allMenuImage.setImageResource(product.getImageResource());
+
+        // Manejar clic en el elemento
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(product);
+            }
+        });
     }
+
 
     @Override
     public int getItemCount() {
