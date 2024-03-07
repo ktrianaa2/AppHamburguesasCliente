@@ -18,6 +18,4 @@ public interface ApiService {
     Call<LoginResponse> iniciarSesion(@Body LoginRequest loginRequest);
     @GET("Login/obtener_usuario/{id_cuenta}/")
     Call<UserResponse> obtenerUsuario(@Path("id_cuenta") String id_cuenta);
-
-
 }

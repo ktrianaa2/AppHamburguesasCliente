@@ -2,6 +2,7 @@ package com.example.apphamburguesascliente;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +29,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PerfillFragment extends Fragment {
 
     private Button btnEditar;
+    private TextView txtUsuario;
+    private TextView txtNombresUsuario;
+    private TextView txtMail;
+    private TextView txtNumeroTelefono;
+    private TextView txtRazonSocial;
+    private TextView txtCedula;
 
     @Nullable
     @Override
@@ -35,6 +43,12 @@ public class PerfillFragment extends Fragment {
 
         // Encuentra las vistas
         btnEditar = view.findViewById(R.id.btnEditar);
+        txtUsuario = view.findViewById(R.id.txtUsuario);
+        txtNombresUsuario = view.findViewById(R.id.txtNombresUsuario);
+        txtMail = view.findViewById(R.id.txtMail);
+        txtNumeroTelefono = view.findViewById(R.id.txtNumeroTelefono);
+        txtRazonSocial = view.findViewById(R.id.txtRazonSocial);
+        txtCedula = view.findViewById(R.id.txtCedula);
 
         // Configura los clics
         btnEditar.setOnClickListener(new View.OnClickListener() {
@@ -45,11 +59,29 @@ public class PerfillFragment extends Fragment {
             }
         });
 
+        // Configurar el clic para cerrar sesión
+        Button btnCerrarSesion = view.findViewById(R.id.btnCerrarSesion);
+        btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Limpiar las preferencias compartidas (cerrar sesión)
+                SharedPreferences.Editor editor = getActivity().getSharedPreferences("MySharedPref", MODE_PRIVATE).edit();
+                editor.clear();
+                editor.apply();
+
+                // Redirigir al usuario a la pantalla de inicio de sesión
+                Intent intent = new Intent(getActivity(), PaginaPrincipalActivity.class);
+                startActivity(intent);
+                getActivity().finish(); // Finaliza la actividad actual para que el usuario no pueda volver atrás
+            }
+        });
+
         // Llamada a la API para obtener los datos del usuario
         obtenerUsuario();
 
         return view;
     }
+
 
     private void obtenerUsuario() {
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("MySharedPref", MODE_PRIVATE);
@@ -75,17 +107,6 @@ public class PerfillFragment extends Fragment {
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if (response.isSuccessful()) {
                     User usuario = response.body().getUsuario();
-                    // Imprimir los datos del usuario en la consola
-                    Log.d("Usuario", "Nombre de usuario: " + usuario.getNombreUsuario());
-                    Log.d("Usuario", "ID de cliente: " + usuario.getIdCliente());
-                    Log.d("Usuario", "Teléfono: " + usuario.getTelefono());
-                    Log.d("Usuario", "Razón Social: " + usuario.getRazonSocial());
-                    Log.d("Usuario", "Tipo de cliente: " + usuario.getTipoCliente());
-                    Log.d("Usuario", "Segundo nombre: " + usuario.getSnombre());
-                    Log.d("Usuario", "Apellido: " + usuario.getCapellido());
-                    Log.d("Usuario", "RUC/Cédula: " + usuario.getRucCedula());
-                    // Agrega más campos según sea necesario
-
                     // Actualizar la interfaz de usuario con los datos del usuario
                     actualizarInterfazUsuario(usuario);
                 } else {
@@ -102,8 +123,11 @@ public class PerfillFragment extends Fragment {
 
     // Método para actualizar la interfaz de usuario con los datos del usuario
     private void actualizarInterfazUsuario(User usuario) {
-        // Aquí puedes actualizar la interfaz de usuario con los datos obtenidos del usuario
-        // Por ejemplo, puedes establecer el nombre de usuario en un TextView
-        // o cualquier otra vista según tu diseño
+        // Establecer los valores del usuario en los TextView correspondientes
+        txtUsuario.setText(usuario.getNombreUsuario());
+        txtNombresUsuario.setText(usuario.getSnombre() + " " + usuario.getCapellido());
+        txtNumeroTelefono.setText(usuario.getTelefono());
+        txtRazonSocial.setText(usuario.getRazonSocial() != null ? usuario.getRazonSocial() : "Sin información");
+        txtCedula.setText(usuario.getRucCedula() != null ? usuario.getRucCedula() : "Sin información");
     }
 }
