@@ -37,6 +37,7 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
         // Iniciar con el fragmento de inicio sin importar el estado de inicio de sesión.
         getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, fragmentInicio).commit();
     }
+
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -59,6 +60,7 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
                             // Si idCliente es nulo, cargar el NoIdClienteFragment para perfil
                             transaction.replace(R.id.fragmentContainer, new NoIdClienteFragment());
                         } else {
+                            // Reemplazar con el fragmento PerfillFragment si el idCliente no es NULL
                             transaction.replace(R.id.fragmentContainer, fragmentPerfil);
                         }
                     }
@@ -67,5 +69,5 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
                     transaction.commit();
                     return true;
                 }
-    };
+            };
 }
