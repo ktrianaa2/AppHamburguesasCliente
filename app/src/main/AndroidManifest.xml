@@ -15,6 +15,9 @@
         android:theme="@style/Theme.AppHamburguesasCliente"
         tools:targetApi="31">
         <activity
+            android:name=".RealizarPagoActivity"
+            android:exported="false" />
+        <activity
             android:name=".MasInformacionActivity"
             android:exported="false" />
         <activity

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background2"
-    tools:context=".GestionPuntosActivity">
+    tools:context=".RealizarPagoActivity">
 
     <ImageView
         android:id="@+id/imageView2"
@@ -16,5 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/icon_flecha" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
