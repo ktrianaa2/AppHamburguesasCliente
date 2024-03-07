@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 
@@ -49,13 +50,20 @@ public class DetallesProductoComboActivity extends AppCompatActivity {
         itemName.setText(name);
         itemPrice.setText("$ " + priceDouble); // Mostrar el precio convertido
         itemDescription.setText(description);
+
+
+        // Fragment
+        // Inicializa el Fragmento por defecto
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, new BotonAnadirAlCarritoFragment())
+                .commit();
+
     }
 
-
-
-    private void showCartDialog() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        AnadirAlCarritoFragment cartDialogFragment = new AnadirAlCarritoFragment();
-        cartDialogFragment.show(fragmentManager, "cart_dialog");
+    public void cambiarFragmento(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .commit();
     }
+
 }
