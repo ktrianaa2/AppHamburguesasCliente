@@ -15,6 +15,21 @@
         android:theme="@style/Theme.AppHamburguesasCliente"
         tools:targetApi="31">
         <activity
+            android:name=".MasInformacionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AnunciosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SucursalesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RecompensasActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EmpresaActivity"
+            android:exported="false" />
+        <activity
             android:name=".EditarPerfilActivity"
             android:exported="false" />
         <activity

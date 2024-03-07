@@ -15,7 +15,7 @@ public class DetallesProductoComboActivity extends AppCompatActivity {
     ImageView imageView;
     TextView itemName, itemPrice, itemDescription;
 
-    String name, price, rating, imageUrl, description;
+    String name, price, description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +23,16 @@ public class DetallesProductoComboActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detalles_producto_combo);
 
         Intent intent = getIntent();
+
+        ImageView imageViewFlecha = findViewById(R.id.imageView2);
+
+        imageViewFlecha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Cierra la actividad actual y regresa a la anterior
+                finish();
+            }
+        });
 
         name = intent.getStringExtra("name");
         price = intent.getStringExtra("price");
@@ -40,6 +50,7 @@ public class DetallesProductoComboActivity extends AppCompatActivity {
         itemPrice.setText("$ " + priceDouble); // Mostrar el precio convertido
         itemDescription.setText(description);
     }
+
 
 
     private void showCartDialog() {

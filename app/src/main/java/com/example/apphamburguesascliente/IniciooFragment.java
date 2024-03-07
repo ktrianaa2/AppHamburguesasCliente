@@ -3,6 +3,7 @@ package com.example.apphamburguesascliente;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,6 +48,53 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
                 .build();
 
         apiService = retrofit.create(ApiService.class);
+
+        // cardview
+        CardView cardEmpresa = view.findViewById(R.id.cardEmpresa);
+        CardView cardRecompensas = view.findViewById(R.id.cardRecompensas);
+        CardView cardSucursales = view.findViewById(R.id.cardSucursales);
+        CardView cardAnuncios = view.findViewById(R.id.cardAnuncios);
+        CardView cardMasInformacion = view.findViewById(R.id.cardMasInformacion);
+
+        cardEmpresa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), EmpresaActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        cardRecompensas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), RecompensasActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        cardSucursales.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SucursalesActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        cardAnuncios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AnunciosActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        cardMasInformacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MasInformacionActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // RecyclerView
         allMenuRecycler = view.findViewById(R.id.all_menu_recycler);
@@ -115,6 +163,8 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
         intent.putExtra("description", producto.getDescripcionProducto());
         startActivity(intent);
     }
+
+
 
 
 }
