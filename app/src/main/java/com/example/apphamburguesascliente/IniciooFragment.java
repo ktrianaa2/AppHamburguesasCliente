@@ -34,10 +34,6 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
     private RecyclerView allMenuRecycler;
     private ProductoAdaptador adaptador;
 
-    public IniciooFragment() {
-        // Constructor vacío
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inicioo, container, false);
@@ -49,7 +45,6 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
 
         apiService = retrofit.create(ApiService.class);
 
-        // cardview
         CardView cardEmpresa = view.findViewById(R.id.cardEmpresa);
         CardView cardRecompensas = view.findViewById(R.id.cardRecompensas);
         CardView cardSucursales = view.findViewById(R.id.cardSucursales);
@@ -95,24 +90,18 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
                 startActivity(intent);
             }
         });
-
-        // RecyclerView
         allMenuRecycler = view.findViewById(R.id.all_menu_recycler);
         adaptador = new ProductoAdaptador(new ArrayList<>());
         allMenuRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         allMenuRecycler.setAdapter(adaptador);
 
         adaptador.setOnItemClickListener(this);
-
-
-        // Obtener datos desde la API
         obtenerProductosDesdeAPI();
         return view;
     }
 
     private void obtenerProductosDesdeAPI() {
         Call<JsonObject> call = apiService.obtenerProductos();
-
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -125,7 +114,6 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
                         if (productosArray != null && productosArray.size() > 0) {
                             List<ProductoModelo> listaProductos = ProductoModelo.fromJsonArray(productosArray);
 
-                            // Imprimir los productos en la consola
                             for (ProductoModelo producto : listaProductos) {
                                 Log.d("Producto", "ID: " + producto.getIdProducto());
                                 Log.d("Producto", "Nombre: " + producto.getNombreProducto());
@@ -133,8 +121,6 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
                                 Log.d("Producto", "Descripcion: " + producto.getDescripcionProducto());
 
                             }
-
-                            // Actualizar el RecyclerView
                             actualizarLista(listaProductos);
                         }
                     } catch (com.google.gson.JsonSyntaxException e) {
@@ -142,7 +128,6 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
                     }
                 }
             }
-
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 // Manejar el error
@@ -150,11 +135,9 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
             }
         });
     }
-
     private void actualizarLista(List<ProductoModelo> listaProductos) {
         adaptador.setProductos(listaProductos);
     }
-
     @Override
     public void onItemClick(ProductoModelo producto) {
         Intent intent = new Intent(getActivity(), DetallesProductoComboActivity.class);
@@ -163,8 +146,4 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
         intent.putExtra("description", producto.getDescripcionProducto());
         startActivity(intent);
     }
-
-
-
-
 }

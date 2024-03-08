@@ -2,19 +2,14 @@ package com.example.apphamburguesascliente;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
+import com.example.apphamburguesascliente.Interfaces.OnProductAddedListener;
 
-public class DetallesProductoComboActivity extends AppCompatActivity {
-    ImageView imageView;
-    TextView itemName, itemPrice, itemDescription;
+public class DetallesProductoComboActivity extends AppCompatActivity implements OnProductAddedListener {
 
     String name, price, description;
 
@@ -25,39 +20,26 @@ public class DetallesProductoComboActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        ImageView imageViewFlecha = findViewById(R.id.imageView2);
-
-        imageViewFlecha.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Cierra la actividad actual y regresa a la anterior
-                finish();
-            }
-        });
-
         name = intent.getStringExtra("name");
         price = intent.getStringExtra("price");
         description = intent.getStringExtra("description");
 
-        // Convertir el precio de String a double
         double priceDouble = Double.parseDouble(price);
 
-        // Resto del código
-        itemName = findViewById(R.id.name);
-        itemPrice = findViewById(R.id.price);
-        itemDescription = findViewById(R.id.description);
+        TextView itemName = findViewById(R.id.name);
+        TextView itemPrice = findViewById(R.id.price);
+        TextView itemDescription = findViewById(R.id.description);
 
         itemName.setText(name);
         itemPrice.setText("$ " + priceDouble); // Mostrar el precio convertido
         itemDescription.setText(description);
 
-
-        // Fragment
-        // Inicializa el Fragmento por defecto
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new BotonAnadirAlCarritoFragment())
-                .commit();
-
+        // Añade el fragmento BotonAnadirAlCarritoFragment
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainer, BotonAnadirAlCarritoFragment.newInstance(name, priceDouble, description))
+                    .commit();
+        }
     }
 
     public void cambiarFragmento(Fragment fragment) {
@@ -66,4 +48,12 @@ public class DetallesProductoComboActivity extends AppCompatActivity {
                 .commit();
     }
 
+    @Override
+    public void onProductAdded(String nombreProducto, double precioProducto, String descripcionProducto) {
+        // Pasar los datos al CarritoCFragment
+        Fragment carritoFragment = CarritoCFragment.newInstance(nombreProducto, precioProducto, descripcionProducto);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, carritoFragment)
+                .commit();
+    }
 }

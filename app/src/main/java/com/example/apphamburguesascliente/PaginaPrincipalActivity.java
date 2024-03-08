@@ -9,6 +9,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -32,7 +34,6 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
 
         fragmentInicio = new IniciooFragment();
         fragmentPerfil = new PerfillFragment();
-        fragmentCarritoC = new CarritoCFragment();
 
         // Iniciar con el fragmento de inicio sin importar el estado de inicio de sesión.
         getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, fragmentInicio).commit();
@@ -53,6 +54,10 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
                             // Si idCliente es nulo, cargar el NoIdClienteFragment para carrito
                             transaction.replace(R.id.fragmentContainer, new NoIdClienteFragment());
                         } else {
+                            fragmentCarritoC = new CarritoCFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("idCliente", idCliente); // Pasar el idCliente al fragmento
+                            fragmentCarritoC.setArguments(bundle);
                             transaction.replace(R.id.fragmentContainer, fragmentCarritoC);
                         }
                     } else if (itemId == R.id.item_perfil) {
