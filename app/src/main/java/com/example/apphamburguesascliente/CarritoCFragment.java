@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 
 public class CarritoCFragment extends Fragment {
 
-    private int numeroProductosEnCarrito = 0;
+    private int numeroProductosEnCarrito = 2;
     private int idCliente = -1; // Valor predeterminado o valor que consideres adecuado
 
     public CarritoCFragment() {
@@ -48,7 +48,7 @@ public class CarritoCFragment extends Fragment {
             // Si hay productos en el carrito, cargar el fragmento con productos
             view = inflater.inflate(R.layout.fragment_carrito_con_productos, container, false);
         } else {
-            // Si el carrito está vacío, cargar el fragmento vacío
+            // Si el carrito está vacío, cargar el fragmento vacío con el botón "Ver Menú"
             view = inflater.inflate(R.layout.fragment_carrito_vacio, container, false);
 
             // Configurar el botón "Ver Menú"

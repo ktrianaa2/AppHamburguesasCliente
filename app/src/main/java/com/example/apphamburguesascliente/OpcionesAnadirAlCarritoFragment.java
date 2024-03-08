@@ -2,6 +2,8 @@ package com.example.apphamburguesascliente;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -84,7 +86,6 @@ public class OpcionesAnadirAlCarritoFragment extends Fragment {
                 quantityEditText.setText(String.valueOf(quantity));
             }
         });
-
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,11 +94,23 @@ public class OpcionesAnadirAlCarritoFragment extends Fragment {
                     double precioProducto = getArguments().getDouble("price");
                     String descripcionProducto = getArguments().getString("description");
 
+                    // Imprimir los datos del producto en la consola
+                    Log.d("DetallesProducto Añadir Carrito", "Nombre: " + nombreProducto);
+                    Log.d("DetallesProducto Añadir Carrito", "Precio: " + precioProducto);
+                    Log.d("DetallesProducto Añadir Carrito", "Descripción: " + descripcionProducto);
+
                     // Llamar al método de la Interface para pasar los datos
                     productAddedListener.onProductAdded(nombreProducto, precioProducto, descripcionProducto);
+                    Toast.makeText(getContext(), "Agregado exitosamente al carrito", Toast.LENGTH_SHORT).show();
+
+                    // Navegar al fragmento del carrito después de agregar el producto
+                    if (getActivity() != null) {
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragmentContainer, new CarritoCFragment())
+                                .commit();
+                    }
                 }
             }
-
         });
         return view;
     }
