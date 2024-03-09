@@ -9,7 +9,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="636dp"
         android:layout_weight="1">
 
         <LinearLayout
@@ -268,22 +268,19 @@
                         android:text="123456789"
                         android:textStyle="bold" />
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnEditar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="35dp"
+                    android:backgroundTint="@color/rojo"
+                    android:text="Editar"
+                    android:textColor="#fff" />
+
             </LinearLayout>
-
-            <Button
-                android:id="@+id/btnEditar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="35dp"
-                android:background="@drawable/bg_bottom"
-                android:text="Editar"
-                android:layout_marginBottom="80dp"
-                android:textColor="#fff" />
-
-
         </LinearLayout>
-
     </ScrollView>
 
     <LinearLayout
@@ -301,7 +298,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:background="@drawable/bg_bottom"
+            android:backgroundTint="@color/rojo"
             android:text="Cerrar Sesión"
             android:textColor="#fff"
             android:textSize="12sp" />
