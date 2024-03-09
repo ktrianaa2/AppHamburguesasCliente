@@ -28,6 +28,10 @@ public class CarritoModelo implements Serializable {
         return productos;
     }
 
+    public void limpiarCarrito() {
+        productos.clear();
+    }
+
     public static class Producto {
         private String nombre;
         private int id;

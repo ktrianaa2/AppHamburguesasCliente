@@ -25,8 +25,6 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 
 public class CarritoConProductosFragment extends Fragment implements OnProductAddedListener {
-
-
     private RecyclerView recyclerView;
     private CarritoAdaptador adaptador;
 
@@ -67,7 +65,7 @@ public class CarritoConProductosFragment extends Fragment implements OnProductAd
     }
 
     @Override
-    public void onProductAdded(String nombreProducto, double precioProducto, String descripcionProducto) {
+    public void onProductAdded(String nombreProducto, double precioProducto, String descripcionProducto, int cantidad) {
         // Agregar el producto al carrito
         CarritoModelo carritoModel = CarritoModelo.getInstance();
         CarritoModelo.Producto producto = new CarritoModelo.Producto(nombreProducto, 1, precioProducto, 1);

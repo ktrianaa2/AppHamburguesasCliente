@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class CarritoCFragment extends Fragment {
 
-    private int numeroProductosEnCarrito = 2;
+    private int numeroProductosEnCarrito = 0;
     private int idCliente = -1; // Valor predeterminado o valor que consideres adecuado
 
     public CarritoCFragment() {
@@ -47,14 +48,17 @@ public class CarritoCFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     List<CarritoModelo.Producto> listaDeProductos;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
 
-        // Aquí puedes obtener la lista de productos del modelo
+        // Actualizar listaDeProductos desde el Singleton CarritoModelo
         listaDeProductos = CarritoModelo.getInstance().getProductos();
+        // Actualizar numeroProductosEnCarrito basado en el tamaño de la lista
+        numeroProductosEnCarrito = listaDeProductos != null ? listaDeProductos.size() : 0;
 
         if (numeroProductosEnCarrito > 0) {
             // Si hay productos en el carrito, cargar el fragmento con productos
@@ -64,6 +68,20 @@ public class CarritoCFragment extends Fragment {
             CarritoAdaptador adaptador = new CarritoAdaptador(listaDeProductos);
             recyclerView.setAdapter(adaptador);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+            // Configurar el botón "Vaciar Carrito"
+            Button clearButton = view.findViewById(R.id.clearButton);
+            clearButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Llamar al método para limpiar el carrito
+                    limpiarCarrito();
+                    // Notificar al adaptador que la lista cambió
+                    adaptador.actualizarLista(listaDeProductos);
+                    // Actualizar el contador de productos en el carrito
+                    numeroProductosEnCarrito = listaDeProductos.size();
+                }
+            });
         } else {
             // Si el carrito está vacío, cargar el fragmento vacío con el botón "Ver Menú"
             view = inflater.inflate(R.layout.fragment_carrito_vacio, container, false);
@@ -84,5 +102,16 @@ public class CarritoCFragment extends Fragment {
         }
         return view;
     }
-}
 
+    private void limpiarCarrito() {
+        CarritoModelo carritoModelo = CarritoModelo.getInstance();
+        carritoModelo.limpiarCarrito();
+        listaDeProductos.clear();
+
+        // Reemplazar el fragmento actual por el fragmento vacío
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, new CarritoVacioFragment());
+        transaction.commit();
+    }
+
+}

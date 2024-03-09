@@ -59,27 +59,6 @@ public class DetallesProductoComboActivity extends AppCompatActivity implements 
                 .commit();
     }
 
-    @Override
-    public void onProductAdded(String nombreProducto, double precioProducto, String descripcionProducto) {
-        // Agregar el producto al carrito
-        CarritoModelo carritoModel = CarritoModelo.getInstance();
-        CarritoModelo.Producto producto = new CarritoModelo.Producto(nombreProducto, generateProductId(), precioProducto, 1);
-        carritoModel.agregarProducto(producto);
-
-        // Guardar la lista de productos en SharedPreferences
-        guardarProductosEnSharedPreferences(carritoModel.getProductos());
-        // Imprimir en Logcat para verificar que se guardaron los datos correctamente
-        Log.d("Carrito", "Producto añadido: " + producto.getNombre() + ", Precio: $" + producto.getPrecio());
-
-        List<CarritoModelo.Producto> productos = carritoModel.getProductos();
-        Log.d("Carrito", "Total de productos añadidos: " + productos.size());
-        for (CarritoModelo.Producto p : productos) {
-            Log.d("Carrito", "Nombre: " + p.getNombre() + ", Precio: $" + p.getPrecio());
-        }
-        adaptador.actualizarLista(carritoModel.getProductos());
-
-    }
-
     private void guardarProductosEnSharedPreferences(List<CarritoModelo.Producto> productos) {
         // Obtener SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("carrito_preferences", MODE_PRIVATE);
@@ -113,4 +92,23 @@ public class DetallesProductoComboActivity extends AppCompatActivity implements 
     }
 
 
+    @Override
+    public void onProductAdded(String nombreProducto, double precioProducto, String descripcionProducto, int cantidad) {
+        // Agregar el producto al carrito
+        CarritoModelo carritoModel = CarritoModelo.getInstance();
+        CarritoModelo.Producto producto = new CarritoModelo.Producto(nombreProducto, generateProductId(), precioProducto, cantidad);
+        carritoModel.agregarProducto(producto);
+
+        // Guardar la lista de productos en SharedPreferences
+        guardarProductosEnSharedPreferences(carritoModel.getProductos());
+        // Imprimir en Logcat para verificar que se guardaron los datos correctamente
+        Log.d("Carrito", "Producto añadido: " + producto.getNombre() + ", Precio: $" + producto.getPrecio());
+
+        List<CarritoModelo.Producto> productos = carritoModel.getProductos();
+        Log.d("Carrito", "Total de productos añadidos: " + productos.size());
+        for (CarritoModelo.Producto p : productos) {
+            Log.d("Carrito", "Nombre: " + p.getNombre() + ", Precio: $" + p.getPrecio());
+        }
+        adaptador.actualizarLista(carritoModel.getProductos());
+    }
 }

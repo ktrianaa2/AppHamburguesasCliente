@@ -97,11 +97,13 @@ public class OpcionesAnadirAlCarritoFragment extends Fragment {
                     String nombreProducto = getArguments().getString("name");
                     double precioProducto = getArguments().getDouble("price");
                     String descripcionProducto = getArguments().getString("description");
+                    int cantidad = Integer.parseInt(quantityEditText.getText().toString());
 
-                    // Imprimir los datos del producto en la consola
+                    // Imprimir los datos del producto en la consola, incluyendo la cantidad
                     Log.d("DetallesProducto Añadir Carrito", "Nombre: " + nombreProducto);
                     Log.d("DetallesProducto Añadir Carrito", "Precio: " + precioProducto);
                     Log.d("DetallesProducto Añadir Carrito", "Descripción: " + descripcionProducto);
+                    Log.d("DetallesProducto Añadir Carrito", "Cantidad: " + cantidad);
 
                     // Obtener idCliente de SharedPreferences
                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MySharedPref", MODE_PRIVATE);
@@ -110,7 +112,7 @@ public class OpcionesAnadirAlCarritoFragment extends Fragment {
                     // Si idCliente es válido, proceder a abrir PaginaPrincipalActivity
                     if (idCliente != -1) {
                         // Llamar al método de la Interface para pasar los datos
-                        productAddedListener.onProductAdded(nombreProducto, precioProducto, descripcionProducto);
+                        productAddedListener.onProductAdded(nombreProducto, precioProducto, descripcionProducto, cantidad);
                         Toast.makeText(getContext(), "Agregado exitosamente al carrito", Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(getActivity(), PaginaPrincipalActivity.class);
