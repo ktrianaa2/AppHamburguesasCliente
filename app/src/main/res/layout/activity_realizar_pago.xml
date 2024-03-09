@@ -17,6 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/icon_flecha" />
 
+
     <TextView
         android:id="@+id/txtConfirmarPago"
         android:layout_width="269dp"
@@ -25,37 +26,50 @@
         android:text="Confirmar Pago"
         android:textSize="20dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.261"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+    <LinearLayout
+        android:id="@+id/Layout1"
+        android:layout_width="390dp"
+        android:layout_height="53dp"
+        android:layout_gravity="end"
+        android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/metodosPagoSpinner"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2">
+        app:layout_constraintTop_toBottomOf="@+id/txtConfirmarPago"
+        app:layout_constraintVertical_bias="0.307">
 
-        <RadioButton
-            android:id="@+id/radioButtonOptionRetiro"
+        <RadioGroup
+            android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Retiro" />
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/metodosPagoSpinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
-        <RadioButton
-            android:id="@+id/radioButtonOptionDomicilio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Domicilio" />
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/radioButtonOptionRetiro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Retiro" />
+
+            <RadioButton
+                android:id="@+id/radioButtonOptionDomicilio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Domicilio" />
+        </RadioGroup>
+
+    </LinearLayout>
 
     <Spinner
         android:id="@+id/metodosPagoSpinner"
