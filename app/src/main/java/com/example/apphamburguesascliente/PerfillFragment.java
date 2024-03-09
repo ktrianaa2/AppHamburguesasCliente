@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.apphamburguesascliente.Interfaces.ApiService;
+import com.example.apphamburguesascliente.Modelos.CarritoModelo;
 import com.example.apphamburguesascliente.Modelos.User;
 import com.example.apphamburguesascliente.Modelos.UserResponse;
 
@@ -64,17 +65,21 @@ public class PerfillFragment extends Fragment {
         btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Limpiar el carrito de compras antes de cerrar sesión
+                CarritoModelo.getInstance().limpiarCarrito();
+
                 // Limpiar las preferencias compartidas (cerrar sesión)
                 SharedPreferences.Editor editor = getActivity().getSharedPreferences("MySharedPref", MODE_PRIVATE).edit();
                 editor.clear();
                 editor.apply();
 
                 // Redirigir al usuario a la pantalla de inicio de sesión
-                Intent intent = new Intent(getActivity(), PaginaPrincipalActivity.class);
+                Intent intent = new Intent(getActivity(), PaginaPrincipalActivity.class); // Asegúrate de cambiar 'LoginActivity.class' por la actividad de inicio de sesión real de tu app
                 startActivity(intent);
                 getActivity().finish(); // Finaliza la actividad actual para que el usuario no pueda volver atrás
             }
         });
+
 
         // Llamada a la API para obtener los datos del usuario
         obtenerUsuario();

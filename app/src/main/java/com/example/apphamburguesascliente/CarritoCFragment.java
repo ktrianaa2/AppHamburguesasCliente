@@ -2,6 +2,7 @@ package com.example.apphamburguesascliente;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,8 @@ public class CarritoCFragment extends Fragment {
         // Obtener el idCliente de los argumentos
         if (getArguments() != null) {
             idCliente = getArguments().getInt("idCliente", -1);
+            // Mostrar el idCliente en Logcat
+            Log.d("CarritoCFragment", "El idCliente es: " + idCliente);
         }
     }
 
