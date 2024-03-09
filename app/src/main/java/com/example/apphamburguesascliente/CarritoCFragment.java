@@ -11,6 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.apphamburguesascliente.Adaptadores.CarritoAdaptador;
+import com.example.apphamburguesascliente.Modelos.CarritoModelo;
+
+import java.util.List;
 
 public class CarritoCFragment extends Fragment {
 
@@ -40,13 +47,23 @@ public class CarritoCFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+    List<CarritoModelo.Producto> listaDeProductos;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
 
+        // Aquí puedes obtener la lista de productos del modelo
+        listaDeProductos = CarritoModelo.getInstance().getProductos();
+
         if (numeroProductosEnCarrito > 0) {
             // Si hay productos en el carrito, cargar el fragmento con productos
             view = inflater.inflate(R.layout.fragment_carrito_con_productos, container, false);
+
+            RecyclerView recyclerView = view.findViewById(R.id.carrito_recycler);
+            CarritoAdaptador adaptador = new CarritoAdaptador(listaDeProductos);
+            recyclerView.setAdapter(adaptador);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         } else {
             // Si el carrito está vacío, cargar el fragmento vacío con el botón "Ver Menú"
             view = inflater.inflate(R.layout.fragment_carrito_vacio, container, false);
@@ -65,7 +82,7 @@ public class CarritoCFragment extends Fragment {
                 }
             });
         }
-
         return view;
     }
 }
+

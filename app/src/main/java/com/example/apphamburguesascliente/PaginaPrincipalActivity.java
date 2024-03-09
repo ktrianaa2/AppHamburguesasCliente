@@ -16,7 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class PaginaPrincipalActivity extends AppCompatActivity {
 
-    private int idCliente = NULL;
+    private int idCliente = -1;
     BottomNavigationView bottomNav;
 
     FragmentTransaction transaction;
@@ -26,8 +26,8 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pagina_principal);
 
-        // Intenta recibir idCliente, si no hay, queda como NULL.
-        idCliente = getIntent().getIntExtra("idCliente", NULL);
+        // Intenta recibir idCliente, si no hay, queda como -1.
+        idCliente = getIntent().getIntExtra("idCliente", -1);
 
         bottomNav = findViewById(R.id.bottomNav);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
@@ -50,8 +50,8 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
                     if (itemId == R.id.item_inicio) {
                         transaction.replace(R.id.fragmentContainer, fragmentInicio);
                     } else if (itemId == R.id.item_carrito) {
-                        if (idCliente == NULL) {
-                            // Si idCliente es nulo, cargar el NoIdClienteFragment para carrito
+                        if (idCliente == -1) {
+                            // Si idCliente es -1, cargar el NoIdClienteFragment para carrito
                             transaction.replace(R.id.fragmentContainer, new NoIdClienteFragment());
                         } else {
                             fragmentCarritoC = new CarritoCFragment();
@@ -61,11 +61,11 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
                             transaction.replace(R.id.fragmentContainer, fragmentCarritoC);
                         }
                     } else if (itemId == R.id.item_perfil) {
-                        if (idCliente == NULL) {
-                            // Si idCliente es nulo, cargar el NoIdClienteFragment para perfil
+                        if (idCliente == -1) {
+                            // Si idCliente es -1, cargar el NoIdClienteFragment para perfil
                             transaction.replace(R.id.fragmentContainer, new NoIdClienteFragment());
                         } else {
-                            // Reemplazar con el fragmento PerfillFragment si el idCliente no es NULL
+                            // Reemplazar con el fragmento PerfillFragment si el idCliente no es -1
                             transaction.replace(R.id.fragmentContainer, fragmentPerfil);
                         }
                     }
@@ -76,3 +76,4 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
                 }
             };
 }
+

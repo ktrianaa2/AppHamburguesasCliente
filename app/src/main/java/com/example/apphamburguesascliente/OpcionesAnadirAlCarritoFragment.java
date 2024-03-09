@@ -1,9 +1,13 @@
 package com.example.apphamburguesascliente;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -99,15 +103,23 @@ public class OpcionesAnadirAlCarritoFragment extends Fragment {
                     Log.d("DetallesProducto Añadir Carrito", "Precio: " + precioProducto);
                     Log.d("DetallesProducto Añadir Carrito", "Descripción: " + descripcionProducto);
 
-                    // Llamar al método de la Interface para pasar los datos
-                    productAddedListener.onProductAdded(nombreProducto, precioProducto, descripcionProducto);
-                    Toast.makeText(getContext(), "Agregado exitosamente al carrito", Toast.LENGTH_SHORT).show();
+                    // Obtener idCliente de SharedPreferences
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MySharedPref", MODE_PRIVATE);
+                    int idCliente = sharedPreferences.getInt("id_cuenta", -1); // Usar un valor por defecto si no se encuentra
 
-                    // Navegar al fragmento del carrito después de agregar el producto
-                    if (getActivity() != null) {
-                        getActivity().getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.fragmentContainer, new CarritoCFragment())
-                                .commit();
+                    // Si idCliente es válido, proceder a abrir PaginaPrincipalActivity
+                    if (idCliente != -1) {
+                        // Llamar al método de la Interface para pasar los datos
+                        productAddedListener.onProductAdded(nombreProducto, precioProducto, descripcionProducto);
+                        Toast.makeText(getContext(), "Agregado exitosamente al carrito", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(getActivity(), PaginaPrincipalActivity.class);
+                        intent.putExtra("idCliente", idCliente); // Pasar el idCliente como extra
+                        startActivity(intent);
+                        getActivity().finish(); // Finalizar la actividad actual si deseas evitar que el usuario regrese a ella
+                    } else {
+                        // Manejar el caso de que no se encuentre el idCliente
+                        Log.e("OpcionesAnadirAlCarrito", "Error al obtener el ID de cliente.");
                     }
                 }
             }

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.apphamburguesascliente.Adaptadores.CarritoAdaptador;
 import com.example.apphamburguesascliente.Interfaces.OnProductAddedListener;
 import com.example.apphamburguesascliente.Modelos.CarritoModelo;
-import com.example.apphamburguesascliente.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
