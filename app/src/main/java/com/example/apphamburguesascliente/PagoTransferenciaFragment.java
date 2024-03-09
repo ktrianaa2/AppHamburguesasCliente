@@ -55,15 +55,6 @@ public class PagoTransferenciaFragment extends Fragment {
             }
         });
 
-        Button confirmButton = view.findViewById(R.id.confirmButton);
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Inicia la actividad de pago confirmado
-                Intent intent = new Intent(getActivity(), PagoConfirmadoActivity.class);
-                startActivity(intent);
-            }
-        });
 
         return view;
     }

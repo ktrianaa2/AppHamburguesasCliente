@@ -24,15 +24,6 @@ public class PagoFranccionadoFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pago_franccionado, container, false);
 
-        Button confirmButton = view.findViewById(R.id.confirmButton);
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Inicia la actividad de pago confirmado
-                Intent intent = new Intent(getActivity(), PagoConfirmadoActivity.class);
-                startActivity(intent);
-            }
-        });
 
         return view;
     }

@@ -7,32 +7,33 @@
     tools:context=".PagoTransferenciaFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="371dp"
+        android:layout_height="466dp">
 
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="282dp"
-            android:layout_height="540dp"
+            android:layout_height="372dp"
             android:background="#FFFFFF"
             android:src="@drawable/transferencia"
             app:layout_constraintBottom_toTopOf="@+id/selectImageButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintHorizontal_bias="0.494"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.276" />
+            app:layout_constraintVertical_bias="0.38" />
 
         <Button
             android:id="@+id/selectImageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginBottom="56dp"
+            android:layout_marginBottom="4dp"
             android:backgroundTint="#2196F3"
             android:text="Seleccionar Imagen"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
@@ -42,24 +43,11 @@
             android:text="Selecciona tu comprobante de pago"
             android:textColor="#333333"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/confirmButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView"
             app:layout_constraintVertical_bias="0.514" />
 
-
-        <Button
-            android:id="@+id/confirmButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="56dp"
-            android:backgroundTint="#2196F3"
-            android:text="Confirmar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.458"
-            app:layout_constraintStart_toEndOf="@+id/selectImageButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

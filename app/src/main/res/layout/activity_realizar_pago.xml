@@ -71,7 +71,7 @@
 
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_width="372dp"
+        android:layout_width="367dp"
         android:layout_height="472dp"
         android:layout_gravity="center"
         android:layout_weight="1"
@@ -84,8 +84,8 @@
 
         <FrameLayout
             android:id="@+id/fragmentContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="367dp"
+            android:layout_height="472dp" />
 
     </ScrollView>
 
