@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,7 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/icon_flecha" />
-
 
     <TextView
         android:id="@+id/txtConfirmarPago"
@@ -38,23 +38,15 @@
         android:layout_gravity="end"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/metodosPagoSpinner"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtConfirmarPago"
-        app:layout_constraintVertical_bias="0.307">
+        app:layout_constraintTop_toBottomOf="@+id/txtConfirmarPago">
 
         <RadioGroup
             android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/metodosPagoSpinner"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2">
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/radioButtonOptionRetiro"
@@ -74,32 +66,27 @@
     <Spinner
         android:id="@+id/metodosPagoSpinner"
         android:layout_width="366dp"
-        android:layout_height="27dp"
+        android:layout_height="50dp"
         android:background="#FFFFFF"
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.481"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="134dp"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@+id/Layout1" />
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="367dp"
         android:layout_height="472dp"
         android:layout_gravity="center"
-        android:layout_weight="1"
-        app:layout_constraintBottom_toTopOf="@+id/Layout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/metodosPagoSpinner"
-        app:layout_constraintVertical_bias="0.526">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/Layout">
 
         <FrameLayout
             android:id="@+id/fragmentContainer"
-            android:layout_width="367dp"
-            android:layout_height="472dp" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </ScrollView>
 
@@ -110,10 +97,9 @@
         android:layout_gravity="end"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
             android:id="@+id/pagarButton"
