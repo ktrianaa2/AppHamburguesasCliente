@@ -17,5 +17,74 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/icon_flecha" />
 
+    <TextView
+        android:id="@+id/txtConfirmarPago"
+        android:layout_width="269dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="16dp"
+        android:text="Confirmar Pago"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.13"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <Spinner
+        android:id="@+id/metodosPagoSpinner"
+        android:layout_width="366dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="#FFFFFF"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/txtConfirmarPago"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.592"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView"
+        app:layout_constraintVertical_bias="0.844" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="372dp"
+        android:layout_height="472dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@+id/Layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/metodosPagoSpinner"
+        app:layout_constraintVertical_bias="0.528">
+
+        <FrameLayout
+            android:id="@+id/fragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/Layout"
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:layout_gravity="end"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/pagarButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#2196F3"
+            android:gravity="center"
+            android:text="Pagar" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

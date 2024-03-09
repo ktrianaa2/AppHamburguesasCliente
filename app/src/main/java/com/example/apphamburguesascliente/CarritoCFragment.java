@@ -85,6 +85,19 @@ public class CarritoCFragment extends Fragment {
                     numeroProductosEnCarrito = listaDeProductos.size();
                 }
             });
+
+            // Boton Siguiente
+            Button nextButton = view.findViewById(R.id.nextButton);
+            nextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    // aqui debes agarrar los datos
+
+                    Intent intent = new Intent(getActivity(), RealizarPagoActivity.class);
+                    startActivity(intent);
+                }
+            });
         } else {
             // Si el carrito está vacío, cargar el fragmento vacío con el botón "Ver Menú"
             view = inflater.inflate(R.layout.fragment_carrito_vacio, container, false);
