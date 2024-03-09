@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.LoginRequest;
 import com.example.apphamburguesascliente.Modelos.LoginResponse;
+import com.example.apphamburguesascliente.Modelos.RolResponse;
+import com.example.apphamburguesascliente.Modelos.TokenRequest;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,23 +64,44 @@ public class IniciarSesionActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 LoginResponse loginResponse = response.body();
                                 if (loginResponse != null) {
-                                    String token = loginResponse.getToken();
-                                    String nombreUsuario = loginResponse.getNombreusuario();
-                                    int idCuenta = loginResponse.getId_cuenta();
+                                    final String token = loginResponse.getToken();
 
-                                    // Mostrar notificación de inicio de sesión correcto
-                                    mostrarNotificacion();
-                                    // Preparar el intent con idCuenta
-                                    Intent intent = new Intent(IniciarSesionActivity.this, PaginaPrincipalActivity.class);
-                                    intent.putExtra("idCliente", idCuenta); // Pasar el idCuenta
-                                    startActivity(intent);
-                                    finish(); // Cerrar esta actividad
+                                    // Ahora, verifica el rol con otra llamada a la API
+                                    Call<RolResponse> callRol = apiService.verificarRol(new TokenRequest(token));
+                                    callRol.enqueue(new Callback<RolResponse>() {
+                                        @Override
+                                        public void onResponse(Call<RolResponse> call, Response<RolResponse> response) {
+                                            if (response.isSuccessful()) {
+                                                RolResponse rolResponse = response.body();
+                                                if (rolResponse != null && "C".equals(rolResponse.getRol())) {
+                                                    String token = loginResponse.getToken();
+                                                    String nombreUsuario = loginResponse.getNombreusuario();
+                                                    int idCuenta = loginResponse.getId_cuenta();
 
-                                    SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
-                                    SharedPreferences.Editor myEdit = sharedPreferences.edit();
-                                    myEdit.putInt("id_cuenta", loginResponse.getId_cuenta());
-                                    myEdit.apply();
+                                                    mostrarNotificacion();
 
+                                                    Intent intent = new Intent(IniciarSesionActivity.this, PaginaPrincipalActivity.class);
+                                                    intent.putExtra("idCliente", idCuenta); // Pasar el idCuenta
+                                                    startActivity(intent);
+                                                    finish(); // Cerrar esta actividad
+
+                                                    SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+                                                    SharedPreferences.Editor myEdit = sharedPreferences.edit();
+                                                    myEdit.putInt("id_cuenta", loginResponse.getId_cuenta());
+                                                    myEdit.apply();                                                } else {
+                                                    // Rol no permitido
+                                                    Toast.makeText(IniciarSesionActivity.this, "Esta cuenta no tiene el rol para acceder.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            } else {
+                                                Toast.makeText(IniciarSesionActivity.this, "Error al verificar el rol", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<RolResponse> call, Throwable t) {
+                                            Toast.makeText(IniciarSesionActivity.this, "Error en la red", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 }
                             } else {
                                 Toast.makeText(IniciarSesionActivity.this, "Error en inicio de sesión", Toast.LENGTH_SHORT).show();
@@ -87,7 +110,7 @@ public class IniciarSesionActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<LoginResponse> call, Throwable t) {
-                            Toast.makeText(IniciarSesionActivity.this, "Error en inicio de sesión", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(IniciarSesionActivity.this, "Error de conexión", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

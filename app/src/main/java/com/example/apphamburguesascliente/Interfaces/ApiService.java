@@ -4,6 +4,8 @@ import com.example.apphamburguesascliente.Modelos.LoginRequest;
 import com.example.apphamburguesascliente.Modelos.LoginResponse;
 import com.example.apphamburguesascliente.Modelos.RegistroRequest;
 import com.example.apphamburguesascliente.Modelos.RegistroResponse;
+import com.example.apphamburguesascliente.Modelos.RolResponse;
+import com.example.apphamburguesascliente.Modelos.TokenRequest;
 import com.example.apphamburguesascliente.Modelos.UserResponse;
 import com.google.gson.JsonObject;
 
@@ -20,6 +22,8 @@ public interface ApiService {
     Call<JsonObject> obtenerProductos();
     @POST("Login/iniciar_sesion/")
     Call<LoginResponse> iniciarSesion(@Body LoginRequest loginRequest);
+    @POST("Login/rol/")
+    Call<RolResponse> verificarRol(@Body TokenRequest tokenRequest);
     @GET("Login/obtener_usuario/{id_cuenta}/")
     Call<UserResponse> obtenerUsuario(@Path("id_cuenta") String id_cuenta);
     @POST("Login/crear/")
