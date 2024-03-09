@@ -25,26 +25,48 @@
         android:text="Confirmar Pago"
         android:textSize="20dp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.13"
+        app:layout_constraintHorizontal_bias="0.261"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/metodosPagoSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2">
+
+        <RadioButton
+            android:id="@+id/radioButtonOptionRetiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Retiro" />
+
+        <RadioButton
+            android:id="@+id/radioButtonOptionDomicilio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Domicilio" />
+    </RadioGroup>
 
     <Spinner
         android:id="@+id/metodosPagoSpinner"
         android:layout_width="366dp"
         android:layout_height="27dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
         android:background="#FFFFFF"
         android:textColor="#000000"
-        app:layout_constraintBottom_toTopOf="@+id/txtConfirmarPago"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.592"
+        app:layout_constraintHorizontal_bias="0.481"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView"
-        app:layout_constraintVertical_bias="0.844" />
+        tools:layout_editor_absoluteY="134dp" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -54,15 +76,15 @@
         android:layout_weight="1"
         app:layout_constraintBottom_toTopOf="@+id/Layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintHorizontal_bias="0.476"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/metodosPagoSpinner"
-        app:layout_constraintVertical_bias="0.528">
+        app:layout_constraintVertical_bias="0.526">
 
         <FrameLayout
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </ScrollView>
 
