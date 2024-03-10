@@ -91,9 +91,19 @@ public class CarritoCFragment extends Fragment {
             nextButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // Verificar si la lista de productos no está vacía
+                    if (!listaDeProductos.isEmpty()) {
+                        // Recorrer la lista de productos y mostrar sus detalles en consola
+                        for (CarritoModelo.Producto producto : listaDeProductos) {
+                            Log.d("Carrito Producto", "Nombre: " + producto.getNombre() +
+                                    ", Precio: " + producto.getPrecio() +
+                                    ", Cantidad: " + producto.getCantidad());
+                        }
+                    } else {
+                        Log.d("Carrito", "El carrito está vacío.");
+                    }
 
-                    // aqui debes agarrar los datos
-
+                    // Continuar con la siguiente actividad
                     Intent intent = new Intent(getActivity(), RealizarPagoActivity.class);
                     startActivity(intent);
                 }
