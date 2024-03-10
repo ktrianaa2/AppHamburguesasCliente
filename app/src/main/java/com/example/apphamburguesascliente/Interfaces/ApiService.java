@@ -4,6 +4,7 @@ import com.example.apphamburguesascliente.Modelos.LoginRequest;
 import com.example.apphamburguesascliente.Modelos.LoginResponse;
 import com.example.apphamburguesascliente.Modelos.RegistroRequest;
 import com.example.apphamburguesascliente.Modelos.RegistroResponse;
+import com.example.apphamburguesascliente.Modelos.RespuestaEmpresa;
 import com.example.apphamburguesascliente.Modelos.RolResponse;
 import com.example.apphamburguesascliente.Modelos.TokenRequest;
 import com.example.apphamburguesascliente.Modelos.UserResponse;
@@ -32,9 +33,9 @@ public interface ApiService {
     Call<JsonObject> verificarUsuarioExistente(@Body Map<String, String> usuario);
     @POST("Login/phoneExist/")
     Call<JsonObject> verificarTelefonoExistente(@Body Map<String, String> telefono);
-
+    @POST("empresa/infoEmpresa/")
+    Call<RespuestaEmpresa> obtenerInfoEmpresa();
     @GET("combos/ver_combos/")
     Call<JsonObject> obtenerCombos();
-
 
 }
