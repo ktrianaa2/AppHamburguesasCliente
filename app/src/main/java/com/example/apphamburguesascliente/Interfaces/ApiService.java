@@ -35,7 +35,6 @@ public interface ApiService {
 
     @GET("combos/ver_combos/")
     Call<JsonObject> obtenerCombos();
-    @POST("empresa/infoEmpresa/")
-    Call<RespuestaEmpresa> obtenerInfoEmpresa();
+
 
 }
