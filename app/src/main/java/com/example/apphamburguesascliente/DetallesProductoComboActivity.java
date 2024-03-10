@@ -30,6 +30,7 @@ public class DetallesProductoComboActivity extends AppCompatActivity implements 
 
         Intent intent = getIntent();
 
+        int idProducto = intent.getIntExtra("idProducto", 0);
         name = intent.getStringExtra("name");
         price = intent.getStringExtra("price");
         description = intent.getStringExtra("description");
@@ -96,18 +97,19 @@ public class DetallesProductoComboActivity extends AppCompatActivity implements 
     public void onProductAdded(String nombreProducto, double precioProducto, String descripcionProducto, int cantidad) {
         // Agregar el producto al carrito
         CarritoModelo carritoModel = CarritoModelo.getInstance();
-        CarritoModelo.Producto producto = new CarritoModelo.Producto(nombreProducto, generateProductId(), precioProducto, cantidad);
+        int productId = getIntent().getIntExtra("idProducto", 0); // Obtener el idProducto de los extras
+        CarritoModelo.Producto producto = new CarritoModelo.Producto(nombreProducto, productId, precioProducto, cantidad);
         carritoModel.agregarProducto(producto);
 
         // Guardar la lista de productos en SharedPreferences
         guardarProductosEnSharedPreferences(carritoModel.getProductos());
         // Imprimir en Logcat para verificar que se guardaron los datos correctamente
-        Log.d("Carrito", "Producto añadido: " + producto.getNombre() + ", Precio: $" + producto.getPrecio());
+        Log.d("Carrito", "Producto añadido: Nombre: " + producto.getNombre() + ", ID: " + producto.getId() + ", Precio: $" + producto.getPrecio());
 
         List<CarritoModelo.Producto> productos = carritoModel.getProductos();
         Log.d("Carrito", "Total de productos añadidos: " + productos.size());
         for (CarritoModelo.Producto p : productos) {
-            Log.d("Carrito", "Nombre: " + p.getNombre() + ", Precio: $" + p.getPrecio());
+            Log.d("Carrito", "Nombre: " + p.getNombre() + ", ID: " + p.getId() + ", Precio: $" + p.getPrecio());
         }
         adaptador.actualizarLista(carritoModel.getProductos());
     }

@@ -95,7 +95,8 @@ public class CarritoCFragment extends Fragment {
                     if (!listaDeProductos.isEmpty()) {
                         // Recorrer la lista de productos y mostrar sus detalles en consola
                         for (CarritoModelo.Producto producto : listaDeProductos) {
-                            Log.d("Carrito Producto", "Nombre: " + producto.getNombre() +
+                            Log.d("Carrito Producto", "ID: " + producto.getId() + // Asegúrate de que tu clase Producto tenga el método getIdProducto()
+                                    ", Nombre: " + producto.getNombre() +
                                     ", Precio: " + producto.getPrecio() +
                                     ", Cantidad: " + producto.getCantidad());
                         }

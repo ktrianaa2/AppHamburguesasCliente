@@ -40,7 +40,11 @@ public class CarritoAdaptador extends RecyclerView.Adapter<CarritoAdaptador.View
 
         holder.txtNombreProducto.setText(producto.getNombre());
         holder.txtPrecioProducto.setText("$" + producto.getPrecio());
-        holder.txtUnidades.setText(String.valueOf(producto.getCantidad())); // Actualizar unidades
+        holder.txtUnidades.setText(String.valueOf(producto.getCantidad()));
+
+        // Calcular el precio total
+        double precioTotal = producto.getPrecio() * producto.getCantidad();
+        holder.txtPrecioTotal.setText("$" + precioTotal); // Establecer el precio total
     }
 
     @Override
@@ -53,12 +57,14 @@ public class CarritoAdaptador extends RecyclerView.Adapter<CarritoAdaptador.View
         TextView txtNombreProducto;
         TextView txtPrecioProducto;
         TextView txtUnidades; // Agregar el TextView para las unidades
+        TextView txtPrecioTotal; // Agregar el TextView para el precio total
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtNombreProducto = itemView.findViewById(R.id.carrito_name);
             txtPrecioProducto = itemView.findViewById(R.id.carrito_price);
-            txtUnidades = itemView.findViewById(R.id.carrito_unidades); // Inicializar el TextView para las unidades
+            txtUnidades = itemView.findViewById(R.id.carrito_unidades);
+            txtPrecioTotal = itemView.findViewById(R.id.carrito_price_total); // Inicializar el TextView para el precio total
         }
     }
 }

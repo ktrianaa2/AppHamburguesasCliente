@@ -158,13 +158,12 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
     @Override
     public void onItemClick(ProductoModelo producto) {
         Intent intent = new Intent(getActivity(), DetallesProductoComboActivity.class);
+        intent.putExtra("idProducto", producto.getIdProducto());
         intent.putExtra("name", producto.getNombreProducto());
         intent.putExtra("price", String.valueOf(producto.getPrecioProducto())); // Convertir a String
         intent.putExtra("description", producto.getDescripcionProducto());
         startActivity(intent);
     }
-
-
     private void obtenerCombosDesdeAPI() {
         Call<JsonObject> call = apiService.obtenerCombos();
         call.enqueue(new Callback<JsonObject>() {
