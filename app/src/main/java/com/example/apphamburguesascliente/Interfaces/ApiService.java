@@ -6,6 +6,7 @@ import com.example.apphamburguesascliente.Modelos.RegistroRequest;
 import com.example.apphamburguesascliente.Modelos.RegistroResponse;
 import com.example.apphamburguesascliente.Modelos.RespuestaEmpresa;
 import com.example.apphamburguesascliente.Modelos.RolResponse;
+import com.example.apphamburguesascliente.Modelos.SucursalResponse;
 import com.example.apphamburguesascliente.Modelos.TokenRequest;
 import com.example.apphamburguesascliente.Modelos.UserResponse;
 import com.google.gson.JsonObject;
@@ -14,6 +15,8 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -37,5 +40,11 @@ public interface ApiService {
     Call<RespuestaEmpresa> obtenerInfoEmpresa();
     @GET("combos/ver_combos/")
     Call<JsonObject> obtenerCombos();
+    @FormUrlEncoded
+    @POST("sucursal/secSucursal/")
+    Call<SucursalResponse> obtenerSucursalPorUbicacion(
+            @Field("latitud") String latitud,
+            @Field("longitud") String longitud
+    );
 
 }

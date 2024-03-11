@@ -67,4 +67,11 @@ public class CarritoAdaptador extends RecyclerView.Adapter<CarritoAdaptador.View
             txtPrecioTotal = itemView.findViewById(R.id.carrito_price_total); // Inicializar el TextView para el precio total
         }
     }
+    public double calcularPrecioTotal() {
+        double total = 0;
+        for (CarritoModelo.Producto producto : productos) {
+            total += producto.getPrecio() * producto.getCantidad();
+        }
+        return total;
+    }
 }

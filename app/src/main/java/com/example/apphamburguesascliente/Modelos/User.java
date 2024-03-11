@@ -9,6 +9,7 @@ public class User {
     private String snombre;
     private String capellido;
     private String ruc_cedula;
+    private Ubicacion ubicacion1;
 
     public String getNombreUsuario() {
         return nombre_usuario;
@@ -72,5 +73,13 @@ public class User {
 
     public void setRucCedula(String ruc_cedula) {
         this.ruc_cedula = ruc_cedula;
+    }
+
+    public Ubicacion getUbicacion1() {
+        return ubicacion1;
+    }
+
+    public void setUbicacion1(Ubicacion ubicacion1) {
+        this.ubicacion1 = ubicacion1;
     }
 }

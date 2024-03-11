@@ -72,6 +72,25 @@ public class CarritoCFragment extends Fragment {
             recyclerView.setAdapter(adaptador);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+            // Obtener el precio total y mostrarlo en txtSubTotal
+            TextView txtSubTotal = view.findViewById(R.id.txtSubTotal);
+            double precioTotal = adaptador.calcularPrecioTotal();
+            txtSubTotal.setText("Subtotal: $" + precioTotal);
+
+
+            double subtotal = adaptador.calcularPrecioTotal(); // Ya lo tienes
+            double iva = subtotal * 0.12; // Calcula el 12% de IVA del subtotal
+            double totalAPagar = subtotal + iva; // Calcula el total a pagar
+
+            // Actualiza el txtSubTotal, txtIva y txtAPagar
+            txtSubTotal.setText("Subtotal: $" + String.format("%.2f", subtotal));
+
+            TextView txtIva = view.findViewById(R.id.txtIva); // Asegúrate de tener este TextView en tu layout
+            txtIva.setText("IVA: $" + String.format("%.2f", iva));
+
+            TextView txtAPagar = view.findViewById(R.id.txtAPagar); // Asegúrate de tener este TextView en tu layout
+            txtAPagar.setText("Total a pagar: $" + String.format("%.2f", totalAPagar));
+
             // Configurar el botón "Vaciar Carrito"
             Button clearButton = view.findViewById(R.id.clearButton);
             clearButton.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +102,9 @@ public class CarritoCFragment extends Fragment {
                     adaptador.actualizarLista(listaDeProductos);
                     // Actualizar el contador de productos en el carrito
                     numeroProductosEnCarrito = listaDeProductos.size();
+                    // Actualizar el precio total en txtSubTotal
+                    double nuevoPrecioTotal = adaptador.calcularPrecioTotal();
+                    txtSubTotal.setText("Subtotal: $" + nuevoPrecioTotal);
                 }
             });
 
