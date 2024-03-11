@@ -15,6 +15,12 @@
         android:theme="@style/Theme.AppHamburguesasCliente"
         tools:targetApi="31">
         <activity
+            android:name=".AnadirUbicacionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditarUbicacionActivity"
+            android:exported="false" />
+        <activity
             android:name=".PagoConfirmadoActivity"
             android:exported="false" />
         <activity

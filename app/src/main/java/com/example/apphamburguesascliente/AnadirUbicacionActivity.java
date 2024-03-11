@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-public class AnunciosActivity extends AppCompatActivity {
+public class AnadirUbicacionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_anuncios);
+        setContentView(R.layout.activity_anadir_ubicacion);
 
         ImageView imageViewFlecha = findViewById(R.id.flechaRetroceder);
 
