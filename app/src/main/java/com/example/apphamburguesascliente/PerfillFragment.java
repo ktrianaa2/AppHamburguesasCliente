@@ -17,6 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.content.SharedPreferences;
+
+
 import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.CarritoModelo;
 import com.example.apphamburguesascliente.Modelos.User;
@@ -89,8 +92,13 @@ public class PerfillFragment extends Fragment {
         btnUbicaciones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Abrir la actividad de "Mis Ubicaciones"
+                // Obtener la ID de usuario
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MySharedPref", MODE_PRIVATE);
+                int idCuenta = sharedPreferences.getInt("id_cuenta", 0);
+
+                // Abrir la actividad de "Mis Ubicaciones" con la ID de usuario como extra
                 Intent intent = new Intent(getActivity(), MisUbicacionesActivity.class);
+                intent.putExtra("idUsuario", idCuenta);
                 startActivity(intent);
             }
         });

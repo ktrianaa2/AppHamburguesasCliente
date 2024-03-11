@@ -1,20 +1,32 @@
 package com.example.apphamburguesascliente;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-public class MisUbicacionesActivity extends AppCompatActivity {
+import com.example.apphamburguesascliente.Interfaces.ApiService;
+import com.example.apphamburguesascliente.Modelos.User;
+import com.example.apphamburguesascliente.Modelos.UserResponse;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class MisUbicacionesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mis_ubicaciones);
+
+        int idUsuario = getIntent().getIntExtra("idUsuario", 0);
+        Log.d("MisUbicacionesActivity", "ID de usuario obtenida: " + idUsuario);
 
         ImageView imageViewFlecha = findViewById(R.id.flechaRetroceder);
         imageViewFlecha.setOnClickListener(new View.OnClickListener() {
@@ -23,17 +35,45 @@ public class MisUbicacionesActivity extends AppCompatActivity {
                 finish(); // Cierra la actividad actual y regresa a la anterior
             }
         });
-
-        // Obtén la información sobre si la ubicación está configurada o no
-        boolean ubicacionCasaConfigurada = obtenerUbicacionCasaConfigurada();
-        boolean ubicacionTrabajoConfigurada = obtenerUbicacionTrabajoConfigurada();
-        boolean ubicacionOtraConfigurada = obtenerUbicacionOtraConfigurada();
-
-        // Carga el fragmento correspondiente
-        cargarFragmento(ubicacionCasaConfigurada, ubicacionTrabajoConfigurada, ubicacionOtraConfigurada);
+        // Llamada a la API para obtener los datos del usuario
+        obtenerUsuario(idUsuario);
     }
 
-    private void cargarFragmento(boolean ubicacionCasaConfigurada, boolean ubicacionTrabajoConfigurada, boolean ubicacionOtraConfigurada) {
+    // Método para obtener datos del usuario mediante la API
+    private void obtenerUsuario(int idUsuario) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://9jpn4ctd-8000.use2.devtunnels.ms/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService service = retrofit.create(ApiService.class);
+
+        // Asegúrate de convertir idUsuario a String si tu API espera una cadena
+        Call<UserResponse> callUsuario = service.obtenerUsuario(String.valueOf(idUsuario));
+        callUsuario.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.isSuccessful()) {
+                    User usuario = response.body().getUsuario();
+                    cargarFragmento(usuario);
+                } else {
+                    Log.e("Error", "Error al obtener los datos del usuario: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                Log.e("Error", "Error en la solicitud de obtención de usuario: " + t.getMessage());
+            }
+        });
+    }
+
+    // Método para cargar el fragmento con la información de ubicación
+    private void cargarFragmento(User usuario) {
+        boolean ubicacionCasaConfigurada = obtenerUbicacionCasaConfigurada(usuario);
+        boolean ubicacionTrabajoConfigurada = obtenerUbicacionTrabajoConfigurada(usuario);
+        boolean ubicacionOtraConfigurada = obtenerUbicacionOtraConfigurada(usuario);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -62,18 +102,16 @@ public class MisUbicacionesActivity extends AppCompatActivity {
     }
 
     // Lógica para obtener la configuración de cada ubicación (casa, trabajo, otra)
-    private boolean obtenerUbicacionCasaConfigurada() {
-        // Implementa la lógica para obtener la información sobre la configuración de la ubicación de casa
-        return false;
+    private boolean obtenerUbicacionCasaConfigurada(User usuario) {
+        // Verifica si la ubicación de casa está configurada
+        return usuario.getUbicacion1() != null && usuario.getUbicacion1().getLatitud() != null && usuario.getUbicacion1().getLongitud() != null;
     }
-
-    private boolean obtenerUbicacionTrabajoConfigurada() {
-        // Implementa la lógica para obtener la información sobre la configuración de la ubicación de trabajo
-        return false;
+    private boolean obtenerUbicacionTrabajoConfigurada(User usuario) {
+        // Verifica si la ubicación de trabajo está configurada
+        return usuario.getUbicacion2() != null && usuario.getUbicacion2().getLatitud() != null && usuario.getUbicacion2().getLongitud() != null;
     }
-
-    private boolean obtenerUbicacionOtraConfigurada() {
-        // Implementa la lógica para obtener la información sobre la configuración de la ubicación otra
-        return false;
+    private boolean obtenerUbicacionOtraConfigurada(User usuario) {
+        // Verifica si la otra ubicación está configurada
+        return usuario.getUbicacion3() != null && usuario.getUbicacion3().getLatitud() != null && usuario.getUbicacion3().getLongitud() != null;
     }
 }

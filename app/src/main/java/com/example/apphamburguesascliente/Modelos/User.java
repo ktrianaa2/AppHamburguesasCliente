@@ -10,6 +10,8 @@ public class User {
     private String capellido;
     private String ruc_cedula;
     private Ubicacion ubicacion1;
+    private Ubicacion ubicacion2;
+    private Ubicacion ubicacion3;
 
     public String getNombreUsuario() {
         return nombre_usuario;
@@ -81,5 +83,21 @@ public class User {
 
     public void setUbicacion1(Ubicacion ubicacion1) {
         this.ubicacion1 = ubicacion1;
+    }
+
+    public Ubicacion getUbicacion2() {
+        return ubicacion2;
+    }
+
+    public void setUbicacion2(Ubicacion ubicacion2) {
+        this.ubicacion2 = ubicacion2;
+    }
+
+    public Ubicacion getUbicacion3() {
+        return ubicacion3;
+    }
+
+    public void setUbicacion3(Ubicacion ubicacion3) {
+        this.ubicacion3 = ubicacion3;
     }
 }
