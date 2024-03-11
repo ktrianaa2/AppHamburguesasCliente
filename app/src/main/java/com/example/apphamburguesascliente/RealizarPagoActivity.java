@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import com.example.apphamburguesascliente.PagoTransferenciaFragment;
 import com.example.apphamburguesascliente.R;
 
 public class RealizarPagoActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parentView) {
                 // No es necesario hacer nada aquí
             }
+
         });
 
         // Por defecto, muestra el fragmento de Transferencia
@@ -72,6 +75,11 @@ public class RealizarPagoActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, defaultFragment)
                 .commit();
+
+
+        // Establecer por defecto que el radioButtonOptionRetiro esté marcado
+        RadioButton radioButtonRetiro = findViewById(R.id.radioButtonOptionRetiro);
+        radioButtonRetiro.setChecked(true);
     }
 
     // Método para obtener el fragmento según la posición seleccionada en el Spinner
