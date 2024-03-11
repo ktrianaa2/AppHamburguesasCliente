@@ -1,7 +1,9 @@
 package com.example.apphamburguesascliente;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -11,6 +13,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.View;
+
 
 import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.EmpresaInfo;
@@ -67,6 +71,26 @@ public class EmpresaActivity extends AppCompatActivity {
                 Toast.makeText(EmpresaActivity.this, "Error al obtener datos de la empresa", Toast.LENGTH_SHORT).show();
             }
         });
+
+        CardView cardMasInfo = findViewById(R.id.cardMasInfo);
+        CardView cardSucursales = findViewById(R.id.cardSucursales);
+
+        cardMasInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EmpresaActivity.this, MasInformacionActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        cardSucursales.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EmpresaActivity.this, SucursalesActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void actualizarUI(EmpresaInfo info) {

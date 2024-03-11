@@ -8,7 +8,7 @@
     tools:context=".RecompensasActivity">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/flechaRetroceder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -16,5 +16,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/icon_flecha" />
+
+    <TextView
+        android:id="@+id/txtTitulo"
+        android:layout_width="269dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="20dp"
+        android:text="Canjea tus Puntos"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.088"
+        app:layout_constraintStart_toEndOf="@+id/flechaRetroceder"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

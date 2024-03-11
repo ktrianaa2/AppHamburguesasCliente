@@ -35,7 +35,6 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
     private ApiService apiService;
     private RecyclerView allMenuRecycler;
     private ProductoAdaptador adaptador;
-
     private RecyclerView combosRecycler;
     private ComboAdaptador comboAdaptador;
     @Override
@@ -51,9 +50,7 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
 
         CardView cardEmpresa = view.findViewById(R.id.cardEmpresa);
         CardView cardRecompensas = view.findViewById(R.id.cardRecompensas);
-        CardView cardSucursales = view.findViewById(R.id.cardSucursales);
         CardView cardAnuncios = view.findViewById(R.id.cardAnuncios);
-        CardView cardMasInformacion = view.findViewById(R.id.cardMasInformacion);
 
         cardEmpresa.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,13 +68,6 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
             }
         });
 
-        cardSucursales.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SucursalesActivity.class);
-                startActivity(intent);
-            }
-        });
 
         cardAnuncios.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,13 +77,6 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
             }
         });
 
-        cardMasInformacion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MasInformacionActivity.class);
-                startActivity(intent);
-            }
-        });
 
         //Productos
         allMenuRecycler = view.findViewById(R.id.all_menu_recycler);

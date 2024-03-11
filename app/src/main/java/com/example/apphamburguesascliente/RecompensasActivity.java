@@ -13,7 +13,7 @@ public class RecompensasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recompensas);
 
-        ImageView imageViewFlecha = findViewById(R.id.imageView2);
+        ImageView imageViewFlecha = findViewById(R.id.flechaRetroceder);
 
         imageViewFlecha.setOnClickListener(new View.OnClickListener() {
             @Override

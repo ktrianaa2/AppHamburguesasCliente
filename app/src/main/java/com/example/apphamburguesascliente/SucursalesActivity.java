@@ -13,7 +13,7 @@ public class SucursalesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sucursales);
 
-        ImageView imageViewFlecha = findViewById(R.id.imageView2);
+        ImageView imageViewFlecha = findViewById(R.id.flechaRetroceder);
 
         imageViewFlecha.setOnClickListener(new View.OnClickListener() {
             @Override

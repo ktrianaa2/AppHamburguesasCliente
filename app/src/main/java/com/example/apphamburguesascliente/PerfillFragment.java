@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,7 +30,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PerfillFragment extends Fragment {
 
-    private Button btnEditar;
     private TextView txtUsuario;
     private TextView txtNombresUsuario;
     private TextView txtMail;
@@ -43,7 +43,6 @@ public class PerfillFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_perfill, container, false);
 
         // Encuentra las vistas
-        btnEditar = view.findViewById(R.id.btnEditar);
         txtUsuario = view.findViewById(R.id.txtUsuario);
         txtNombresUsuario = view.findViewById(R.id.txtNombresUsuario);
         txtMail = view.findViewById(R.id.txtMail);
@@ -51,14 +50,6 @@ public class PerfillFragment extends Fragment {
         txtRazonSocial = view.findViewById(R.id.txtRazonSocial);
         txtCedula = view.findViewById(R.id.txtCedula);
 
-        // Configura los clics
-        btnEditar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Abre la actividad de edición de perfil
-                // Aquí deberías abrir la actividad de edición de perfil como lo hacías antes
-            }
-        });
 
         // Configurar el clic para cerrar sesión
         Button btnCerrarSesion = view.findViewById(R.id.btnCerrarSesion);
@@ -80,6 +71,40 @@ public class PerfillFragment extends Fragment {
             }
         });
 
+
+
+        // Configurar el clic para abrir la actividad de "Puntos"
+        LinearLayout btnPuntos = view.findViewById(R.id.btnPuntos);
+        btnPuntos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Abrir la actividad de "Puntos"
+                Intent intent = new Intent(getActivity(), RecompensasActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Configurar el clic para abrir la actividad de "Mis Ubicaciones"
+        LinearLayout btnUbicaciones = view.findViewById(R.id.btnUbicaciones);
+        btnUbicaciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Abrir la actividad de "Mis Ubicaciones"
+                Intent intent = new Intent(getActivity(), MisUbicacionesActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Configurar el clic para abrir la actividad de "Editar Perfil"
+        Button btnEditar = view.findViewById(R.id.btnEditar);
+        btnEditar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Abrir la actividad de "Editar Perfil"
+                Intent intent = new Intent(getActivity(), EditarPerfilActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Llamada a la API para obtener los datos del usuario
         obtenerUsuario();
