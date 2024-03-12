@@ -119,7 +119,6 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
                                 Log.d("Producto", "Nombre: " + producto.getNombreProducto());
                                 Log.d("Producto", "Precio: " + producto.getPrecioProducto());
                                 Log.d("Producto", "Descripcion: " + producto.getDescripcionProducto());
-                                Log.d("Producto", "Puntos: " + producto.getPuntosProducto());
 
                             }
                             actualizarLista(listaProductos);
@@ -146,10 +145,8 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
         intent.putExtra("name", producto.getNombreProducto());
         intent.putExtra("price", String.valueOf(producto.getPrecioProducto())); // Convertir a String
         intent.putExtra("description", producto.getDescripcionProducto());
-        intent.putExtra("points", producto.getPuntosProducto()); // Pasar los puntos del producto
         startActivity(intent);
     }
-
     private void obtenerCombosDesdeAPI() {
         Call<JsonObject> call = apiService.obtenerCombos();
         call.enqueue(new Callback<JsonObject>() {

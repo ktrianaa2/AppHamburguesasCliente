@@ -38,8 +38,6 @@ public interface ApiService {
     Call<JsonObject> verificarTelefonoExistente(@Body Map<String, String> telefono);
     @POST("empresa/infoEmpresa/")
     Call<RespuestaEmpresa> obtenerInfoEmpresa();
-    @GET("combos/ver_combos/")
-    Call<JsonObject> obtenerCombos();
     @FormUrlEncoded
     @POST("sucursal/secSucursal/")
     Call<SucursalResponse> obtenerSucursalPorUbicacion(
