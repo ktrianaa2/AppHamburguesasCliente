@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.apphamburguesascliente.Interfaces.ApiService;
@@ -35,9 +37,11 @@ public class MisUbicacionesActivity extends AppCompatActivity {
                 finish(); // Cierra la actividad actual y regresa a la anterior
             }
         });
-        // Llamada a la API para obtener los datos del usuario
+
         obtenerUsuario(idUsuario);
     }
+
+
 
     // Método para obtener datos del usuario mediante la API
     private void obtenerUsuario(int idUsuario) {
@@ -70,54 +74,53 @@ public class MisUbicacionesActivity extends AppCompatActivity {
 
     // Método para cargar el fragmento con la información de ubicación
     private void cargarFragmento(User usuario) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
         boolean ubicacionCasaConfigurada = obtenerUbicacionCasaConfigurada(usuario);
         boolean ubicacionTrabajoConfigurada = obtenerUbicacionTrabajoConfigurada(usuario);
         boolean ubicacionOtraConfigurada = obtenerUbicacionOtraConfigurada(usuario);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        // Reemplaza el fragmento de la casa en el contenedor según la ubicación configurada
+        // Crear instancias de fragmentos después de obtener los datos del usuario
         if (ubicacionCasaConfigurada) {
             BotonUbicacionConfiguradaFragment fragmentCasa = new BotonUbicacionConfiguradaFragment();
             Bundle bundleCasa = new Bundle();
-            bundleCasa.putInt("idUsuario", usuario.getIdCliente());
             bundleCasa.putDouble("latitud", convertirStringADouble(usuario.getUbicacion1().getLatitud()));
             bundleCasa.putDouble("longitud", convertirStringADouble(usuario.getUbicacion1().getLongitud()));
             fragmentCasa.setArguments(bundleCasa);
             fragmentTransaction.replace(R.id.fragmentBtnCasa, fragmentCasa);
         } else {
-            fragmentTransaction.replace(R.id.fragmentBtnCasa, new BotonUbicacionNoConfiguradaFragment());
+            BotonUbicacionNoConfiguradaFragment fragmentCasa = new BotonUbicacionNoConfiguradaFragment();
+            fragmentTransaction.replace(R.id.fragmentBtnCasa, fragmentCasa);
         }
 
-        // Reemplaza el fragmento del trabajo en el contenedor según la ubicación configurada
         if (ubicacionTrabajoConfigurada) {
             BotonUbicacionConfiguradaFragment fragmentTrabajo = new BotonUbicacionConfiguradaFragment();
             Bundle bundleTrabajo = new Bundle();
-            bundleTrabajo.putInt("idUsuario", usuario.getIdCliente());
             bundleTrabajo.putDouble("latitud", convertirStringADouble(usuario.getUbicacion2().getLatitud()));
             bundleTrabajo.putDouble("longitud", convertirStringADouble(usuario.getUbicacion2().getLongitud()));
             fragmentTrabajo.setArguments(bundleTrabajo);
             fragmentTransaction.replace(R.id.fragmentBtnTrabajo, fragmentTrabajo);
         } else {
-            fragmentTransaction.replace(R.id.fragmentBtnTrabajo, new BotonUbicacionNoConfiguradaFragment());
+            BotonUbicacionNoConfiguradaFragment fragmentTrabajo = new BotonUbicacionNoConfiguradaFragment();
+            fragmentTransaction.replace(R.id.fragmentBtnTrabajo, fragmentTrabajo);
         }
 
-        // Reemplaza el fragmento de otra en el contenedor según la ubicación configurada
         if (ubicacionOtraConfigurada) {
-            BotonUbicacionConfiguradaFragment fragmentOtra = new BotonUbicacionConfiguradaFragment();
-            Bundle bundleOtra = new Bundle();
-            bundleOtra.putInt("idUsuario", usuario.getIdCliente());
-            bundleOtra.putDouble("latitud", convertirStringADouble(usuario.getUbicacion3().getLatitud()));
-            bundleOtra.putDouble("longitud", convertirStringADouble(usuario.getUbicacion3().getLongitud()));
-            fragmentOtra.setArguments(bundleOtra);
-            fragmentTransaction.replace(R.id.fragmentBtnOtro, fragmentOtra);
+            BotonUbicacionConfiguradaFragment fragmentOtro = new BotonUbicacionConfiguradaFragment();
+            Bundle bundleOtro = new Bundle();
+            bundleOtro.putDouble("latitud", convertirStringADouble(usuario.getUbicacion3().getLatitud()));
+            bundleOtro.putDouble("longitud", convertirStringADouble(usuario.getUbicacion3().getLongitud()));
+            fragmentOtro.setArguments(bundleOtro);
+            fragmentTransaction.replace(R.id.fragmentBtnOtro, fragmentOtro);
         } else {
-            fragmentTransaction.replace(R.id.fragmentBtnOtro, new BotonUbicacionNoConfiguradaFragment());
+            BotonUbicacionNoConfiguradaFragment fragmentOtro = new BotonUbicacionNoConfiguradaFragment();
+            fragmentTransaction.replace(R.id.fragmentBtnOtro, fragmentOtro);
         }
 
         fragmentTransaction.commit();
     }
+
 
     // Método para convertir String a Double y manejar posibles excepciones
     private double convertirStringADouble(String valor) {
@@ -129,7 +132,6 @@ public class MisUbicacionesActivity extends AppCompatActivity {
             return 0.0; // Valor por defecto en caso de error
         }
     }
-
 
 
     // Lógica para obtener la configuración de cada ubicación (casa, trabajo, otra)
@@ -145,7 +147,4 @@ public class MisUbicacionesActivity extends AppCompatActivity {
         // Verifica si la otra ubicación está configurada
         return usuario.getUbicacion3() != null && usuario.getUbicacion3().getLatitud() != null && usuario.getUbicacion3().getLongitud() != null;
     }
-
-
-
 }
