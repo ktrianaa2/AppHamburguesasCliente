@@ -30,15 +30,17 @@ public class OpcionesAnadirAlCarritoFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static OpcionesAnadirAlCarritoFragment newInstance(String nombreProducto, double precioProducto, String descripcionProducto) {
+    public static OpcionesAnadirAlCarritoFragment newInstance(String nombreProducto, double precioProducto, String descripcionProducto, int puntosProducto) {
         OpcionesAnadirAlCarritoFragment fragment = new OpcionesAnadirAlCarritoFragment();
         Bundle args = new Bundle();
         args.putString("name", nombreProducto);
         args.putDouble("price", precioProducto);
         args.putString("description", descripcionProducto);
+        args.putInt("points", puntosProducto); // Añadir puntosProducto a los argumentos
         fragment.setArguments(args);
         return fragment;
     }
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -98,12 +100,14 @@ public class OpcionesAnadirAlCarritoFragment extends Fragment {
                     double precioProducto = getArguments().getDouble("price");
                     String descripcionProducto = getArguments().getString("description");
                     int cantidad = Integer.parseInt(quantityEditText.getText().toString());
+                    int puntosProducto = getArguments().getInt("points"); // Recuperar puntosProducto de los argumentos
 
                     // Imprimir los datos del producto en la consola, incluyendo la cantidad
                     Log.d("DetallesProducto Añadir Carrito", "Nombre: " + nombreProducto);
                     Log.d("DetallesProducto Añadir Carrito", "Precio: " + precioProducto);
                     Log.d("DetallesProducto Añadir Carrito", "Descripción: " + descripcionProducto);
                     Log.d("DetallesProducto Añadir Carrito", "Cantidad: " + cantidad);
+                    Log.d("DetallesProducto Añadir Carrito", "Puntos: " + puntosProducto);
 
                     // Obtener idCliente de SharedPreferences
                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MySharedPref", MODE_PRIVATE);
@@ -112,7 +116,7 @@ public class OpcionesAnadirAlCarritoFragment extends Fragment {
                     // Si idCliente es válido, proceder a abrir PaginaPrincipalActivity
                     if (idCliente != -1) {
                         // Llamar al método de la Interface para pasar los datos
-                        productAddedListener.onProductAdded(nombreProducto, precioProducto, descripcionProducto, cantidad);
+                        productAddedListener.onProductAdded(nombreProducto, precioProducto, descripcionProducto, cantidad, puntosProducto);
                         Toast.makeText(getContext(), "Agregado exitosamente al carrito", Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(getActivity(), PaginaPrincipalActivity.class);

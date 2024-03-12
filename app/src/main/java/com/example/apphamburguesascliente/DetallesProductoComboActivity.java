@@ -34,6 +34,8 @@ public class DetallesProductoComboActivity extends AppCompatActivity implements 
         name = intent.getStringExtra("name");
         price = intent.getStringExtra("price");
         description = intent.getStringExtra("description");
+        // Recoger los puntos del producto del Intent
+        int puntosProducto = intent.getIntExtra("points", 0); // Asegúrate de proporcionar un valor predeterminado
 
         double priceDouble = Double.parseDouble(price);
 
@@ -42,14 +44,14 @@ public class DetallesProductoComboActivity extends AppCompatActivity implements 
         TextView itemDescription = findViewById(R.id.description);
 
         itemName.setText(name);
-        itemPrice.setText("$ " + priceDouble); // Mostrar el precio convertido
+        itemPrice.setText("$ " + priceDouble);
         itemDescription.setText(description);
 
         adaptador = new CarritoAdaptador(new ArrayList<>());
-        // Añade el fragmento BotonAnadirAlCarritoFragment
+        // Añade el fragmento BotonAnadirAlCarritoFragment, asegurándote de pasar los puntosProducto como argumento
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, BotonAnadirAlCarritoFragment.newInstance(name, priceDouble, description))
+                    .replace(R.id.fragmentContainer, BotonAnadirAlCarritoFragment.newInstance(name, priceDouble, description, puntosProducto))
                     .commit();
         }
     }
@@ -94,11 +96,11 @@ public class DetallesProductoComboActivity extends AppCompatActivity implements 
 
 
     @Override
-    public void onProductAdded(String nombreProducto, double precioProducto, String descripcionProducto, int cantidad) {
+    public void onProductAdded(String nombreProducto, double precioProducto, String descripcionProducto, int cantidad, int puntosProducto) {
         // Agregar el producto al carrito
         CarritoModelo carritoModel = CarritoModelo.getInstance();
         int productId = getIntent().getIntExtra("idProducto", 0); // Obtener el idProducto de los extras
-        CarritoModelo.Producto producto = new CarritoModelo.Producto(nombreProducto, productId, precioProducto, cantidad);
+        CarritoModelo.Producto producto = new CarritoModelo.Producto(nombreProducto, productId, precioProducto, cantidad, puntosProducto);
         carritoModel.agregarProducto(producto);
 
         // Guardar la lista de productos en SharedPreferences
@@ -109,7 +111,7 @@ public class DetallesProductoComboActivity extends AppCompatActivity implements 
         List<CarritoModelo.Producto> productos = carritoModel.getProductos();
         Log.d("Carrito", "Total de productos añadidos: " + productos.size());
         for (CarritoModelo.Producto p : productos) {
-            Log.d("Carrito", "Nombre: " + p.getNombre() + ", ID: " + p.getId() + ", Precio: $" + p.getPrecio());
+            Log.d("Carrito", "Nombre: " + p.getNombre() + ", ID: " + p.getId() + ", Precio: $" + p.getPrecio() + ", Puntos: " +p.getPuntos());
         }
         adaptador.actualizarLista(carritoModel.getProductos());
     }

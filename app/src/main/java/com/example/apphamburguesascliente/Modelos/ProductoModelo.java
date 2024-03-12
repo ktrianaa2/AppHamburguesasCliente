@@ -11,6 +11,7 @@ public class ProductoModelo {
     private String nombreProducto;
     private String descripcionProducto;
     private double precioProducto;
+    private int puntosProducto;
 
     public static List<ProductoModelo> fromJsonArray(JsonArray productosArray) {
         List<ProductoModelo> listaProductos = new ArrayList<>();
@@ -24,6 +25,7 @@ public class ProductoModelo {
                 producto.setNombreProducto(jsonProducto.get("nombreproducto").getAsString());
                 producto.setDescripcionProducto(jsonProducto.get("descripcionproducto").getAsString());
                 producto.setPrecioProducto(jsonProducto.get("preciounitario").getAsDouble());
+                producto.setPuntosProducto(jsonProducto.has("puntosp") ? jsonProducto.get("puntosp").getAsInt() : 0);
 
                 listaProductos.add(producto);
             }
@@ -65,4 +67,14 @@ public class ProductoModelo {
     public void setPrecioProducto(double precioProducto) {
         this.precioProducto = precioProducto;
     }
+
+    public int getPuntosProducto() {
+        return puntosProducto;
+    }
+
+    public void setPuntosProducto(int puntosProducto) {
+        this.puntosProducto = puntosProducto;
+    }
+
+
 }

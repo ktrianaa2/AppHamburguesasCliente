@@ -16,12 +16,13 @@ public class BotonAnadirAlCarritoFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static BotonAnadirAlCarritoFragment newInstance(String nombreProducto, double precioProducto, String descripcionProducto) {
+    public static BotonAnadirAlCarritoFragment newInstance(String nombreProducto, double precioProducto, String descripcionProducto, int puntosProducto) {
         BotonAnadirAlCarritoFragment fragment = new BotonAnadirAlCarritoFragment();
         Bundle args = new Bundle();
         args.putString("name", nombreProducto);
         args.putDouble("price", precioProducto);
         args.putString("description", descripcionProducto);
+        args.putInt("points", puntosProducto); // Añadir puntosProducto a los argumentos
         fragment.setArguments(args);
         return fragment;
     }
@@ -38,16 +39,18 @@ public class BotonAnadirAlCarritoFragment extends Fragment {
                 String nombreProducto = getArguments().getString("name");
                 double precioProducto = getArguments().getDouble("price");
                 String descripcionProducto = getArguments().getString("description");
+                int puntosProducto = getArguments().getInt("points");
+
+                // Mostrar los puntos por consola
+                Log.d("BotonAnadirAlCarrito", "Puntos del producto: " + puntosProducto);
 
                 // Crear un nuevo fragmento de opciones de añadir al carrito con los datos del producto
-                Fragment opcionesFragment = OpcionesAnadirAlCarritoFragment.newInstance(nombreProducto, precioProducto, descripcionProducto);
+                Fragment opcionesFragment = OpcionesAnadirAlCarritoFragment.newInstance(nombreProducto, precioProducto, descripcionProducto, puntosProducto);
 
                 // Cambiar al fragmento de opciones de añadir al carrito
                 ((DetallesProductoComboActivity) requireActivity()).cambiarFragmento(opcionesFragment);
             }
         });
-
-
         return view;
     }
 }

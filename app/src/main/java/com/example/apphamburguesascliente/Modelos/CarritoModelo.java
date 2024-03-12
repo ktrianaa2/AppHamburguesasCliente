@@ -37,12 +37,14 @@ public class CarritoModelo implements Serializable {
         private int id;
         private double precio;
         private int cantidad;
+        private int puntos; // Añadir campo de puntos
 
-        public Producto(String nombre, int id, double precio, int cantidad) {
+        public Producto(String nombre, int id, double precio, int cantidad, int puntos) {
             this.nombre = nombre;
             this.id = id;
             this.precio = precio;
             this.cantidad = cantidad;
+            this.puntos = puntos; // Inicializar los puntos
         }
 
         public void setNombre(String nombre) {
@@ -76,5 +78,14 @@ public class CarritoModelo implements Serializable {
         public int getCantidad() {
             return cantidad;
         }
+
+        public int getPuntos() {
+            return puntos;
+        }
+
+        public void setPuntos(int puntos) {
+            this.puntos = puntos;
+        }
+
     }
 }

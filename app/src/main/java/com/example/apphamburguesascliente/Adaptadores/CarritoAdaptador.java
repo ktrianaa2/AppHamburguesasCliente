@@ -45,7 +45,11 @@ public class CarritoAdaptador extends RecyclerView.Adapter<CarritoAdaptador.View
         // Calcular el precio total
         double precioTotal = producto.getPrecio() * producto.getCantidad();
         holder.txtPrecioTotal.setText("$" + precioTotal); // Establecer el precio total
+
+        // Suponiendo que 'getPuntos' es el método para obtener los puntos de un producto
+        holder.txtPuntos.setText(String.valueOf(producto.getPuntos())); // Asegúrate de tener este método en tu modelo
     }
+
 
     @Override
     public int getItemCount() {
@@ -56,17 +60,20 @@ public class CarritoAdaptador extends RecyclerView.Adapter<CarritoAdaptador.View
         // Define las vistas necesarias para mostrar los datos
         TextView txtNombreProducto;
         TextView txtPrecioProducto;
-        TextView txtUnidades; // Agregar el TextView para las unidades
-        TextView txtPrecioTotal; // Agregar el TextView para el precio total
+        TextView txtUnidades; // TextView para las unidades
+        TextView txtPrecioTotal; // TextView para el precio total
+        TextView txtPuntos; // TextView para los puntos
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtNombreProducto = itemView.findViewById(R.id.carrito_name);
             txtPrecioProducto = itemView.findViewById(R.id.carrito_price);
             txtUnidades = itemView.findViewById(R.id.carrito_unidades);
-            txtPrecioTotal = itemView.findViewById(R.id.carrito_price_total); // Inicializar el TextView para el precio total
+            txtPrecioTotal = itemView.findViewById(R.id.carrito_price_total);
+            txtPuntos = itemView.findViewById(R.id.carrito_puntos); // Inicializar el TextView para los puntos
         }
     }
+
     public double calcularPrecioTotal() {
         double total = 0;
         for (CarritoModelo.Producto producto : productos) {

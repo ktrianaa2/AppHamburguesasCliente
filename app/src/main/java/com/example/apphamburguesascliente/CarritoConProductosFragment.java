@@ -65,10 +65,10 @@ public class CarritoConProductosFragment extends Fragment implements OnProductAd
     }
 
     @Override
-    public void onProductAdded(String nombreProducto, double precioProducto, String descripcionProducto, int cantidad) {
+    public void onProductAdded(String nombreProducto, double precioProducto, String descripcionProducto, int cantidad, int puntosProducto) {
         // Agregar el producto al carrito
         CarritoModelo carritoModel = CarritoModelo.getInstance();
-        CarritoModelo.Producto producto = new CarritoModelo.Producto(nombreProducto, 1, precioProducto, 1);
+        CarritoModelo.Producto producto = new CarritoModelo.Producto(nombreProducto, 1, precioProducto, cantidad, puntosProducto);
         carritoModel.agregarProducto(producto);
 
         // Guardar la lista de productos en SharedPreferences
