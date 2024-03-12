@@ -1,5 +1,6 @@
 package com.example.apphamburguesascliente;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -10,15 +11,26 @@ import android.widget.ImageView;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-public class AnadirUbicacionActivity extends AppCompatActivity {
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener {
 
 
-    private WebView webView;
+    GoogleMap mMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anadir_ubicacion);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         ImageView imageViewFlecha = findViewById(R.id.flechaRetroceder);
 
@@ -38,15 +50,38 @@ public class AnadirUbicacionActivity extends AppCompatActivity {
             Log.d("EditarUbicacionActivity", "ID de usuario obtenida: " + idUsuario);
         }
 
-        webView = findViewById(R.id.webView);
-
-        // Configurar WebView
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-
-        // Cargar archivo HTML que contiene el mapa Leaflet
-        webView.loadUrl("file:///assets/map.html");
     }
 
 
+    @Override
+    public void onMapClick(@NonNull LatLng latLng) {
+
+
+        mMap.clear();
+        LatLng mexico = new LatLng(latLng.latitude,latLng.longitude);
+        mMap.addMarker(new MarkerOptions().position(mexico).title(""));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mexico));
+    }
+
+    @Override
+    public void onMapLongClick(@NonNull LatLng latLng) {
+        mMap.clear();
+        LatLng mexico = new LatLng(latLng.latitude,latLng.longitude);
+        mMap.addMarker(new MarkerOptions().position(mexico).title(""));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mexico));
+
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+
+        mMap = googleMap;
+        this.mMap.setOnMapClickListener(this);
+        this.mMap.setOnMapLongClickListener(this);
+
+        LatLng mexico = new LatLng(19.8077463,-99.4077038);
+        mMap.addMarker(new MarkerOptions().position(mexico).title("México"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mexico));
+
+    }
 }
