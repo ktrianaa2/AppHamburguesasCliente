@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.apphamburguesascliente.Api.ApiClient;
 import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.LoginRequest;
 import com.example.apphamburguesascliente.Modelos.LoginResponse;
@@ -37,12 +38,7 @@ public class IniciarSesionActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://9jpn4ctd-8000.use2.devtunnels.ms/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        apiService = retrofit.create(ApiService.class);
+        apiService = ApiClient.getInstance();
 
         TextView loginButton = findViewById(R.id.loginbtn);
         TextView forgotPasswordText = findViewById(R.id.forgotpass);

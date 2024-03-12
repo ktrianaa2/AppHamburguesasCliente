@@ -16,6 +16,7 @@ import android.widget.Toast;
 import android.view.View;
 
 
+import com.example.apphamburguesascliente.Api.ApiClient;
 import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.EmpresaInfo;
 import com.example.apphamburguesascliente.Modelos.RespuestaEmpresa;
@@ -23,14 +24,16 @@ import com.example.apphamburguesascliente.Modelos.RespuestaEmpresa;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EmpresaActivity extends AppCompatActivity {
+    private ApiService apiService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empresa);
+
+        apiService = ApiClient.getInstance();
 
         ImageView imageViewFlecha = findViewById(R.id.imageView2);
         imageViewFlecha.setOnClickListener(new View.OnClickListener() {
@@ -40,12 +43,29 @@ public class EmpresaActivity extends AppCompatActivity {
             }
         });
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://9jpn4ctd-8000.use2.devtunnels.ms/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        obtenerInfoEmpresaDesdeAPI();
 
-        ApiService apiService = retrofit.create(ApiService.class);
+        CardView cardMasInfo = findViewById(R.id.cardMasInfo);
+        CardView cardSucursales = findViewById(R.id.cardSucursales);
+
+        cardMasInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EmpresaActivity.this, MasInformacionActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        cardSucursales.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EmpresaActivity.this, SucursalesActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void obtenerInfoEmpresaDesdeAPI() {
         Call<RespuestaEmpresa> call = apiService.obtenerInfoEmpresa();
         call.enqueue(new Callback<RespuestaEmpresa>() {
             @Override
@@ -71,26 +91,6 @@ public class EmpresaActivity extends AppCompatActivity {
                 Toast.makeText(EmpresaActivity.this, "Error al obtener datos de la empresa", Toast.LENGTH_SHORT).show();
             }
         });
-
-        CardView cardMasInfo = findViewById(R.id.cardMasInfo);
-        CardView cardSucursales = findViewById(R.id.cardSucursales);
-
-        cardMasInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EmpresaActivity.this, MasInformacionActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        cardSucursales.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EmpresaActivity.this, SucursalesActivity.class);
-                startActivity(intent);
-            }
-        });
-
     }
 
     private void actualizarUI(EmpresaInfo info) {
@@ -109,6 +109,4 @@ public class EmpresaActivity extends AppCompatActivity {
             imageView.setImageBitmap(decodedByte);
         }
     }
-
 }
-

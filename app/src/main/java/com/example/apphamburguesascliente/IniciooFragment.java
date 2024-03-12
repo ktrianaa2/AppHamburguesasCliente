@@ -13,10 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.apphamburguesascliente.Adaptadores.ComboAdaptador;
 import com.example.apphamburguesascliente.Adaptadores.ProductoAdaptador;
+import com.example.apphamburguesascliente.Api.ApiClient;
 import com.example.apphamburguesascliente.Interfaces.ApiService;
-import com.example.apphamburguesascliente.Modelos.ComboModelo;
 import com.example.apphamburguesascliente.Modelos.ProductoModelo;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -36,17 +35,11 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
     private RecyclerView allMenuRecycler;
     private ProductoAdaptador adaptador;
     private RecyclerView combosRecycler;
-    private ComboAdaptador comboAdaptador;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inicioo, container, false);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://9jpn4ctd-8000.use2.devtunnels.ms/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        apiService = retrofit.create(ApiService.class);
+        apiService = ApiClient.getInstance();
 
         CardView cardEmpresa = view.findViewById(R.id.cardEmpresa);
         CardView cardRecompensas = view.findViewById(R.id.cardRecompensas);
@@ -87,16 +80,6 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
         adaptador.setOnItemClickListener(this);
         obtenerProductosDesdeAPI();
 
-
-        // Combos
-        combosRecycler = view.findViewById(R.id.combos_recycler);
-        comboAdaptador = new ComboAdaptador(new ArrayList<>(), getActivity());
-        combosRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        combosRecycler.setAdapter(comboAdaptador);
-
-        obtenerCombosDesdeAPI();
-
-
         return view;
     }
 
@@ -119,6 +102,7 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
                                 Log.d("Producto", "Nombre: " + producto.getNombreProducto());
                                 Log.d("Producto", "Precio: " + producto.getPrecioProducto());
                                 Log.d("Producto", "Descripcion: " + producto.getDescripcionProducto());
+                                Log.d("Producto", "Puntos: " + producto.getPuntosProducto());
 
                             }
                             actualizarLista(listaProductos);
@@ -145,51 +129,7 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
         intent.putExtra("name", producto.getNombreProducto());
         intent.putExtra("price", String.valueOf(producto.getPrecioProducto())); // Convertir a String
         intent.putExtra("description", producto.getDescripcionProducto());
+        intent.putExtra("points", producto.getPuntosProducto());
         startActivity(intent);
     }
-    private void obtenerCombosDesdeAPI() {
-        Call<JsonObject> call = apiService.obtenerCombos();
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    JsonObject jsonResponse = response.body();
-
-                    try {
-                        JsonArray combosArray = jsonResponse.getAsJsonArray("combos");
-
-                        if (combosArray != null && combosArray.size() > 0) {
-                            List<ComboModelo.Combo> listaCombos = ComboModelo.fromJsonArray(combosArray);
-
-                            for (ComboModelo.Combo combo : listaCombos) {
-                                Log.d("Combo", "ID: " + combo.getIdCombo());
-                                Log.d("Combo", "Nombre: " + combo.getNombreCb());
-                                Log.d("Combo", "Precio: " + combo.getPrecioUnitario());
-                                Log.d("Combo", "Descripción: " + combo.getDescripcionCombo());
-                            }
-
-                            actualizarListaCombos(listaCombos);
-                        } else {
-                            Log.d("Combo", "No se recibieron combos desde la API");
-                        }
-                    } catch (com.google.gson.JsonSyntaxException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Log.d("Combo", "Error en la respuesta de la API: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                // Manejar el error
-                Log.e("Combo", "Error al obtener combos desde la API", t);
-            }
-        });
-    }
-
-    private void actualizarListaCombos(List<ComboModelo.Combo> listaCombos) {
-        comboAdaptador.setCombos(listaCombos);
-    }
-
 }

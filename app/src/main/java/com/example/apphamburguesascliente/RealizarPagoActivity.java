@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
+import com.example.apphamburguesascliente.Api.ApiClient;
 import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.SucursalResponse;
 import com.example.apphamburguesascliente.Modelos.Ubicacion;
@@ -41,11 +42,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_realizar_pago);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://9jpn4ctd-8000.use2.devtunnels.ms/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        apiService = retrofit.create(ApiService.class);
+        apiService = ApiClient.getInstance();
 
         // Inicializa el Spinner y define las opciones
         Spinner metodosPagoSpinner = findViewById(R.id.metodosPagoSpinner);

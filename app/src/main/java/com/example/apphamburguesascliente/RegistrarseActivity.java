@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.apphamburguesascliente.Api.ApiClient;
 import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.RegistroRequest;
 import com.example.apphamburguesascliente.Modelos.RegistroResponse;
@@ -42,12 +43,7 @@ public class RegistrarseActivity extends AppCompatActivity {
         apellidoEditText = findViewById(R.id.apellido);
         textLoginTextView = findViewById(R.id.textlogin);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://9jpn4ctd-8000.use2.devtunnels.ms/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        apiService = retrofit.create(ApiService.class);
+        apiService = ApiClient.getInstance();
 
         textLoginTextView.setOnClickListener(new View.OnClickListener() {
             @Override
