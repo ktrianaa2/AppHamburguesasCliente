@@ -12,7 +12,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-
+import com.example.apphamburguesascliente.Interfaces.ApiService;
+import com.example.apphamburguesascliente.Modelos.Ubicacion;
+import com.example.apphamburguesascliente.Modelos.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -24,14 +26,23 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 
 import android.Manifest;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.JsonObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener {
 
 
+    private ApiService apiService;
+    private User currentUser;
+    private int tipoUbicacion;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     private Marker currentMarker;
@@ -41,7 +52,6 @@ public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapR
 
     private boolean mapReady = false;
     GoogleMap mMap;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +91,59 @@ public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapR
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             int idUsuario = extras.getInt("idUsuario", 0);
+          //  currentUser = obtenerUsuarioPorId(idUsuario);
+            tipoUbicacion = extras.getInt("tipoUbicacion", 0);
 
-            // Imprimir la información en el Logcat
-            Log.d("EditarUbicacionActivity", "ID de usuario obtenida: " + idUsuario);
+            // Imprimir la información en el Logcat para verificar
+            Log.d("AnadirUbicacionActivity", "ID de cliente obtenido: " + idUsuario);
+            Log.d("AnadirUbicacionActivity", "Tipo de ubicación obtenido: " + tipoUbicacion);
         }
 
+        MaterialButton guardarBtn = findViewById(R.id.guardarbtn);
+        guardarBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                guardarUbicacion();
+            }
+        });
+
     }
+
+    private void guardarUbicacion() {
+        if (currentLatitude != 0 && currentLongitude != 0) {
+            // Crear una nueva instancia de Ubicacion con la latitud y longitud actual
+            Ubicacion ubicacion = new Ubicacion();
+            ubicacion.setLatitud(String.valueOf(currentLatitude));
+            ubicacion.setLongitud(String.valueOf(currentLongitude));
+
+            // Asignar la ubicación según el tipo seleccionado
+            switch (tipoUbicacion) {
+                case 1:
+                    currentUser.setUbicacion1(ubicacion);
+                    break;
+                case 2:
+                    currentUser.setUbicacion2(ubicacion);
+                    break;
+                case 3:
+                    currentUser.setUbicacion3(ubicacion);
+                    break;
+                default:
+                    break;
+            }
+
+            // Guardar el usuario actualizado
+            // guardarUsuario(currentUser);
+
+            // Cerrar la actividad actual y volver a la anterior
+            finish();
+        } else {
+            // Manejar el caso en que la ubicación no se haya seleccionado
+            Toast.makeText(this, "Seleccione una ubicación primero", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
 
     // Método para obtener y mostrar la ubicación actual
     private void showCurrentLocation() {
@@ -162,4 +219,5 @@ public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapR
         // Imprimir en el Logcat
         Log.d("AnadirUbicacionActivity", "Latitud: " + currentLatitude + ", Longitud: " + currentLongitude);
     }
+
 }

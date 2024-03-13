@@ -22,6 +22,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MisUbicacionesActivity extends AppCompatActivity {
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +49,7 @@ public class MisUbicacionesActivity extends AppCompatActivity {
     // Método para obtener datos del usuario mediante la API
     private void obtenerUsuario(int idUsuario) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://9jpn4ctd-8000.use2.devtunnels.ms/")
+                .baseUrl("https://wv7jhxv6-8000.brs.devtunnels.ms")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -81,45 +84,63 @@ public class MisUbicacionesActivity extends AppCompatActivity {
         boolean ubicacionTrabajoConfigurada = obtenerUbicacionTrabajoConfigurada(usuario);
         boolean ubicacionOtraConfigurada = obtenerUbicacionOtraConfigurada(usuario);
 
+        // Constantes para tipos de ubicación
+        int TIPO_CASA = 1;
+        int TIPO_TRABAJO = 2;
+        int TIPO_OTRO = 3;
+
         // Crear instancias de fragmentos después de obtener los datos del usuario
         if (ubicacionCasaConfigurada) {
             BotonUbicacionConfiguradaFragment fragmentCasa = new BotonUbicacionConfiguradaFragment();
             Bundle bundleCasa = new Bundle();
+            bundleCasa.putInt("tipoUbicacion", TIPO_CASA);
             bundleCasa.putDouble("latitud", convertirStringADouble(usuario.getUbicacion1().getLatitud()));
             bundleCasa.putDouble("longitud", convertirStringADouble(usuario.getUbicacion1().getLongitud()));
             fragmentCasa.setArguments(bundleCasa);
             fragmentTransaction.replace(R.id.fragmentBtnCasa, fragmentCasa);
         } else {
+            Bundle bundleCasa2 = new Bundle();
+            bundleCasa2.putInt("tipoUbicacion", TIPO_CASA);
             BotonUbicacionNoConfiguradaFragment fragmentCasa = new BotonUbicacionNoConfiguradaFragment();
+            fragmentCasa.setArguments(bundleCasa2);
             fragmentTransaction.replace(R.id.fragmentBtnCasa, fragmentCasa);
         }
 
         if (ubicacionTrabajoConfigurada) {
             BotonUbicacionConfiguradaFragment fragmentTrabajo = new BotonUbicacionConfiguradaFragment();
             Bundle bundleTrabajo = new Bundle();
+            bundleTrabajo.putInt("tipoUbicacion", TIPO_TRABAJO);
             bundleTrabajo.putDouble("latitud", convertirStringADouble(usuario.getUbicacion2().getLatitud()));
             bundleTrabajo.putDouble("longitud", convertirStringADouble(usuario.getUbicacion2().getLongitud()));
             fragmentTrabajo.setArguments(bundleTrabajo);
             fragmentTransaction.replace(R.id.fragmentBtnTrabajo, fragmentTrabajo);
         } else {
+            Bundle bundleTrabajo2 = new Bundle();
+            bundleTrabajo2.putInt("tipoUbicacion", TIPO_TRABAJO);
             BotonUbicacionNoConfiguradaFragment fragmentTrabajo = new BotonUbicacionNoConfiguradaFragment();
+            fragmentTrabajo.setArguments(bundleTrabajo2);
             fragmentTransaction.replace(R.id.fragmentBtnTrabajo, fragmentTrabajo);
         }
 
         if (ubicacionOtraConfigurada) {
             BotonUbicacionConfiguradaFragment fragmentOtro = new BotonUbicacionConfiguradaFragment();
             Bundle bundleOtro = new Bundle();
+            bundleOtro.putInt("tipoUbicacion", TIPO_OTRO);
             bundleOtro.putDouble("latitud", convertirStringADouble(usuario.getUbicacion3().getLatitud()));
             bundleOtro.putDouble("longitud", convertirStringADouble(usuario.getUbicacion3().getLongitud()));
             fragmentOtro.setArguments(bundleOtro);
             fragmentTransaction.replace(R.id.fragmentBtnOtro, fragmentOtro);
         } else {
+            Bundle bundleOtro2 = new Bundle();
+            bundleOtro2.putInt("tipoUbicacion", TIPO_OTRO);
             BotonUbicacionNoConfiguradaFragment fragmentOtro = new BotonUbicacionNoConfiguradaFragment();
+            fragmentOtro.setArguments(bundleOtro2);
             fragmentTransaction.replace(R.id.fragmentBtnOtro, fragmentOtro);
         }
 
         fragmentTransaction.commit();
     }
+
 
 
     // Método para convertir String a Double y manejar posibles excepciones

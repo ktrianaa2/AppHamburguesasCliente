@@ -58,9 +58,6 @@
             android:name=".MisUbicacionesActivity"
             android:exported="false" />
         <activity
-            android:name=".GestionPuntosActivity"
-            android:exported="false" />
-        <activity
             android:name=".OlvidoContrasenaActivity"
             android:exported="false" />
         <activity
