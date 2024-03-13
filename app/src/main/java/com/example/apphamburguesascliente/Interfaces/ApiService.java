@@ -9,6 +9,7 @@ import com.example.apphamburguesascliente.Modelos.RespuestaEmpresa;
 import com.example.apphamburguesascliente.Modelos.RolResponse;
 import com.example.apphamburguesascliente.Modelos.SucursalResponse;
 import com.example.apphamburguesascliente.Modelos.TokenRequest;
+import com.example.apphamburguesascliente.Modelos.User;
 import com.example.apphamburguesascliente.Modelos.UserResponse;
 import com.google.gson.JsonObject;
 
@@ -56,4 +57,7 @@ public interface ApiService {
 
     @POST("cliente/realizar_pedido/{id_cuenta}/")
     Call<JsonObject> realizarPedido(@Path("id_cuenta") String id_cuenta, @Body Pedido pedido);
+
+    @POST("Login/Login/editar_ubicacion/{id_cuenta}/")
+    Call<UserResponse> actualizarUsuario(@Path("id_cuenta") String id_cuenta, @Body User user);
 }

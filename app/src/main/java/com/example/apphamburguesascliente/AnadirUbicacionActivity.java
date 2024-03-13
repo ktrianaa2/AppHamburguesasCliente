@@ -12,9 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.example.apphamburguesascliente.Api.ApiClient;
 import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.Ubicacion;
 import com.example.apphamburguesascliente.Modelos.User;
+import com.example.apphamburguesascliente.Modelos.UserResponse;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,18 +32,17 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.gson.JsonObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 
 public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener {
 
 
     private ApiService apiService;
     private User currentUser;
+    private int idUsuario;
     private int tipoUbicacion;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -60,6 +61,10 @@ public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapR
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        apiService = ApiClient.getInstance();
+
 
         ImageView imageViewFlecha = findViewById(R.id.flechaRetroceder);
 
@@ -90,7 +95,7 @@ public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapR
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            int idUsuario = extras.getInt("idUsuario", 0);
+            idUsuario = extras.getInt("idUsuario", 0);
           //  currentUser = obtenerUsuarioPorId(idUsuario);
             tipoUbicacion = extras.getInt("tipoUbicacion", 0);
 
@@ -109,39 +114,92 @@ public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapR
 
     }
 
+
+
     private void guardarUbicacion() {
         if (currentLatitude != 0 && currentLongitude != 0) {
-            // Crear una nueva instancia de Ubicacion con la latitud y longitud actual
             Ubicacion ubicacion = new Ubicacion();
             ubicacion.setLatitud(String.valueOf(currentLatitude));
             ubicacion.setLongitud(String.valueOf(currentLongitude));
 
-            // Asignar la ubicación según el tipo seleccionado
-            switch (tipoUbicacion) {
-                case 1:
-                    currentUser.setUbicacion1(ubicacion);
-                    break;
-                case 2:
-                    currentUser.setUbicacion2(ubicacion);
-                    break;
-                case 3:
-                    currentUser.setUbicacion3(ubicacion);
-                    break;
-                default:
-                    break;
-            }
+            // Agregar una línea de registro en el Logcat
+            Log.d("AnadirUbicacionActivity", "Guardando ubicación: Latitud " + currentLatitude + ", Longitud " + currentLongitude);
 
-            // Guardar el usuario actualizado
-            // guardarUsuario(currentUser);
-
-            // Cerrar la actividad actual y volver a la anterior
-            finish();
+            // Obtener el usuario correspondiente
+            obtenerUsuarioPorId(idUsuario, ubicacion);
         } else {
-            // Manejar el caso en que la ubicación no se haya seleccionado
             Toast.makeText(this, "Seleccione una ubicación primero", Toast.LENGTH_SHORT).show();
         }
     }
 
+    private void obtenerUsuarioPorId(int idUsuario, final Ubicacion ubicacion) {
+
+        Call<UserResponse> callUsuario = apiService.obtenerUsuario(String.valueOf(idUsuario));
+
+
+        callUsuario.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.isSuccessful()) {
+                    UserResponse userResponse = response.body();
+                    if (userResponse != null) {
+                        User currentUser = userResponse.getUsuario();
+                        // Actualizar el usuario con la ubicación y guardar
+                        guardarUbicacionConUsuario(currentUser, ubicacion);
+                    }
+                } else {
+                    // Manejar errores de respuesta
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                // Manejar errores de red
+            }
+        });
+    }
+
+    private void guardarUbicacionConUsuario(User currentUser, Ubicacion ubicacion) {
+        switch (tipoUbicacion) {
+            case 1:
+                currentUser.setUbicacion1(ubicacion);
+                break;
+            case 2:
+                currentUser.setUbicacion2(ubicacion);
+                break;
+            case 3:
+                currentUser.setUbicacion3(ubicacion);
+                break;
+            default:
+                break;
+        }
+
+        // Actualizar el usuario en el servidor
+        actualizarUsuario(String.valueOf(idUsuario), currentUser);
+    }
+
+    private void actualizarUsuario(String idCuenta, User user) {
+        Call<UserResponse> call = apiService.actualizarUsuario(idCuenta, user);
+        call.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.isSuccessful()) {
+                    // Usuario actualizado exitosamente
+                    Log.d("AnadirUbicacionActivity", "Usuario actualizado exitosamente");
+                    finish(); // Cerrar la actividad actual
+                } else {
+                    // Manejar errores de respuesta
+                    Log.e("AnadirUbicacionActivity", "Error al actualizar el usuario: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                // Manejar errores de red o del servidor
+                Log.e("AnadirUbicacionActivity", "Error de red o del servidor al actualizar el usuario: " + t.getMessage());
+            }
+        });
+    }
 
 
 
@@ -179,7 +237,6 @@ public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapR
             }
         }
     }
-
 
     @Override
     public void onMapClick(@NonNull LatLng latLng) {
