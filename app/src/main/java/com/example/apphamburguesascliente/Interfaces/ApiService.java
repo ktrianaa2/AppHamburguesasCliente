@@ -2,6 +2,7 @@ package com.example.apphamburguesascliente.Interfaces;
 
 import com.example.apphamburguesascliente.Modelos.LoginRequest;
 import com.example.apphamburguesascliente.Modelos.LoginResponse;
+import com.example.apphamburguesascliente.Modelos.Pedido;
 import com.example.apphamburguesascliente.Modelos.RegistroRequest;
 import com.example.apphamburguesascliente.Modelos.RegistroResponse;
 import com.example.apphamburguesascliente.Modelos.RespuestaEmpresa;
@@ -24,20 +25,28 @@ import retrofit2.http.Path;
 public interface ApiService {
     @GET("producto/listar/")
     Call<JsonObject> obtenerProductos();
+
     @POST("Login/iniciar_sesion/")
     Call<LoginResponse> iniciarSesion(@Body LoginRequest loginRequest);
+
     @POST("Login/rol/")
     Call<RolResponse> verificarRol(@Body TokenRequest tokenRequest);
+
     @GET("Login/obtener_usuario/{id_cuenta}/")
     Call<UserResponse> obtenerUsuario(@Path("id_cuenta") String id_cuenta);
+
     @POST("Login/crear/")
     Call<RegistroResponse> registrarUsuario(@Body RegistroRequest registroRequest);
+
     @POST("Login/cuentaexist/")
     Call<JsonObject> verificarUsuarioExistente(@Body Map<String, String> usuario);
+
     @POST("Login/phoneExist/")
     Call<JsonObject> verificarTelefonoExistente(@Body Map<String, String> telefono);
+
     @POST("empresa/infoEmpresa/")
     Call<RespuestaEmpresa> obtenerInfoEmpresa();
+
     @FormUrlEncoded
     @POST("sucursal/secSucursal/")
     Call<SucursalResponse> obtenerSucursalPorUbicacion(
@@ -45,4 +54,6 @@ public interface ApiService {
             @Field("longitud") String longitud
     );
 
+    @POST("cliente/realizar_pedido/{id_cuenta}/")
+    Call<JsonObject> realizarPedido(@Path("id_cuenta") String id_cuenta, @Body Pedido pedido);
 }

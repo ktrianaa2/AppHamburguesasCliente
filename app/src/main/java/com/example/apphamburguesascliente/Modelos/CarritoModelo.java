@@ -21,6 +21,15 @@ public class CarritoModelo implements Serializable {
     }
 
     public void agregarProducto(Producto producto) {
+        // Verificar si el producto ya está en el carrito
+        for (Producto p : productos) {
+            if (p.getId() == producto.getId()) {
+                // El producto ya está en el carrito, actualizar la cantidad
+                p.setCantidad(p.getCantidad() + producto.getCantidad());
+                return; // Salir del método
+            }
+        }
+        // Si no se encontró el producto en el carrito, agregarlo
         productos.add(producto);
     }
 

@@ -81,4 +81,13 @@ public class CarritoAdaptador extends RecyclerView.Adapter<CarritoAdaptador.View
         }
         return total;
     }
+
+    public int calcularTotalPuntos() {
+        int totalPuntos = 0;
+        for (CarritoModelo.Producto producto : productos) {
+            // Ahora simplemente sumamos los puntos de cada producto sin considerar la cantidad
+            totalPuntos += producto.getPuntos();
+        }
+        return totalPuntos;
+    }
 }

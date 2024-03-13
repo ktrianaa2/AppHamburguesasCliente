@@ -18,7 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.apphamburguesascliente.Adaptadores.CarritoAdaptador;
 import com.example.apphamburguesascliente.Modelos.CarritoModelo;
+import com.example.apphamburguesascliente.Modelos.DetalleProducto;
+import com.example.apphamburguesascliente.Modelos.DetallesPedido;
+import com.example.apphamburguesascliente.Modelos.Pedido;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CarritoCFragment extends Fragment {
@@ -77,19 +81,23 @@ public class CarritoCFragment extends Fragment {
             double precioTotal = adaptador.calcularPrecioTotal();
             txtSubTotal.setText("Subtotal: $" + precioTotal);
 
-
-            double subtotal = adaptador.calcularPrecioTotal(); // Ya lo tienes
-            double iva = subtotal * 0.12; // Calcula el 12% de IVA del subtotal
-            double totalAPagar = subtotal + iva; // Calcula el total a pagar
+            double subtotal = adaptador.calcularPrecioTotal();
+            double iva = subtotal * 0.12;
+            double totalAPagar = subtotal + iva;
 
             // Actualiza el txtSubTotal, txtIva y txtAPagar
             txtSubTotal.setText("Subtotal: $" + String.format("%.2f", subtotal));
 
-            TextView txtIva = view.findViewById(R.id.txtIva); // Asegúrate de tener este TextView en tu layout
+            TextView txtIva = view.findViewById(R.id.txtIva);
             txtIva.setText("IVA: $" + String.format("%.2f", iva));
 
-            TextView txtAPagar = view.findViewById(R.id.txtAPagar); // Asegúrate de tener este TextView en tu layout
+            TextView txtAPagar = view.findViewById(R.id.txtAPagar);
             txtAPagar.setText("Total a pagar: $" + String.format("%.2f", totalAPagar));
+
+            // Calcular el total de puntos y mostrarlo en txtPuntos
+            int totalPuntos = adaptador.calcularTotalPuntos();
+            TextView txtPuntos = view.findViewById(R.id.txtPuntos);
+            txtPuntos.setText("Total de puntos: " + totalPuntos);
 
             // Configurar el botón "Vaciar Carrito"
             Button clearButton = view.findViewById(R.id.clearButton);
@@ -109,26 +117,45 @@ public class CarritoCFragment extends Fragment {
             });
 
             // Boton Siguiente
+            // Dentro del OnClickListener del botón "Siguiente"
             Button nextButton = view.findViewById(R.id.nextButton);
             nextButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Verificar si la lista de productos no está vacía
                     if (!listaDeProductos.isEmpty()) {
-                        // Recorrer la lista de productos y mostrar sus detalles en consola
+                        // Crear una lista para los detalles del pedido
+                        List<DetalleProducto> detallesPedido = new ArrayList<>();
+
+                        // Recorrer la lista de productos y agregar cada uno como un DetalleProducto
                         for (CarritoModelo.Producto producto : listaDeProductos) {
-                            Log.d("Carrito Producto", "ID: " + producto.getId() + // Asegúrate de que tu clase Producto tenga el método getIdProducto()
+                            DetalleProducto detalle = new DetalleProducto(
+                                    producto.getId(), // Asegúrate de que este método devuelve un String o cambia el tipo en DetalleProducto
+                                    producto.getCantidad(),
+                                    producto.getPrecio()
+                            );
+                            detallesPedido.add(detalle);
+
+                            Log.d("Carrito Producto", "ID: " + producto.getId() +
                                     ", Nombre: " + producto.getNombre() +
                                     ", Precio: " + producto.getPrecio() +
                                     ", Cantidad: " + producto.getCantidad());
                         }
+
+                        // Crear el objeto DetallesPedido
+                        DetallesPedido detallesPedidoObjeto = new DetallesPedido(detallesPedido);
+
+                        // Crear intent para pasar datos a RealizarPagoActivity
+                        Intent intent = new Intent(getActivity(), RealizarPagoActivity.class);
+                        intent.putExtra("idCliente", idCliente);
+                        intent.putExtra("totalPuntos", totalPuntos);
+                        intent.putExtra("totalAPagar", totalAPagar);
+                        intent.putExtra("detallesPedidoObjeto", detallesPedidoObjeto);
+                        Log.d("Carrito", "Detalles del Pedido: " + detallesPedidoObjeto);
+                        startActivity(intent);
                     } else {
                         Log.d("Carrito", "El carrito está vacío.");
                     }
-
-                    // Continuar con la siguiente actividad
-                    Intent intent = new Intent(getActivity(), RealizarPagoActivity.class);
-                    startActivity(intent);
                 }
             });
         } else {
@@ -162,5 +189,4 @@ public class CarritoCFragment extends Fragment {
         transaction.replace(R.id.fragmentContainer, new CarritoVacioFragment());
         transaction.commit();
     }
-
 }
