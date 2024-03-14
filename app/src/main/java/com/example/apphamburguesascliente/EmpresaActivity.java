@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.View;
 
 
 import com.example.apphamburguesascliente.Api.ApiClient;
@@ -45,13 +44,13 @@ public class EmpresaActivity extends AppCompatActivity {
 
         obtenerInfoEmpresaDesdeAPI();
 
-        CardView cardMasInfo = findViewById(R.id.cardMasInfo);
+        CardView cardMasInfo = findViewById(R.id.cardRedesSociales);
         CardView cardSucursales = findViewById(R.id.cardSucursales);
 
         cardMasInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EmpresaActivity.this, MasInformacionActivity.class);
+                Intent intent = new Intent(EmpresaActivity.this, RedesSocialesActivity.class);
                 startActivity(intent);
             }
         });

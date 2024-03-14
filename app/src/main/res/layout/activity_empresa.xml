@@ -44,7 +44,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtCarrito">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardMasInfo"
+            android:id="@+id/cardRedesSociales"
             android:layout_width="142dp"
             android:layout_height="115dp"
             android:layout_row="0"
@@ -66,12 +66,12 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/logo" />
+                    android:src="@drawable/redes" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Más Informacion"
+                    android:text="Redes Sociales"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -102,12 +102,12 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/sucursales" />
+                    android:src="@drawable/encuentranos" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sucursales"
+                    android:text="Encuentranos"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -290,7 +290,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Logo"
+                    android:text=" "
                     android:textColor="#000000" />
 
                 <ImageView

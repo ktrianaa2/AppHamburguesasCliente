@@ -30,4 +30,14 @@
         app:layout_constraintStart_toEndOf="@+id/flechaRetroceder"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/sucursalesRecycler"
+        android:layout_width="361dp"
+        android:layout_height="499dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtTitulo"
+        app:layout_constraintVertical_bias="0.274" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

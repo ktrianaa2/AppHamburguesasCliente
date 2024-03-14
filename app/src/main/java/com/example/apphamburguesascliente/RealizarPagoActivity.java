@@ -25,6 +25,9 @@ import com.example.apphamburguesascliente.Modelos.SucursalResponse;
 import com.example.apphamburguesascliente.Modelos.Ubicacion;
 import com.example.apphamburguesascliente.Modelos.User;
 import com.example.apphamburguesascliente.Modelos.UserResponse;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -43,9 +46,9 @@ public class RealizarPagoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_realizar_pago);
 
         apiService = ApiClient.getInstance();
-        TimePicker timePicker = findViewById(R.id.timePicker);
+        // TimePicker timePicker = findViewById(R.id.timePicker);
 
-        timePicker.setIs24HourView(true);
+        // timePicker.setIs24HourView(true);
 
         // Inicializa el Spinner y define las opciones
         Spinner metodosPagoSpinner = findViewById(R.id.metodosPagoSpinner);
@@ -108,6 +111,21 @@ public class RealizarPagoActivity extends AppCompatActivity {
         // Establecer por defecto que el radioButtonOptionRetiro esté marcado
         RadioButton radioButtonRetiro = findViewById(R.id.radioButtonOptionRetiro);
         radioButtonRetiro.setChecked(true);
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                Fragment fragment;
+                if (checkedId == R.id.radioButtonOptionDomicilio) {
+                    fragment = new DomicilioUbicacionFragment();
+                } else {
+                    fragment = new RetiroSucursalFragment();
+                }
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerSelector, fragment)
+                        .commit();
+            }
+        });
     }
 
     // Método para obtener el fragmento según la posición seleccionada en el Spinner
@@ -256,5 +274,26 @@ public class RealizarPagoActivity extends AppCompatActivity {
                 Log.e("Pago", "Error al realizar el pedido", t);
             }
         });
+    }
+
+    public void showTimePickerDialog(View v) {
+        MaterialTimePicker.Builder builder = new MaterialTimePicker.Builder();
+        builder.setTimeFormat(TimeFormat.CLOCK_24H);
+        builder.setTitleText("Seleccionar hora");
+
+        MaterialTimePicker materialTimePicker = builder.build();
+        materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int hour = materialTimePicker.getHour();
+                int minute = materialTimePicker.getMinute();
+
+                String selectedTime = String.format("%02d:%02d", hour, minute);
+
+                TextInputEditText editTextTime = findViewById(R.id.editTextTime);
+                editTextTime.setText(selectedTime);
+            }
+        });
+        materialTimePicker.show(getSupportFragmentManager(), "TIME_PICKER");
     }
 }

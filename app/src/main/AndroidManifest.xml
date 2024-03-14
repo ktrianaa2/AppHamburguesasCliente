@@ -37,7 +37,7 @@
             android:name=".RealizarPagoActivity"
             android:exported="false" />
         <activity
-            android:name=".MasInformacionActivity"
+            android:name=".RedesSocialesActivity"
             android:exported="false" />
         <activity
             android:name=".AnunciosActivity"

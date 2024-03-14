@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-public class MasInformacionActivity extends AppCompatActivity {
+public class RedesSocialesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mas_informacion);
+        setContentView(R.layout.activity_redes_sociales);
 
         ImageView imageViewFlecha = findViewById(R.id.flechaRetroceder);
 

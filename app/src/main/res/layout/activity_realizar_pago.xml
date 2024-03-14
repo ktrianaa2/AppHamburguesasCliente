@@ -61,44 +61,86 @@
                 android:text="Domicilio" />
         </RadioGroup>
 
-        <TimePicker
-            android:id="@+id/timePicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:timePickerMode="spinner"
-            app:layout_constraintTop_toBottomOf="@+id/txtConfirmarPago"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
     </LinearLayout>
 
     <Spinner
         android:id="@+id/metodosPagoSpinner"
-        android:layout_width="366dp"
-        android:layout_height="50dp"
+        android:layout_width="330dp"
+        android:layout_height="39dp"
         android:background="#FFFFFF"
         android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/Layout1"
+        app:layout_constraintStart_toStartOf="@+id/Layout1"
         app:layout_constraintTop_toBottomOf="@+id/Layout1" />
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="367dp"
-        android:layout_height="472dp"
+    <LinearLayout
+        android:id="@+id/layoutfragmentselector"
+        android:layout_width="330dp"
+        android:layout_height="39dp"
         android:layout_gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/metodosPagoSpinner"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/Layout">
+        android:layout_marginTop="6dp"
+        app:layout_constraintEnd_toEndOf="@+id/metodosPagoSpinner"
+        app:layout_constraintStart_toStartOf="@+id/metodosPagoSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/metodosPagoSpinner">
+
+        <FrameLayout
+            android:id="@+id/fragmentContainerSelector"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layoutfragment"
+        android:layout_width="292dp"
+        android:layout_height="360dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="52dp"
+        app:layout_constraintEnd_toEndOf="@+id/layoutfragmentselector"
+        app:layout_constraintStart_toStartOf="@+id/layoutfragmentselector"
+        app:layout_constraintTop_toBottomOf="@+id/metodosPagoSpinner">
 
         <FrameLayout
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutTime"
+        android:layout_width="355dp"
+        android:layout_height="75dp"
+        android:layout_gravity="end"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/Layout"
+        app:layout_constraintEnd_toEndOf="@+id/layoutfragment"
+        app:layout_constraintHorizontal_bias="0.46"
+        app:layout_constraintStart_toStartOf="@+id/layoutfragment"
+        app:layout_constraintTop_toBottomOf="@+id/layoutfragment"
+        app:layout_constraintVertical_bias="0.655">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Seleccionar hora"
+            app:endIconDrawable="@drawable/ic_time"
+            app:endIconMode="custom">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:onClick="showTimePickerDialog" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/Layout"
@@ -107,14 +149,14 @@
         android:layout_gravity="end"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/layoutTime"
+        app:layout_constraintStart_toStartOf="@+id/layoutTime">
 
         <Button
             android:id="@+id/pagarButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="135dp"
+            android:layout_height="59dp"
             android:backgroundTint="#2196F3"
             android:gravity="center"
             android:text="Pagar" />
