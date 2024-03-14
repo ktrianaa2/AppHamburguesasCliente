@@ -19,7 +19,7 @@ public class Pedido {
     private String metodoPago;
 
     @SerializedName("id_sucursal")
-    private int id_sucursal;
+    private int sucursal;
 
     @SerializedName("latitud")
     private String latitud;
@@ -37,14 +37,14 @@ public class Pedido {
     private DetallesPedido detallesPedido;
 
     public Pedido(int idCuenta, int puntos, double precio, String tipoPedido, String metodoPago,
-                  int id_sucursal, String latitud, String longitud, String fechaHora, String fechaMinutos,
+                  int sucursal, String latitud, String longitud, String fechaHora, String fechaMinutos,
                   DetallesPedido detallesPedido) {
         this.idCuenta = idCuenta;
         this.puntos = puntos;
         this.precio = precio;
         this.tipoPedido = tipoPedido;
         this.metodoPago = metodoPago;
-        this.id_sucursal = id_sucursal;
+        this.sucursal = sucursal;
         this.latitud = latitud;
         this.longitud = longitud;
         this.fechaHora = fechaHora;
@@ -93,11 +93,11 @@ public class Pedido {
     }
 
     public int getIdSucursal() {
-        return id_sucursal;
+        return sucursal;
     }
 
     public void setIdSucursal(int idSucursal) {
-        this.id_sucursal = id_sucursal;
+        this.sucursal = sucursal;
     }
 
     public String getLatitud() {
@@ -148,7 +148,7 @@ public class Pedido {
                 ", precio=" + precio +
                 ", tipoPedido='" + tipoPedido + '\'' +
                 ", metodoPago='" + metodoPago + '\'' +
-                ", idSucursal=" + id_sucursal +
+                ", idSucursal=" + sucursal +
                 ", latitud='" + latitud + '\'' +
                 ", longitud='" + longitud + '\'' +
                 ", fechaHora='" + fechaHora + '\'' +

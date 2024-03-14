@@ -25,6 +25,7 @@ import com.example.apphamburguesascliente.Modelos.SucursalResponse;
 import com.example.apphamburguesascliente.Modelos.Ubicacion;
 import com.example.apphamburguesascliente.Modelos.User;
 import com.example.apphamburguesascliente.Modelos.UserResponse;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import retrofit2.Call;
@@ -131,59 +132,69 @@ public class RealizarPagoActivity extends AppCompatActivity {
         double totalAPagar = intent.getDoubleExtra("totalAPagar", 0.0);
         DetallesPedido detallesPedidoObjeto = (DetallesPedido) intent.getSerializableExtra("detallesPedidoObjeto");
 
-        if (idCuentaUsuario != -1) {
-            apiService.obtenerUsuario(String.valueOf(idCuentaUsuario)).enqueue(new Callback<UserResponse>() {
-                @Override
-                public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                    UserResponse usuarioResponse = response.body();
-                    if (usuarioResponse != null) {
-                        User usuario = usuarioResponse.getUsuario();
-                        if (usuario != null) {
-                            Ubicacion ubicacion = usuario.getUbicacion1();
-                            if (ubicacion != null) {
-                                String latitud = ubicacion.getLatitud();
-                                String longitud = ubicacion.getLongitud();
-                                Log.d("Pago", "Latitud: " + latitud + ", Longitud: " + longitud);
+        if (detallesPedidoObjeto != null) {
+            // Crear Gson object
+            Gson gson = new Gson();
 
-                                // Obtener el tipo de pedido seleccionado (R para retiro, D para domicilio)
-                                RadioGroup radioGroup = findViewById(R.id.radioGroup);
-                                String tipoPedido;
-                                if (radioGroup.getCheckedRadioButtonId() == R.id.radioButtonOptionRetiro) {
-                                    tipoPedido = "R";
+            // Convertir detallesPedidoObjeto a JSON String
+            String detallesPedidoJson = gson.toJson(detallesPedidoObjeto);
+
+            if (idCuentaUsuario != -1) {
+                apiService.obtenerUsuario(String.valueOf(idCuentaUsuario)).enqueue(new Callback<UserResponse>() {
+                    @Override
+                    public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                        UserResponse usuarioResponse = response.body();
+                        if (usuarioResponse != null) {
+                            User usuario = usuarioResponse.getUsuario();
+                            if (usuario != null) {
+                                Ubicacion ubicacion = usuario.getUbicacion1();
+                                if (ubicacion != null) {
+                                    String latitud = ubicacion.getLatitud();
+                                    String longitud = ubicacion.getLongitud();
+                                    Log.d("Pago", "Latitud: " + latitud + ", Longitud: " + longitud);
+
+                                    // Obtener el tipo de pedido seleccionado (R para retiro, D para domicilio)
+                                    RadioGroup radioGroup = findViewById(R.id.radioGroup);
+                                    String tipoPedido;
+                                    if (radioGroup.getCheckedRadioButtonId() == R.id.radioButtonOptionRetiro) {
+                                        tipoPedido = "R";
+                                    } else {
+                                        tipoPedido = "D";
+                                    }
+                                    Log.d("Pago", "Tipo de Pedido: " + tipoPedido);
+
+                                    // Obtener el método de pago seleccionado (E para efectivo, T para transferencia, F para fraccionado)
+                                    Spinner metodosPagoSpinner = findViewById(R.id.metodosPagoSpinner);
+                                    String metodoPago = metodosPagoSpinner.getSelectedItem().toString().substring(0, 1);
+                                    Log.d("Pago", "Método de Pago: " + metodoPago);
+
+                                    // Hacer la solicitud para obtener la sucursal
+                                    obtenerSucursal(idCliente, totalPuntos, totalAPagar, tipoPedido, metodoPago, latitud, longitud, detallesPedidoObjeto, detallesPedidoJson);
                                 } else {
-                                    tipoPedido = "D";
+                                    Log.e("Pago", "Ubicación no disponible en la respuesta del usuario");
                                 }
-                                Log.d("Pago", "Tipo de Pedido: " + tipoPedido);
-
-                                // Obtener el método de pago seleccionado (E para efectivo, T para transferencia, F para fraccionado)
-                                Spinner metodosPagoSpinner = findViewById(R.id.metodosPagoSpinner);
-                                String metodoPago = metodosPagoSpinner.getSelectedItem().toString().substring(0, 1);
-                                Log.d("Pago", "Método de Pago: " + metodoPago);
-
-                                // Hacer la solicitud para obtener la sucursal
-                                obtenerSucursal(idCliente, totalPuntos, totalAPagar, tipoPedido, metodoPago, latitud, longitud, detallesPedidoObjeto);
                             } else {
-                                Log.e("Pago", "Ubicación no disponible en la respuesta del usuario");
+                                Log.e("Pago", "Usuario no disponible en la respuesta");
                             }
                         } else {
-                            Log.e("Pago", "Usuario no disponible en la respuesta");
+                            Log.e("Pago", "Respuesta de usuario nula");
                         }
-                    } else {
-                        Log.e("Pago", "Respuesta de usuario nula");
                     }
-                }
-
-                @Override
-                public void onFailure(Call<UserResponse> call, Throwable t) {
-                    Log.e("Pago", "Error al obtener la ubicación del usuario", t);
-                }
-            });
+                    @Override
+                    public void onFailure(Call<UserResponse> call, Throwable t) {
+                        Log.e("Pago", "Error al obtener la ubicación del usuario", t);
+                    }
+                });
+            } else {
+                Log.e("Pago", "ID de usuario no disponible");
+            }
         } else {
-            Log.e("Pago", "ID de usuario no disponible");
+            Log.e("Pago", "Detalles del pedido son nulos");
         }
     }
 
-    private void obtenerSucursal(int idCliente, int totalPuntos, double totalAPagar, String tipoPedido, String metodoPago, String latitud, String longitud, DetallesPedido detallesPedidoObjeto) {
+
+    private void obtenerSucursal(int idCliente, int totalPuntos, double totalAPagar, String tipoPedido, String metodoPago, String latitud, String longitud, DetallesPedido detallesPedidoObjeto, String detallesPedidoJson) {
         apiService.obtenerSucursalPorUbicacion(latitud, longitud).enqueue(new Callback<SucursalResponse>() {
             @Override
             public void onResponse(Call<SucursalResponse> call, Response<SucursalResponse> response) {
@@ -194,7 +205,8 @@ public class RealizarPagoActivity extends AppCompatActivity {
 
                     if (idSucursal != 0) {
                         // Llamar a realizarPedido con el ID de la sucursal
-                        realizarPedido(idCliente, totalPuntos, totalAPagar, tipoPedido, metodoPago, idSucursal, latitud, longitud, detallesPedidoObjeto);
+                        Log.d("Pago", "ID Sucursal a enviar: " + idSucursal);
+                        realizarPedido(idCliente, totalPuntos, totalAPagar, tipoPedido, metodoPago, idSucursal, latitud, longitud, detallesPedidoObjeto, detallesPedidoJson);
                     } else {
                         Log.e("Pago", "ID de sucursal inválido: " + idSucursal);
                     }
@@ -211,15 +223,23 @@ public class RealizarPagoActivity extends AppCompatActivity {
     }
 
 
-    private void realizarPedido(int idCliente, int totalPuntos, double totalAPagar, String tipoPedido, String metodoPago, int idSucursal, String latitud, String longitud, DetallesPedido detallesPedidoObjeto) {
-        Pedido pedido = new Pedido(idCliente, totalPuntos, totalAPagar, tipoPedido, metodoPago, idSucursal, latitud, longitud, "", "", detallesPedidoObjeto);
-        Log.d("Pago", "Datos del Pedido: " + pedido.toString());
-
-        // Log del ID de la cuenta antes de realizar la solicitud
-        Log.d("Pago", "ID de la Sucursal: " + idSucursal);
-
+    private void realizarPedido(int idCliente, int totalPuntos, double totalAPagar, String tipoPedido, String metodoPago, int idSucursal, String latitud, String longitud, DetallesPedido detallesPedidoObjeto, String detallesPedidoJson) {
         // Hacer la solicitud para realizar el pedido
-        apiService.realizarPedido(String.valueOf(idCuentaUsuario), pedido).enqueue(new Callback<JsonObject>() {
+        apiService.realizarPedido(
+                String.valueOf(idCuentaUsuario),
+                totalPuntos,
+                totalAPagar,
+                tipoPedido,
+                metodoPago,
+                "O",
+                idSucursal,
+                latitud,
+                longitud,
+                "En revisión",
+                "19",  // Ejemplo: hora en formato adecuado
+                "50",  // Ejemplo: minutos en formato adecuado
+                detallesPedidoJson    // Aquí se pasa el objeto DetallesPedido convertido a JSON
+        ).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.isSuccessful()) {
