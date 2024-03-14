@@ -179,7 +179,28 @@ public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapR
     }
 
     private void actualizarUsuario(String idCuenta, User user) {
-        Call<UserResponse> call = apiService.actualizarUsuario(idCuenta, user);
+        // Obtener las ubicaciones del usuario
+        Ubicacion ubicacion1 = user.getUbicacion1();
+        Ubicacion ubicacion2 = user.getUbicacion2();
+        Ubicacion ubicacion3 = user.getUbicacion3();
+
+        // Obtener las latitudes y longitudes de las ubicaciones
+        String latitud1 = ubicacion1 != null ? ubicacion1.getLatitud() : "";
+        String longitud1 = ubicacion1 != null ? ubicacion1.getLongitud() : "";
+        String latitud2 = ubicacion2 != null ? ubicacion2.getLatitud() : "";
+        String longitud2 = ubicacion2 != null ? ubicacion2.getLongitud() : "";
+        String latitud3 = ubicacion3 != null ? ubicacion3.getLatitud() : "";
+        String longitud3 = ubicacion3 != null ? ubicacion3.getLongitud() : "";
+
+        Call<UserResponse> call = apiService.actualizarUsuario(
+                idCuenta,
+                latitud1,
+                longitud1,
+                latitud2,
+                longitud2,
+                latitud3,
+                longitud3
+        );
         call.enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {

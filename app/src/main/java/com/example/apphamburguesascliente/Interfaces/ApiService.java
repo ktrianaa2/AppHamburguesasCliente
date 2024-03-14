@@ -74,6 +74,15 @@ public interface ApiService {
             @Field("detalles_pedido") String detallesPedidoJson // Aquí envías el JSON serializado como String
     );
 
-    @POST("Login/anadir_ubicacion/{id_cuenta}/")
-    Call<UserResponse> actualizarUsuario(@Path("id_cuenta") String id_cuenta, @Body User user);
+    @FormUrlEncoded
+    @POST("Login/editar_ubicacion/{id_cuenta}/")
+    Call<UserResponse> actualizarUsuario(
+            @Path("id_cuenta") String id_cuenta,
+            @Field("latitud1") String latitud1,
+            @Field("longitud1") String longitud1,
+            @Field("latitud2") String latitud2,
+            @Field("longitud2") String longitud2,
+            @Field("latitud3") String latitud3,
+            @Field("longitud3") String longitud3
+    );
 }
