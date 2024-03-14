@@ -236,7 +236,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
                 latitud,
                 longitud,
                 "En revisión",
-                "19",  // Ejemplo: hora en formato adecuado
+                "20",  // Ejemplo: hora en formato adecuado
                 "50",  // Ejemplo: minutos en formato adecuado
                 detallesPedidoJson    // Aquí se pasa el objeto DetallesPedido convertido a JSON
         ).enqueue(new Callback<JsonObject>() {
