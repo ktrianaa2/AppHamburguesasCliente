@@ -57,7 +57,6 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("cliente/realizar_pedido/{id_cuenta}/")
-    Call<JsonObject> realizarPedido(@Path("id_cuenta") String id_cuenta, @Body Pedido pedido);
     Call<JsonObject> realizarPedido(
             @Path("id_cuenta") String id_cuenta,
             @Field("cpuntos") int puntos,
