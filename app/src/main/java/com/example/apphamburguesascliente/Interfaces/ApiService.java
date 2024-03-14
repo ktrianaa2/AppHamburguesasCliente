@@ -74,6 +74,6 @@ public interface ApiService {
             @Field("detalles_pedido") String detallesPedidoJson // Aquí envías el JSON serializado como String
     );
 
-    @POST("Login/editar_usuario/{id_cuenta}/")
+    @POST("Login/anadir_ubicacion/{id_cuenta}/")
     Call<UserResponse> actualizarUsuario(@Path("id_cuenta") String id_cuenta, @Body User user);
 }
