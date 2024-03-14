@@ -46,16 +46,6 @@ public class PagoTransferenciaFragment extends Fragment {
             }
         });
 
-        ImageView imageViewFlecha = view.findViewById(R.id.imageView);
-        imageViewFlecha.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Cierra el fragmento actual
-                getParentFragmentManager().popBackStack();
-            }
-        });
-
-
         return view;
     }
 
