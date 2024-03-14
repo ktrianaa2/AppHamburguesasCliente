@@ -34,7 +34,7 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
     private ApiService apiService;
     private RecyclerView allMenuRecycler;
     private ProductoAdaptador adaptador;
-    private RecyclerView combosRecycler;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inicioo, container, false);

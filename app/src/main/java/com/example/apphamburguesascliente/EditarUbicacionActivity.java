@@ -20,9 +20,11 @@ public class EditarUbicacionActivity extends AppCompatActivity {
             int idUsuario = extras.getInt("idUsuario", 0);
             double latitud = extras.getDouble("latitud", 0.0);
             double longitud = extras.getDouble("longitud", 0.0);
+            int tipoUbicacion = extras.getInt("tipoUbicacion", 0);
 
             // Imprimir la información en el Logcat
             Log.d("EditarUbicacionActivity", "ID de usuario obtenida: " + idUsuario);
+            Log.d("EditarUbicacionActivity", "Tipo de Ubicacion obtenida: " + tipoUbicacion);
             Log.d("EditarUbicacionActivity", "Latitud obtenida: " + latitud);
             Log.d("EditarUbicacionActivity", "Longitud obtenida: " + longitud);
         }

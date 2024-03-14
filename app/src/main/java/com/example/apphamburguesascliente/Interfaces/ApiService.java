@@ -1,6 +1,5 @@
 package com.example.apphamburguesascliente.Interfaces;
 
-import com.example.apphamburguesascliente.Modelos.DetallesPedido;
 import com.example.apphamburguesascliente.Modelos.LoginRequest;
 import com.example.apphamburguesascliente.Modelos.LoginResponse;
 import com.example.apphamburguesascliente.Modelos.Pedido;
@@ -55,21 +54,6 @@ public interface ApiService {
             @Field("longitud") String longitud
     );
 
-    @FormUrlEncoded
     @POST("cliente/realizar_pedido/{id_cuenta}/")
-    Call<JsonObject> realizarPedido(
-            @Path("id_cuenta") String id_cuenta,
-            @Field("cpuntos") int puntos,
-            @Field("precio") double precio,
-            @Field("tipo_de_pedido") String tipoPedido,
-            @Field("metodo_de_pago") String metodoPago,
-            @Field("estado_del_pedido") String estadoPedido,
-            @Field("id_sucursal") int idSucursal,
-            @Field("latitud") String latitud,
-            @Field("longitud") String longitud,
-            @Field("estado_pago") String estadoPago,
-            @Field("fecha_hora") String fechaHora,
-            @Field("fecha_minutos") String fechaMinutos,
-            @Field("detalles_pedido") String detallesPedidoJson // Aquí envías el JSON serializado como String
-    );
+    Call<JsonObject> realizarPedido(@Path("id_cuenta") String id_cuenta, @Body Pedido pedido);
 }

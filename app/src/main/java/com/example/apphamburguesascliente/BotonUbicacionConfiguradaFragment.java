@@ -16,6 +16,8 @@ import android.widget.Button;
 
 public class BotonUbicacionConfiguradaFragment extends Fragment {
 
+    private int TIPO_DE_UBICACION = -1;
+
     private int idCliente = -1; // Valor predeterminado o valor que consideres adecuado
 
     public BotonUbicacionConfiguradaFragment() {
@@ -33,6 +35,14 @@ public class BotonUbicacionConfiguradaFragment extends Fragment {
 
         // Mostrar el idCliente en Logcat
         Log.d("BotonUbicacionConfig", "El idCliente es: " + idCliente);
+
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            TIPO_DE_UBICACION = arguments.getInt("tipoUbicacion", -1);
+
+
+        }
+
 
         double latitud = getArguments().getDouble("latitud");
         double longitud = getArguments().getDouble("longitud");

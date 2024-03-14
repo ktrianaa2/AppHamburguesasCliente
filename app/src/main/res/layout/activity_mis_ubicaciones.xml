@@ -30,104 +30,128 @@
         app:layout_constraintStart_toEndOf="@+id/flechaRetroceder"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="349dp"
-        android:layout_height="661dp"
-        android:layout_gravity="center"
-        android:layout_weight="1"
+
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="369dp"
+        android:layout_height="231dp"
+        android:columnCount="3"
+        android:rowCount="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtTitulo"
-        app:layout_constraintVertical_bias="0.387">
+        app:layout_constraintTop_toBottomOf="@+id/txtTitulo">
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:background="#000000"
-            android:padding="2dp">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardCasa"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_columnWeight="1"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true">
 
-            <TableRow
-                android:layout_height="101dp"
-                android:background="#FFFFFF"
-                android:padding="5dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/casa" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
                     android:text="Casa"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/txtCasa"
-                    android:layout_width="83dp"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="Guardado"
-                    android:textColor="#000000" />
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
                 <FrameLayout
                     android:id="@+id/fragmentBtnCasa"
-                    android:layout_width="187dp"
-                    android:layout_height="55dp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:gravity="center" />
 
-            </TableRow>
+            </LinearLayout>
 
-            <TableRow
-                android:background="#FFFFFF"
-                android:padding="5dp">
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardTrabajo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_columnWeight="1"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/trabajo" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
                     android:text="Trabajo"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/txtTrabajo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="Guardado"
-                    android:textColor="#000000" />
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
                 <FrameLayout
                     android:id="@+id/fragmentBtnTrabajo"
-                    android:layout_width="120dp"
-                    android:layout_height="55dp" />
-            </TableRow>
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="100dp" />
+            </LinearLayout>
 
-            <TableRow
-                android:background="#FFFFFF"
-                android:padding="5dp">
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardOtro"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_columnWeight="1"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/otra" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
                     android:text="Otra"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/txtOtra"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="Guardado"
-                    android:textColor="#000000" />
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
                 <FrameLayout
                     android:id="@+id/fragmentBtnOtro"
-                    android:layout_width="120dp"
-                    android:layout_height="55dp" />
-            </TableRow>
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="100dp" />
 
-        </TableLayout>
-    </ScrollView>
+            </LinearLayout>
 
+        </androidx.cardview.widget.CardView>
+
+    </GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

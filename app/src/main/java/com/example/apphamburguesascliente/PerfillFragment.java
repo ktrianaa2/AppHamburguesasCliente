@@ -132,7 +132,7 @@ public class PerfillFragment extends Fragment {
         }
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://9jpn4ctd-8000.use2.devtunnels.ms/")
+                .baseUrl("https://wv7jhxv6-8000.brs.devtunnels.ms")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
