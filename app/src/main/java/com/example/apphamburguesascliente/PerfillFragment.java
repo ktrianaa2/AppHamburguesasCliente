@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import android.content.SharedPreferences;
 
 
+import com.example.apphamburguesascliente.Api.ApiClient;
 import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.CarritoModelo;
 import com.example.apphamburguesascliente.Modelos.User;
@@ -39,6 +40,7 @@ public class PerfillFragment extends Fragment {
     private TextView txtNumeroTelefono;
     private TextView txtRazonSocial;
     private TextView txtCedula;
+    private ApiService apiService;
 
     @Nullable
     @Override
@@ -131,15 +133,10 @@ public class PerfillFragment extends Fragment {
             return; // No continuar si no tenemos un id_cuenta válido
         }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://wv7jhxv6-8000.brs.devtunnels.ms")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService service = retrofit.create(ApiService.class);
+        apiService = ApiClient.getInstance();
 
         // Asegúrate de convertir idCuenta a String si tu API espera una cadena
-        Call<UserResponse> callUsuario = service.obtenerUsuario(String.valueOf(idCuenta));
+        Call<UserResponse> callUsuario = apiService.obtenerUsuario(String.valueOf(idCuenta));
         callUsuario.enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {

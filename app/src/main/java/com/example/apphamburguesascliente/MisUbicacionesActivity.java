@@ -5,12 +5,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.example.apphamburguesascliente.Api.ApiClient;
 import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.User;
 import com.example.apphamburguesascliente.Modelos.UserResponse;
@@ -24,6 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MisUbicacionesActivity extends AppCompatActivity {
 
 
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +51,19 @@ public class MisUbicacionesActivity extends AppCompatActivity {
 
     // Método para obtener datos del usuario mediante la API
     private void obtenerUsuario(int idUsuario) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://wv7jhxv6-8000.brs.devtunnels.ms")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+        int idCuenta = sharedPreferences.getInt("id_cuenta", 0); // 0 is the default value if not found
 
-        ApiService service = retrofit.create(ApiService.class);
+        // Verifica si idCuenta es 0, lo que significa que no se encontró o se guardó
+        if (idCuenta == 0) {
+            Log.e("PerfillFragment", "id_cuenta no encontrado en SharedPreferences.");
+            return; // No continuar si no tenemos un id_cuenta válido
+        }
 
-        // Asegúrate de convertir idUsuario a String si tu API espera una cadena
-        Call<UserResponse> callUsuario = service.obtenerUsuario(String.valueOf(idUsuario));
+        apiService = ApiClient.getInstance();
+
+        // Make sure to convert idUsuario to String if your API expects a string
+        Call<UserResponse> callUsuario = apiService.obtenerUsuario(String.valueOf(idUsuario));
         callUsuario.enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
@@ -67,13 +74,13 @@ public class MisUbicacionesActivity extends AppCompatActivity {
                     Log.e("Error", "Error al obtener los datos del usuario: " + response.message());
                 }
             }
-
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
                 Log.e("Error", "Error en la solicitud de obtención de usuario: " + t.getMessage());
             }
         });
     }
+
 
     // Método para cargar el fragmento con la información de ubicación
     private void cargarFragmento(User usuario) {

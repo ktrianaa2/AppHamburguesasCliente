@@ -57,6 +57,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("cliente/realizar_pedido/{id_cuenta}/")
+    Call<JsonObject> realizarPedido(@Path("id_cuenta") String id_cuenta, @Body Pedido pedido);
     Call<JsonObject> realizarPedido(
             @Path("id_cuenta") String id_cuenta,
             @Field("cpuntos") int puntos,
@@ -73,6 +74,6 @@ public interface ApiService {
             @Field("detalles_pedido") String detallesPedidoJson // Aquí envías el JSON serializado como String
     );
 
-    @POST("Login/editar_ubicacion/{id_cuenta}/")
+    @POST("Login/editar_usuario/{id_cuenta}/")
     Call<UserResponse> actualizarUsuario(@Path("id_cuenta") String id_cuenta, @Body User user);
 }
