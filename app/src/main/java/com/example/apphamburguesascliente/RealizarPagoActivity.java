@@ -39,6 +39,8 @@ public class RealizarPagoActivity extends AppCompatActivity {
 
     private ApiService apiService;
     private int idCuentaUsuario;
+    private int selectedHour = 0;
+    private int selectedMinute = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +48,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_realizar_pago);
 
         apiService = ApiClient.getInstance();
-        // TimePicker timePicker = findViewById(R.id.timePicker);
 
-        // timePicker.setIs24HourView(true);
-
-        // Inicializa el Spinner y define las opciones
         Spinner metodosPagoSpinner = findViewById(R.id.metodosPagoSpinner);
         String[] opcionesMetodoPago = {"Transferencia", "Efectivo", "Fraccionado"};
 
@@ -254,8 +252,8 @@ public class RealizarPagoActivity extends AppCompatActivity {
                 latitud,
                 longitud,
                 "En revisión",
-                "20",  // Ejemplo: hora en formato adecuado
-                "50",  // Ejemplo: minutos en formato adecuado
+                String.valueOf(selectedHour),  // Usar la hora seleccionada
+                String.valueOf(selectedMinute),  // Usar los minutos seleccionados
                 detallesPedidoJson    // Aquí se pasa el objeto DetallesPedido convertido a JSON
         ).enqueue(new Callback<JsonObject>() {
             @Override
@@ -285,10 +283,10 @@ public class RealizarPagoActivity extends AppCompatActivity {
         materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int hour = materialTimePicker.getHour();
-                int minute = materialTimePicker.getMinute();
+                selectedHour = materialTimePicker.getHour();
+                selectedMinute = materialTimePicker.getMinute();
 
-                String selectedTime = String.format("%02d:%02d", hour, minute);
+                String selectedTime = String.format("%02d:%02d", selectedHour, selectedMinute);
 
                 TextInputEditText editTextTime = findViewById(R.id.editTextTime);
                 editTextTime.setText(selectedTime);
