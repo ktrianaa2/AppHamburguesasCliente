@@ -15,12 +15,17 @@ import com.google.gson.JsonObject;
 
 import java.util.Map;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 
 public interface ApiService {
@@ -55,22 +60,23 @@ public interface ApiService {
             @Field("longitud") String longitud
     );
 
-    @FormUrlEncoded
+    @Multipart
     @POST("cliente/realizar_pedido/{id_cuenta}/")
     Call<JsonObject> realizarPedido(
             @Path("id_cuenta") String id_cuenta,
-            @Field("cpuntos") int puntos,
-            @Field("precio") double precio,
-            @Field("tipo_de_pedido") String tipoPedido,
-            @Field("metodo_de_pago") String metodoPago,
-            @Field("estado_del_pedido") String estadoPedido,
-            @Field("id_sucursal") int idSucursal,
-            @Field("latitud") String latitud,
-            @Field("longitud") String longitud,
-            @Field("estado_pago") String estadoPago,
-            @Field("fecha_hora") String fechaHora,
-            @Field("fecha_minutos") String fechaMinutos,
-            @Field("detalles_pedido") String detallesPedidoJson // Aquí envías el JSON serializado como String
+            @Part("cpuntos") RequestBody puntos,
+            @Part("precio") RequestBody precio,
+            @Part("tipo_de_pedido") RequestBody tipoPedido,
+            @Part("metodo_de_pago") RequestBody metodoPago,
+            @Part("estado_del_pedido") RequestBody estadoPedido,
+            @Part("id_sucursal") RequestBody idSucursal,
+            @Part("latitud") RequestBody latitud,
+            @Part("longitud") RequestBody longitud,
+            @Part("estado_pago") RequestBody estadoPago,
+            @Part("fecha_hora") RequestBody fechaHora,
+            @Part("fecha_minutos") RequestBody fechaMinutos,
+            @Part("detalles_pedido") RequestBody detallesPedidoJson,
+            @Part MultipartBody.Part imagen // Cambiado a Part
     );
 
     @FormUrlEncoded

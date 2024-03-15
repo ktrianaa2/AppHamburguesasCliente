@@ -1,5 +1,4 @@
 package com.example.apphamburguesascliente;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -7,24 +6,27 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-
 
 public class PagoTransferenciaFragment extends Fragment {
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private ImageView imageView;
+    private Uri imageUri;
 
     public PagoTransferenciaFragment() {
         // Required empty public constructor
@@ -81,8 +83,18 @@ public class PagoTransferenciaFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData();
+            imageUri = data.getData(); // Initialize imageUri here
             Glide.with(this).load(imageUri).into(imageView);
+
+            // Mostrar un mensaje de Toast para confirmar que la imagen se ha seleccionado correctamente
+            Toast.makeText(requireContext(), "Imagen seleccionada correctamente", Toast.LENGTH_SHORT).show();
+
+            // Loguear la URI de la imagen seleccionada para verificar en los registros
+            Log.d("PagoTransferenciaFragment", "URI de la imagen seleccionada: " + imageUri.toString());
         }
+    }
+
+    public Uri getImageUri() {
+        return imageUri;
     }
 }
