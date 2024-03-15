@@ -7,12 +7,14 @@ import com.example.apphamburguesascliente.Modelos.RegistroRequest;
 import com.example.apphamburguesascliente.Modelos.RegistroResponse;
 import com.example.apphamburguesascliente.Modelos.RespuestaEmpresa;
 import com.example.apphamburguesascliente.Modelos.RolResponse;
+import com.example.apphamburguesascliente.Modelos.Sucursal;
 import com.example.apphamburguesascliente.Modelos.SucursalResponse;
 import com.example.apphamburguesascliente.Modelos.TokenRequest;
 import com.example.apphamburguesascliente.Modelos.User;
 import com.example.apphamburguesascliente.Modelos.UserResponse;
 import com.google.gson.JsonObject;
 
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -90,4 +92,8 @@ public interface ApiService {
             @Field("latitud3") String latitud3,
             @Field("longitud3") String longitud3
     );
+
+    @GET("sucursal/sucusarleslist/")
+    Call<SucursalResponse> obtenerSucursales();
+
 }

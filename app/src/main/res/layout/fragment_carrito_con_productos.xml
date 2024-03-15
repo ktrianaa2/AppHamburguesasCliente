@@ -24,8 +24,8 @@
 
         <ScrollView
             android:id="@+id/scrollView"
-            android:layout_width="348dp"
-            android:layout_height="400dp"
+            android:layout_width="391dp"
+            android:layout_height="337dp"
             android:layout_gravity="center"
             android:layout_weight="1"
             app:layout_constraintBottom_toTopOf="@+id/removeLayout"
@@ -48,61 +48,59 @@
             android:id="@+id/txtSubTotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Subtotal: Subtotal"
-            android:textSize="20dp"
-            android:textStyle="bold"
             android:layout_marginStart="25dp"
-            app:layout_constraintBottom_toTopOf="@+id/txtIva"
+            android:layout_marginTop="20dp"
+            android:text="Subtotal: Subtotal"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/removeLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.07"
+            app:layout_constraintHorizontal_bias="0.054"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/scrollView"
-            app:layout_constraintVertical_bias="0.187" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/txtIva"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
             android:text="IVA: iva"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/txtAPagar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.046"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtSubTotal"
-            app:layout_constraintVertical_bias="0.187" />
+            app:layout_constraintEnd_toEndOf="@+id/txtSubTotal"
+            app:layout_constraintHorizontal_bias="0.013"
+            app:layout_constraintStart_toStartOf="@+id/txtSubTotal"
+            app:layout_constraintTop_toBottomOf="@+id/txtSubTotal" />
 
         <TextView
             android:id="@+id/txtAPagar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
             android:text="Total a pagar: $"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/removeLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.061"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtIva"
-            app:layout_constraintVertical_bias="0.187" />
+            app:layout_constraintEnd_toEndOf="@+id/txtSubTotal"
+            app:layout_constraintHorizontal_bias="0.055"
+            app:layout_constraintStart_toStartOf="@+id/txtSubTotal"
+            app:layout_constraintTop_toBottomOf="@+id/txtIva" />
 
         <TextView
             android:id="@+id/txtPuntos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
+            android:layout_marginTop="2dp"
             android:text="Total de puntos: "
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/removeLayout"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/txtSubTotal"
             app:layout_constraintHorizontal_bias="0.061"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtAPagar"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintStart_toStartOf="@+id/txtSubTotal"
+            app:layout_constraintTop_toBottomOf="@+id/txtAPagar" />
+
 
         <LinearLayout
             android:id="@+id/removeLayout"

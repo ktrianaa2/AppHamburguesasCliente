@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class SucursalResponse {
-    @SerializedName("sucursal")
+    @SerializedName("sucursales")
     private List<Sucursal> sucursalList;
 
     public List<Sucursal> getSucursalList() {

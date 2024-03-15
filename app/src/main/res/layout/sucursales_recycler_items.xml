@@ -2,45 +2,63 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="8dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginEnd="4dp"
-    android:layout_marginRight="8dp">
+    android:layout_width="366dp"
+    android:layout_height="300dp"
+    android:background="@drawable/background_sucursales">
 
-    <ImageView
-        android:id="@+id/sucursalImagen"
-        android:layout_width="133dp"
-        android:layout_height="124dp"
+    <LinearLayout
+        android:id="@+id/llBottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/sucursalNombre"
-        app:layout_constraintHorizontal_bias="0.483"
-        app:layout_constraintStart_toStartOf="@+id/sucursalNombre"
-        app:layout_constraintTop_toBottomOf="@+id/sucursalNombre"
-        app:layout_constraintVertical_bias="0.031"
-        app:srcCompat="@drawable/logo" />
-
-    <TextView
-        android:id="@+id/sucursalDireccion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Direccion: "
-        app:layout_constraintEnd_toEndOf="@+id/sucursalImagen"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="@+id/sucursalImagen"
-        app:layout_constraintTop_toBottomOf="@+id/sucursalImagen" />
-
-    <TextView
-        android:id="@+id/sucursalNombre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Nombre de Sucursal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/sucursalDireccion"
+                android:layout_width="272dp"
+                android:layout_height="42dp"
+                android:layout_marginTop="16dp"
+                android:text="Direccion: "
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="@+id/mapView"
+                app:layout_constraintStart_toStartOf="@+id/mapView"
+                app:layout_constraintTop_toBottomOf="@+id/mapView" />
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="244dp"
+                android:layout_height="181dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/sucursalNombre"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/sucursalNombre"
+                app:layout_constraintTop_toBottomOf="@+id/sucursalNombre"
+                app:layout_constraintVertical_bias="0.158" />
+
+            <TextView
+                android:id="@+id/sucursalNombre"
+                android:layout_width="249dp"
+                android:layout_height="21dp"
+                android:layout_marginTop="16dp"
+                android:text="Nombre de Sucursal"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

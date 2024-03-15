@@ -34,6 +34,12 @@ public class ProductoAdaptador extends RecyclerView.Adapter<ProductoAdaptador.Pr
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_recycler_items, parent, false);
+
+        // Definir márgenes entre elementos programáticamente
+        RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) view.getLayoutParams();
+        layoutParams.setMargins(0, 0, 0, 20);
+        view.setLayoutParams(layoutParams);
+
         return new ProductViewHolder(view);
     }
 

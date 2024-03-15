@@ -9,7 +9,16 @@ public class Sucursal {
     @SerializedName("srazon_social")
     private String razonSocial;
 
-    // Agrega los demás campos según la respuesta de la API
+    @SerializedName("sdireccion")
+    private String direccion;
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
 
     public int getIdSucursal() {
         return idSucursal;

@@ -19,4 +19,6 @@ public class Ubicacion {
     public void setLongitud(String longitud) {
         this.longitud = longitud;
     }
+
+
 }
