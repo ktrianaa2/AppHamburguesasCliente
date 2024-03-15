@@ -34,6 +34,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PerfillFragment extends Fragment {
 
+    private int numeroUbicacionesConfiguradas = 0;
+    private TextView txtNumeroUbicaciones;
+
+
     private TextView txtUsuario;
     private TextView txtNombresUsuario;
     private TextView txtMail;
@@ -54,6 +58,8 @@ public class PerfillFragment extends Fragment {
         txtNumeroTelefono = view.findViewById(R.id.txtNumeroTelefono);
         txtRazonSocial = view.findViewById(R.id.txtRazonSocial);
         txtCedula = view.findViewById(R.id.txtCedula);
+        txtNumeroUbicaciones = view.findViewById(R.id.txtNumeroUbicaciones);
+
 
 
         // Configurar el clic para cerrar sesión
@@ -164,5 +170,42 @@ public class PerfillFragment extends Fragment {
         txtNumeroTelefono.setText(usuario.getTelefono());
         txtRazonSocial.setText(usuario.getRazonSocial() != null ? usuario.getRazonSocial() : "Sin información");
         txtCedula.setText(usuario.getRucCedula() != null ? usuario.getRucCedula() : "Sin información");
+
+        // Contar las ubicaciones configuradas
+        contarUbicacionesConfiguradas(usuario);
     }
+
+    private void contarUbicacionesConfiguradas(User usuario) {
+        // Reiniciar el contador
+        numeroUbicacionesConfiguradas = 0;
+
+        // Contar las ubicaciones configuradas
+        if (obtenerUbicacionCasaConfigurada(usuario)) {
+            numeroUbicacionesConfiguradas++;
+        }
+        if (obtenerUbicacionTrabajoConfigurada(usuario)) {
+            numeroUbicacionesConfiguradas++;
+        }
+        if (obtenerUbicacionOtraConfigurada(usuario)) {
+            numeroUbicacionesConfiguradas++;
+        }
+
+        // Actualizar el TextView con el nuevo valor
+        txtNumeroUbicaciones.setText(String.valueOf(numeroUbicacionesConfiguradas));
+    }
+
+    // Lógica para obtener la configuración de cada ubicación (casa, trabajo, otra)
+    private boolean obtenerUbicacionCasaConfigurada(User usuario) {
+        // Verifica si la ubicación de casa está configurada
+        return usuario.getUbicacion1() != null && usuario.getUbicacion1().getLatitud() != null && usuario.getUbicacion1().getLongitud() != null;
+    }
+    private boolean obtenerUbicacionTrabajoConfigurada(User usuario) {
+        // Verifica si la ubicación de trabajo está configurada
+        return usuario.getUbicacion2() != null && usuario.getUbicacion2().getLatitud() != null && usuario.getUbicacion2().getLongitud() != null;
+    }
+    private boolean obtenerUbicacionOtraConfigurada(User usuario) {
+        // Verifica si la otra ubicación está configurada
+        return usuario.getUbicacion3() != null && usuario.getUbicacion3().getLatitud() != null && usuario.getUbicacion3().getLongitud() != null;
+    }
+
 }

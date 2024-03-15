@@ -41,7 +41,6 @@ public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapR
 
 
     private ApiService apiService;
-    private User currentUser;
     private int idUsuario;
     private int tipoUbicacion;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -61,7 +60,6 @@ public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapR
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
         apiService = ApiClient.getInstance();
 
@@ -237,8 +235,12 @@ public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapR
                         currentLatitude = location.getLatitude();
                         currentLongitude = location.getLongitude();
 
-                        LatLng currentLatLng = new LatLng(currentLatitude, currentLongitude);
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f));
+                        LatLng latLng = new LatLng(currentLatitude, currentLongitude);
+                        if (currentMarker != null) {
+                            currentMarker.remove();
+                        }
+                        currentMarker = mMap.addMarker(new MarkerOptions().position(latLng));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
 
                         // Imprimir en el Logcat
                         Log.d("AnadirUbicacionActivity", "Latitud (onMapReady): " + currentLatitude + ", Longitud (onMapReady): " + currentLongitude);

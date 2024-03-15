@@ -71,7 +71,7 @@
 
                 <FrameLayout
                     android:id="@+id/fragmentBtnCasa"
-                    android:layout_width="match_parent"
+                    android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:gravity="center" />
 
@@ -108,7 +108,7 @@
 
                 <FrameLayout
                     android:id="@+id/fragmentBtnTrabajo"
-                    android:layout_width="match_parent"
+                    android:layout_width="100dp"
                     android:gravity="center"
                     android:layout_height="100dp" />
             </LinearLayout>
@@ -144,7 +144,7 @@
 
                 <FrameLayout
                     android:id="@+id/fragmentBtnOtro"
-                    android:layout_width="match_parent"
+                    android:layout_width="100dp"
                     android:gravity="center"
                     android:layout_height="100dp" />
 

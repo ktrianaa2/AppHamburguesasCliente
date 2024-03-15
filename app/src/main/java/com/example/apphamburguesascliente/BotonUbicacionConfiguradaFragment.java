@@ -53,16 +53,22 @@ public class BotonUbicacionConfiguradaFragment extends Fragment {
             // Abre la actividad correspondiente para la edición
             Intent intent = new Intent(getActivity(), EditarUbicacionActivity.class);
             intent.putExtra("idUsuario", idCliente);
+            intent.putExtra("tipoUbicacion", TIPO_DE_UBICACION);
             intent.putExtra("latitud", latitud);
             intent.putExtra("longitud", longitud);
             startActivity(intent);
         });
 
         // Configura el botón de eliminar y añade un OnClickListener
-        Button deleteButton = view.findViewById(R.id.deletebtn);
-        deleteButton.setOnClickListener(v -> {
-            // Aquí puedes agregar la lógica para eliminar la ubicación
-            Log.d("EliminarUbicacion", "Eliminar ubicación para el usuario con ID: " + idCliente + latitud + longitud);
+        Button verButton = view.findViewById(R.id.verbtn);
+        verButton.setOnClickListener(v -> {
+            // Abre la actividad correspondiente para la visualizacion
+            Intent intent = new Intent(getActivity(), VerUbicacionActivity.class);
+            intent.putExtra("idUsuario", idCliente);
+            intent.putExtra("tipoUbicacion", TIPO_DE_UBICACION);
+            intent.putExtra("latitud", latitud);
+            intent.putExtra("longitud", longitud);
+            startActivity(intent);
         });
 
         return view;

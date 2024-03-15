@@ -155,7 +155,6 @@ public class MisUbicacionesActivity extends AppCompatActivity {
         try {
             return Double.parseDouble(valor);
         } catch (NumberFormatException e) {
-            // Manejar la excepción según tus necesidades (puede imprimir un mensaje de error, lanzar una excepción personalizada, etc.)
             e.printStackTrace();
             return 0.0; // Valor por defecto en caso de error
         }
