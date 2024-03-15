@@ -38,7 +38,11 @@ import com.google.android.material.timepicker.TimeFormat;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -157,6 +161,18 @@ public class RealizarPagoActivity extends AppCompatActivity {
             // Crear Gson object
             Gson gson = new Gson();
 
+            if (imageUri != null) {
+                try {
+                    // Obtener el arreglo de bytes de la imagen seleccionada
+                    byte[] imageBytes = getImageBytes(imageUri);
+
+                    // Imprimir el contenido de la imagen en el Logcat
+                    Log.d("RealizarPagoActivity", "Contenido de la imagen en bytes: " + Arrays.toString(imageBytes));
+                } catch (IOException e) {
+                    Log.e("RealizarPagoActivity", "Error al transformar la imagen a bytes", e);
+                }
+            }
+
             // Convertir detallesPedidoObjeto a JSON String
             String detallesPedidoJson = gson.toJson(detallesPedidoObjeto);
 
@@ -190,7 +206,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
                                     Log.d("Pago", "Método de Pago: " + metodoPago);
 
                                     // Hacer la solicitud para obtener la sucursal
-                                    obtenerSucursal(idCliente, totalPuntos, totalAPagar, tipoPedido, metodoPago, latitud, longitud, detallesPedidoObjeto, detallesPedidoJson);
+                                    obtenerSucursal(totalPuntos, totalAPagar, tipoPedido, metodoPago, latitud, longitud, detallesPedidoObjeto, detallesPedidoJson);
                                 } else {
                                     Log.e("Pago", "Ubicación no disponible en la respuesta del usuario");
                                 }
@@ -214,7 +230,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
         }
     }
 
-    private void obtenerSucursal(int idCliente, int totalPuntos, double totalAPagar, String tipoPedido, String metodoPago, String latitud, String longitud, DetallesPedido detallesPedidoObjeto, String detallesPedidoJson) {
+    private void obtenerSucursal(int totalPuntos, double totalAPagar, String tipoPedido, String metodoPago, String latitud, String longitud, DetallesPedido detallesPedidoObjeto, String detallesPedidoJson) {
         apiService.obtenerSucursalPorUbicacion(latitud, longitud).enqueue(new Callback<SucursalResponse>() {
             @Override
             public void onResponse(Call<SucursalResponse> call, Response<SucursalResponse> response) {
@@ -226,7 +242,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
                     if (idSucursal != 0) {
                         // Llamar a realizarPedido con el ID de la sucursal
                         Log.d("Pago", "ID Sucursal a enviar: " + idSucursal);
-                        realizarPedido(idCliente, totalPuntos, totalAPagar, tipoPedido, metodoPago, idSucursal, latitud, longitud, detallesPedidoObjeto, detallesPedidoJson);
+                        realizarPedido(totalPuntos, totalAPagar, tipoPedido, metodoPago, idSucursal, latitud, longitud, detallesPedidoObjeto, detallesPedidoJson);
                     } else {
                         Log.e("Pago", "ID de sucursal inválido: " + idSucursal);
                     }
@@ -241,7 +257,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
         });
     }
 
-    private void realizarPedido(int idCliente, int totalPuntos, double totalAPagar, String tipoPedido, String metodoPago, int idSucursal, String latitud, String longitud, DetallesPedido detallesPedidoObjeto, String detallesPedidoJson) {
+    private void realizarPedido(int totalPuntos, double totalAPagar, String tipoPedido, String metodoPago, int idSucursal, String latitud, String longitud, DetallesPedido detallesPedidoObjeto, String detallesPedidoJson) {
         // Crear RequestBody para los parámetros de texto
         RequestBody puntos = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(totalPuntos));
         RequestBody precio = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(totalAPagar));
@@ -260,6 +276,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
         MultipartBody.Part imagenPart = null;
         if (tipoPedido.equals("T")) {  // Si el tipo de pago es "T", entonces hay una imagen
             if (imageUri != null) {  // Asumiendo que imageUri es la Uri de la imagen seleccionada
+                Log.d("RealizarPagoActivity", "La imagen seleccionada existe en la siguiente ruta: " + imageUri);
                 File file = new File(getRealPathFromURI(imageUri));  // Obtener el archivo real desde la Uri
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
                 imagenPart = MultipartBody.Part.createFormData("imagen", file.getName(), requestFile);
@@ -308,6 +325,8 @@ public class RealizarPagoActivity extends AppCompatActivity {
             }
         });
     }
+
+
     private String getRealPathFromURI(Uri contentUri) {
         String filePath = null;
         try {
@@ -316,6 +335,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
                 if (cursor.moveToFirst()) {
                     int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
                     filePath = cursor.getString(index);
+                    Log.d("RealizarPagoActivity", "Ruta del archivo de imagen: " + filePath);
                 }
                 cursor.close();
             }
@@ -324,6 +344,24 @@ public class RealizarPagoActivity extends AppCompatActivity {
         }
         return filePath;
     }
+
+
+    // Método para obtener el arreglo de bytes de una imagen a partir de su URI
+    private byte[] getImageBytes(Uri imageUri) throws IOException {
+        InputStream inputStream = getContentResolver().openInputStream(imageUri);
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+
+        // Lectura y escritura de la imagen en un buffer de bytes
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+        int len;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+
+        return byteBuffer.toByteArray();
+    }
+
     public void showTimePickerDialog(View v) {
         MaterialTimePicker.Builder builder = new MaterialTimePicker.Builder();
         builder.setTimeFormat(TimeFormat.CLOCK_24H);
