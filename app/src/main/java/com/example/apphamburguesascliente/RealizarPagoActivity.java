@@ -96,8 +96,12 @@ public class RealizarPagoActivity extends AppCompatActivity {
 
                     // Lógica de realizarPago() y demás debe estar aquí dentro del if
                     realizarPago();
+                } else if (fragment instanceof PagoEfectivoFragment) {
+                    // Aquí manejas el caso cuando el fragmento es PagoEfectivoFragment
+                    Log.d("RealizarPagoActivity", "Pago en efectivo seleccionado, realizar el pago en efectivo");
+                    realizarPago();
                 } else {
-                    Log.e("RealizarPagoActivity", "El fragmento no es una instancia de PagoTransferenciaFragment");
+                    Log.e("RealizarPagoActivity", "El fragmento no es una instancia de PagoTransferenciaFragment ni PagoEfectivoFragment");
                 }
             }
         });
