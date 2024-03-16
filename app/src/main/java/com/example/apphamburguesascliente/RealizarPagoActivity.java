@@ -28,6 +28,7 @@ import com.example.apphamburguesascliente.Api.ApiClient;
 import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.DetallesPedido;
 import com.example.apphamburguesascliente.Modelos.Pedido;
+import com.example.apphamburguesascliente.Modelos.Sucursal;
 import com.example.apphamburguesascliente.Modelos.SucursalResponse;
 import com.example.apphamburguesascliente.Modelos.Ubicacion;
 import com.example.apphamburguesascliente.Modelos.User;
@@ -42,7 +43,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,6 +57,15 @@ public class RealizarPagoActivity extends AppCompatActivity {
     private int selectedHour = 0;
     private int selectedMinute = 0;
     private Uri imageUri;
+
+    private User user;
+
+
+    private Spinner ubicacionesSpinner;
+
+    private List<Sucursal> sucursalList;
+
+    private String[] ubicacionesRetiro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +102,6 @@ public class RealizarPagoActivity extends AppCompatActivity {
             }
         });
 
-        RadioGroup radioGroup = findViewById(R.id.radioGroup);
-
         // Maneja la selección del Spinner
         metodosPagoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -104,6 +114,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
                         .replace(R.id.fragmentContainer, fragment)
                         .commit();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
                 // No es necesario hacer nada aquí
@@ -115,25 +126,197 @@ public class RealizarPagoActivity extends AppCompatActivity {
                 .replace(R.id.fragmentContainer, defaultFragment)
                 .commit();
 
+
         // Establecer por defecto que el radioButtonOptionRetiro esté marcado
         RadioButton radioButtonRetiro = findViewById(R.id.radioButtonOptionRetiro);
         radioButtonRetiro.setChecked(true);
 
+        // Inicializar el Spinner de ubicaciones
+        ubicacionesSpinner = findViewById(R.id.ubicacionesSpinner);
+        ubicacionesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Verificar si se ha seleccionado la opción de domicilio
+                RadioButton radioButtonDomicilio = findViewById(R.id.radioButtonOptionDomicilio);
+                if (radioButtonDomicilio.isChecked()) {
+                    // Obtener la ubicación de domicilio seleccionada
+                    String ubicacion = ubicacionesRetiro[position];
+
+                    // Mostrar la información en el Logcat
+                    if (ubicacion != null) {
+
+                        Log.d("RealizarPagoActivity", "ubicacion: " + ubicacion);
+                    }
+                } else {
+                    // Obtener la sucursal de retiro seleccionada
+                    Sucursal sucursal = sucursalList.get(position);
+
+                    // Mostrar la información en el Logcat
+                    if (sucursal != null) {
+                        int idSucursal = sucursal.getIdSucursal();
+                        String nombre = sucursal.getRazonSocial();
+                        // Agregar cualquier otra información relevante de la sucursal
+
+                        Log.d("RealizarPagoActivity", "ID de sucursal: " + idSucursal);
+                        Log.d("RealizarPagoActivity", "Nombre de sucursal: " + nombre);
+                        // Agregar más logs según sea necesario
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // No se necesita hacer nada aquí
+            }
+        });
+
+        // Configurar el listener para el radioGroup
+        RadioGroup radioGroup = findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                Fragment fragment;
+                // Actualizar el contenido del Spinner según la selección del usuario
                 if (checkedId == R.id.radioButtonOptionDomicilio) {
-                    fragment = new DomicilioUbicacionFragment();
+                    User usuario = obtenerUsuarioPorIdCuenta(idCuentaUsuario);
+                    if (usuario != null) {
+                        Ubicacion ubicacion1 = usuario.getUbicacion1();
+                        Ubicacion ubicacion2 = usuario.getUbicacion2();
+                        Ubicacion ubicacion3 = usuario.getUbicacion3();
+
+                        // Crear lista de ubicaciones domicilio
+                        List<Ubicacion> ubicacionesDomicilio = new ArrayList<>();
+                        if (ubicacion1 != null) ubicacionesDomicilio.add(ubicacion1);
+                        if (ubicacion2 != null) ubicacionesDomicilio.add(ubicacion2);
+                        if (ubicacion3 != null) ubicacionesDomicilio.add(ubicacion3);
+
+                        // Establecer las ubicaciones domicilio en el spinner
+                        cargarUbicacionesDomicilio(ubicacionesDomicilio);
+                    }
                 } else {
-                    fragment = new RetiroSucursalFragment();
+                    // Cargar las ubicaciones de retiro en el spinner
+                    cargarUbicacionesSucursales(sucursalList);
                 }
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainerSelector, fragment)
-                        .commit();
+            }
+        });
+        sucursalList = new ArrayList<>();
+        obtenerSucursales();
+    }
+
+
+
+    private User obtenerUsuarioPorIdCuenta(int idCuenta) {
+        apiService.obtenerUsuario(String.valueOf(idCuenta)).enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.isSuccessful()) {
+                    UserResponse usuarioResponse = response.body();
+                    if (usuarioResponse != null) {
+                        user = usuarioResponse.getUsuario(); // Asignar el usuario obtenido a la variable de instancia
+                        // Llamar a otro método para realizar cualquier acción necesaria con el objeto User
+                        procesarUsuario(user);
+                    } else {
+                        Log.e("RealizarPagoActivity", "Respuesta de usuario nula");
+                    }
+                } else {
+                    Log.e("RealizarPagoActivity", "Error al obtener el usuario: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                Log.e("RealizarPagoActivity", "Error al obtener el usuario", t);
+            }
+        });
+        return user;
+    }
+
+    // Método para procesar el objeto User obtenido
+    private void procesarUsuario(User usuario) {
+        // Aquí puedes realizar cualquier acción con el objeto de usuario obtenido
+        if (usuario != null) {
+            // Hacer algo con el usuario
+            Log.d("RealizarPagoActivity", "Usuario obtenido: " + usuario);
+        } else {
+            Log.e("RealizarPagoActivity", "Usuario no encontrado");
+        }
+    }
+
+
+
+    // Método para cargar las ubicaciones de las sucursales en el spinner
+    private void cargarUbicacionesSucursales(List<Sucursal> sucursales) {
+        List<String> nombresSucursales = new ArrayList<>();
+        for (Sucursal sucursal : sucursales) {
+            nombresSucursales.add(sucursal.getRazonSocial());
+        }
+
+        ArrayAdapter<String> ubicacionesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresSucursales);
+        ubicacionesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ubicacionesSpinner.setAdapter(ubicacionesAdapter);
+    }
+
+    // Método para cargar las ubicaciones de las ubicaciones de domicilio en el spinner
+    private void cargarUbicacionesDomicilio(List<Ubicacion> ubicaciones) {
+        List<String> ubicacionesConNombres = new ArrayList<>();
+        for (int i = 0; i < ubicaciones.size(); i++) {
+            String nombreUbicacion;
+            switch (i) {
+                case 0:
+                    nombreUbicacion = "Casa";
+                    break;
+                case 1:
+                    nombreUbicacion = "Trabajo";
+                    break;
+                case 2:
+                    nombreUbicacion = "Otro";
+                    break;
+                default:
+                    nombreUbicacion = "Ubicación " + (i + 1);
+                    break;
+            }
+            ubicacionesConNombres.add(nombreUbicacion);
+        }
+
+        ArrayAdapter<String> ubicacionesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ubicacionesConNombres);
+        ubicacionesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ubicacionesSpinner.setAdapter(ubicacionesAdapter);
+    }
+
+
+
+    private void obtenerSucursales() {
+        apiService.obtenerSucursales().enqueue(new Callback<SucursalResponse>() {
+            @Override
+            public void onResponse(Call<SucursalResponse> call, Response<SucursalResponse> response) {
+                SucursalResponse sucursalResponse = response.body();
+                if (sucursalResponse != null && sucursalResponse.getSucursalList() != null) {
+                    sucursalList = sucursalResponse.getSucursalList();
+                    ubicacionesRetiro = obtenerNombresSucursales();
+                    cargarUbicaciones(ubicacionesRetiro);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SucursalResponse> call, Throwable t) {
+                Log.e("RealizarPagoActivity", "Error al obtener las sucursales", t);
             }
         });
     }
+
+    private String[] obtenerNombresSucursales() {
+        String[] nombresSucursales = new String[sucursalList.size()];
+        for (int i = 0; i < sucursalList.size(); i++) {
+            nombresSucursales[i] = sucursalList.get(i).getRazonSocial();
+        }
+        return nombresSucursales;
+    }
+
+    private void cargarUbicaciones(String[] ubicaciones) {
+        ArrayAdapter<String> ubicacionesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ubicaciones);
+        ubicacionesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ubicacionesSpinner.setAdapter(ubicacionesAdapter);
+    }
+
 
     // Método para obtener el fragmento según la posición seleccionada en el Spinner
     private Fragment obtenerFragmentoSegunSeleccion(int position) {
@@ -148,6 +331,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
                 return new PagoTransferenciaFragment();
         }
     }
+
 
     public void realizarPago() {
         // Obtén los datos necesarios para realizar el pago
