@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SucursalesActivity extends AppCompatActivity {
+public class SucursalesActivity extends AppCompatActivity implements SucursalAdaptador.OnSucursalClickListener {
 
     private ApiService apiService;
     private SucursalAdaptador adapter;
@@ -46,9 +47,12 @@ public class SucursalesActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.sucursalesRecycler);
         sucursalList = new ArrayList<>();
-        adapter = new SucursalAdaptador(sucursalList);
+        adapter = new SucursalAdaptador(sucursalList, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+
+
 
         // Llamar al método para obtener los datos de la API
         obtenerDatosDeAPI();
@@ -86,4 +90,14 @@ public class SucursalesActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onSucursalClick(int sucursalId, String sucursalNombre) {
+        Log.d("SucursalesActivity", "onSucursalClick called with ID: " + sucursalId + ", Nombre: " + sucursalNombre);
+        Intent intent = new Intent(this, VerSucursalActivity.class);
+        intent.putExtra("sucursal_id", sucursalId);
+        intent.putExtra("sucursal_nombre", sucursalNombre);
+        startActivity(intent);
+    }
+
 }

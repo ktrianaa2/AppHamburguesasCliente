@@ -2,16 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="366dp"
-    android:layout_height="300dp"
-    android:background="@drawable/background_sucursales">
+    android:layout_width="match_parent"
+    android:layout_height="300dp">
 
     <LinearLayout
         android:id="@+id/llBottom"
-        android:layout_width="match_parent"
+        android:layout_width="366dp"
         android:layout_height="match_parent"
+        android:clickable="true"
         android:gravity="center"
         android:orientation="vertical"
+        android:background="@drawable/background_sucursales"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,25 +36,38 @@
 
             <com.google.android.gms.maps.MapView
                 android:id="@+id/mapView"
-                android:layout_width="244dp"
-                android:layout_height="181dp"
+                android:layout_width="279dp"
+                android:layout_height="148dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/sucursalNombre"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/sucursalNombre"
                 app:layout_constraintTop_toBottomOf="@+id/sucursalNombre"
-                app:layout_constraintVertical_bias="0.158" />
+                app:layout_constraintVertical_bias="0.073" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/verbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#2196F3"
+                android:gravity="center"
+                android:text="Ver"
+                android:textSize="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/sucursalDireccion"
+                app:layout_constraintStart_toStartOf="@+id/sucursalDireccion"
+                app:layout_constraintTop_toBottomOf="@+id/sucursalDireccion" />
+
 
             <TextView
                 android:id="@+id/sucursalNombre"
                 android:layout_width="249dp"
                 android:layout_height="21dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Nombre de Sucursal"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.504"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

@@ -18,9 +18,16 @@ import retrofit2.Response;
 public class SucursalAdaptador extends RecyclerView.Adapter<SucursalAdaptador.SucursalViewHolder> {
 
     private List<Sucursal> sucursalList;
+    private OnSucursalClickListener clickListener;
 
-    public SucursalAdaptador(List<Sucursal> sucursalList) {
+    public SucursalAdaptador(List<Sucursal> sucursalList, OnSucursalClickListener clickListener) {
         this.sucursalList = sucursalList;
+        this.clickListener = clickListener;
+    }
+
+    @Override
+    public int getItemCount() {
+        return sucursalList.size();
     }
 
     @NonNull
@@ -33,30 +40,38 @@ public class SucursalAdaptador extends RecyclerView.Adapter<SucursalAdaptador.Su
         layoutParams.setMargins(0, 0, 0, 20);
         view.setLayoutParams(layoutParams);
 
+        SucursalViewHolder viewHolder = new SucursalViewHolder(view);
         return new SucursalViewHolder(view);
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull SucursalViewHolder holder, int position) {
         Sucursal sucursal = sucursalList.get(position);
         holder.bind(sucursal);
+        holder.verButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
+                    clickListener.onSucursalClick(sucursal.getIdSucursal(), sucursal.getRazonSocial());
+                }
+            }
+        });
     }
-
-    @Override
-    public int getItemCount() {
-        return sucursalList.size();
-    }
-
 
     static class SucursalViewHolder extends RecyclerView.ViewHolder {
 
         private TextView nombreTextView;
         private TextView direccionTextView;
+        private View itemView;
+        private TextView verButton;
 
         SucursalViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.itemView = itemView;
             nombreTextView = itemView.findViewById(R.id.sucursalNombre);
             direccionTextView = itemView.findViewById(R.id.sucursalDireccion);
+            verButton = itemView.findViewById(R.id.verbtn);
         }
 
         void bind(Sucursal sucursal) {
@@ -65,8 +80,9 @@ public class SucursalAdaptador extends RecyclerView.Adapter<SucursalAdaptador.Su
             String direccion = "Dirección: " + sucursal.getDireccion();
             direccionTextView.setText(direccion);
         }
-
-
     }
 
+    public interface OnSucursalClickListener {
+        void onSucursalClick(int sucursalId, String sucursalNombre);
+    }
 }

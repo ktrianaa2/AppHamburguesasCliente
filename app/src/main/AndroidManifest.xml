@@ -18,6 +18,9 @@
         android:theme="@style/Theme.AppHamburguesasCliente"
         tools:targetApi="31">
         <activity
+            android:name=".VerSucursalActivity"
+            android:exported="false" />
+        <activity
             android:name=".VerUbicacionActivity"
             android:exported="false" />
 
