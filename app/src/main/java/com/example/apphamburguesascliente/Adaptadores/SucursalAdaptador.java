@@ -35,10 +35,12 @@ public class SucursalAdaptador extends RecyclerView.Adapter<SucursalAdaptador.Su
     public SucursalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sucursales_recycler_items, parent, false);
 
+
         // Definir márgenes entre elementos programáticamente
         RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) view.getLayoutParams();
         layoutParams.setMargins(0, 0, 0, 20);
         view.setLayoutParams(layoutParams);
+
 
         SucursalViewHolder viewHolder = new SucursalViewHolder(view);
         return new SucursalViewHolder(view);
@@ -57,6 +59,14 @@ public class SucursalAdaptador extends RecyclerView.Adapter<SucursalAdaptador.Su
                 }
             }
         });
+
+
+
+        // Mostrar información en el Logcat
+        Log.d("SucursalInfo", "ID: " + sucursal.getIdSucursal() +
+                ", Nombre: " + sucursal.getRazonSocial() +
+                ", Latitud: " + sucursal.getUbicacion().getLatitud() +
+                ", Longitud: " + sucursal.getUbicacion().getLongitud());
     }
 
     static class SucursalViewHolder extends RecyclerView.ViewHolder {

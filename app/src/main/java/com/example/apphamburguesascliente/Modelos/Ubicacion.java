@@ -1,6 +1,7 @@
 package com.example.apphamburguesascliente.Modelos;
 
 public class Ubicacion {
+
     private String latitud;
     private String longitud;
 

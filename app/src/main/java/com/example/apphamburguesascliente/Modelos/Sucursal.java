@@ -12,6 +12,11 @@ public class Sucursal {
     @SerializedName("sdireccion")
     private String direccion;
 
+    @SerializedName("id_ubicacion")
+    private UbicacionSucursal ubicacion;
+
+
+
     public String getDireccion() {
         return direccion;
     }
@@ -36,5 +41,14 @@ public class Sucursal {
         this.razonSocial = razonSocial;
     }
 
-    // Agrega los getters y setters para los demás campos
+
+    public UbicacionSucursal getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(UbicacionSucursal ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
+
 }

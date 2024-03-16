@@ -51,10 +51,6 @@ public class SucursalesActivity extends AppCompatActivity implements SucursalAda
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-
-
-
-        // Llamar al método para obtener los datos de la API
         obtenerDatosDeAPI();
     }
 
@@ -94,10 +90,30 @@ public class SucursalesActivity extends AppCompatActivity implements SucursalAda
     @Override
     public void onSucursalClick(int sucursalId, String sucursalNombre) {
         Log.d("SucursalesActivity", "onSucursalClick called with ID: " + sucursalId + ", Nombre: " + sucursalNombre);
-        Intent intent = new Intent(this, VerSucursalActivity.class);
-        intent.putExtra("sucursal_id", sucursalId);
-        intent.putExtra("sucursal_nombre", sucursalNombre);
-        startActivity(intent);
+        Sucursal sucursal = obtenerSucursalPorId(sucursalId); // Método para obtener la sucursal por su ID
+        if (sucursal != null) {
+            double latitud = Double.parseDouble(sucursal.getUbicacion().getLatitud());
+            double longitud = Double.parseDouble(sucursal.getUbicacion().getLongitud());
+
+            Intent intent = new Intent(this, VerSucursalActivity.class);
+            intent.putExtra("sucursal_id", sucursalId);
+            intent.putExtra("sucursal_nombre", sucursalNombre);
+            intent.putExtra("latitud", latitud);
+            intent.putExtra("longitud", longitud);
+            startActivity(intent);
+        } else {
+            Log.e("SucursalesActivity", "Error: No se encontró la sucursal con ID: " + sucursalId);
+        }
+    }
+
+
+    private Sucursal obtenerSucursalPorId(int id) {
+        for (Sucursal sucursal : sucursalList) {
+            if (sucursal.getIdSucursal() == id) {
+                return sucursal;
+            }
+        }
+        return null;
     }
 
 }
