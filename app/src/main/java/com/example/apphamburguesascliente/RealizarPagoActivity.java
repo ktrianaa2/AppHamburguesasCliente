@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -96,8 +97,12 @@ public class RealizarPagoActivity extends AppCompatActivity {
 
                     // Lógica de realizarPago() y demás debe estar aquí dentro del if
                     realizarPago();
+                } else if (fragment instanceof PagoEfectivoFragment) {
+                    // Aquí manejas el caso cuando el fragmento es PagoEfectivoFragment
+                    Log.d("RealizarPagoActivity", "Pago en efectivo seleccionado, realizar el pago en efectivo");
+                    realizarPago();
                 } else {
-                    Log.e("RealizarPagoActivity", "El fragmento no es una instancia de PagoTransferenciaFragment");
+                    Log.e("RealizarPagoActivity", "El fragmento no es una instancia de PagoTransferenciaFragment ni PagoEfectivoFragment");
                 }
             }
         });
