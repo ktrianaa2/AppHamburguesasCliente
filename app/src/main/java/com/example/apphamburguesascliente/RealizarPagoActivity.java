@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -57,14 +58,9 @@ public class RealizarPagoActivity extends AppCompatActivity {
     private int selectedHour = 0;
     private int selectedMinute = 0;
     private Uri imageUri;
-
     private User user;
-
-
     private Spinner ubicacionesSpinner;
-
     private List<Sucursal> sucursalList;
-
     private String[] ubicacionesRetiro;
 
     @Override
@@ -206,8 +202,6 @@ public class RealizarPagoActivity extends AppCompatActivity {
         obtenerSucursales();
     }
 
-
-
     private User obtenerUsuarioPorIdCuenta(int idCuenta) {
         apiService.obtenerUsuario(String.valueOf(idCuenta)).enqueue(new Callback<UserResponse>() {
             @Override
@@ -244,8 +238,6 @@ public class RealizarPagoActivity extends AppCompatActivity {
             Log.e("RealizarPagoActivity", "Usuario no encontrado");
         }
     }
-
-
 
     // Método para cargar las ubicaciones de las sucursales en el spinner
     private void cargarUbicacionesSucursales(List<Sucursal> sucursales) {
@@ -285,8 +277,6 @@ public class RealizarPagoActivity extends AppCompatActivity {
         ubicacionesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ubicacionesSpinner.setAdapter(ubicacionesAdapter);
     }
-
-
 
     private void obtenerSucursales() {
         apiService.obtenerSucursales().enqueue(new Callback<SucursalResponse>() {
@@ -335,8 +325,6 @@ public class RealizarPagoActivity extends AppCompatActivity {
                 return new PagoTransferenciaFragment();
         }
     }
-
-
     public void realizarPago() {
         // Obtén los datos necesarios para realizar el pago
         Intent intent = getIntent();
@@ -344,6 +332,8 @@ public class RealizarPagoActivity extends AppCompatActivity {
         int totalPuntos = intent.getIntExtra("totalPuntos", 0);
         double totalAPagar = intent.getDoubleExtra("totalAPagar", 0.0);
         DetallesPedido detallesPedidoObjeto = (DetallesPedido) intent.getSerializableExtra("detallesPedidoObjeto");
+
+        final String[] imageBase64 = {null};  // Declarar un array de tamaño 1
 
         if (detallesPedidoObjeto != null) {
             // Crear Gson object
@@ -354,8 +344,11 @@ public class RealizarPagoActivity extends AppCompatActivity {
                     // Obtener el arreglo de bytes de la imagen seleccionada
                     byte[] imageBytes = getImageBytes(imageUri);
 
-                    // Imprimir el contenido de la imagen en el Logcat
-                    Log.d("RealizarPagoActivity", "Contenido de la imagen en bytes: " + Arrays.toString(imageBytes));
+                    // Convertir los bytes de la imagen a Base64 y guardar en el array
+                    imageBase64[0] = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
+                    // Imprimir el contenido de la imagen en el Logcat en formato Base64
+                    Log.d("RealizarPagoActivity", "Imagen en Base64: " + imageBase64[0]);
                 } catch (IOException e) {
                     Log.e("RealizarPagoActivity", "Error al transformar la imagen a bytes", e);
                 }
@@ -394,7 +387,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
                                     Log.d("Pago", "Método de Pago: " + metodoPago);
 
                                     // Hacer la solicitud para obtener la sucursal
-                                    obtenerSucursal(totalPuntos, totalAPagar, tipoPedido, metodoPago, latitud, longitud, detallesPedidoObjeto, detallesPedidoJson);
+                                    obtenerSucursal(totalPuntos, totalAPagar, tipoPedido, metodoPago, latitud, longitud, detallesPedidoObjeto, detallesPedidoJson, imageBase64[0]);
                                 } else {
                                     Log.e("Pago", "Ubicación no disponible en la respuesta del usuario");
                                 }
@@ -418,7 +411,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
         }
     }
 
-    private void obtenerSucursal(int totalPuntos, double totalAPagar, String tipoPedido, String metodoPago, String latitud, String longitud, DetallesPedido detallesPedidoObjeto, String detallesPedidoJson) {
+    private void obtenerSucursal(int totalPuntos, double totalAPagar, String tipoPedido, String metodoPago, String latitud, String longitud, DetallesPedido detallesPedidoObjeto, String detallesPedidoJson, String imagenBase64) {
         apiService.obtenerSucursalPorUbicacion(latitud, longitud).enqueue(new Callback<SucursalResponse>() {
             @Override
             public void onResponse(Call<SucursalResponse> call, Response<SucursalResponse> response) {
@@ -430,7 +423,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
                     if (idSucursal != 0) {
                         // Llamar a realizarPedido con el ID de la sucursal
                         Log.d("Pago", "ID Sucursal a enviar: " + idSucursal);
-                        realizarPedido(totalPuntos, totalAPagar, tipoPedido, metodoPago, idSucursal, latitud, longitud, detallesPedidoObjeto, detallesPedidoJson);
+                        realizarPedido(totalPuntos, totalAPagar, tipoPedido, metodoPago, idSucursal, latitud, longitud, detallesPedidoObjeto, detallesPedidoJson, imagenBase64);
                     } else {
                         Log.e("Pago", "ID de sucursal inválido: " + idSucursal);
                     }
@@ -445,7 +438,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
         });
     }
 
-    private void realizarPedido(int totalPuntos, double totalAPagar, String tipoPedido, String metodoPago, int idSucursal, String latitud, String longitud, DetallesPedido detallesPedidoObjeto, String detallesPedidoJson) {
+    private void realizarPedido(int totalPuntos, double totalAPagar, String tipoPedido, String metodoPago, int idSucursal, String latitud, String longitud, DetallesPedido detallesPedidoObjeto, String detallesPedidoJson, String imagenBase64) {
         // Crear RequestBody para los parámetros de texto
         RequestBody puntos = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(totalPuntos));
         RequestBody precio = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(totalAPagar));
@@ -460,21 +453,10 @@ public class RealizarPagoActivity extends AppCompatActivity {
         RequestBody fechaMinutosRB = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(selectedMinute));
         RequestBody detallesPedidoJsonRB = RequestBody.create(MediaType.parse("text/plain"), detallesPedidoJson);
 
-        // Crear MultipartBody.Part para la imagen si existe
-        MultipartBody.Part imagenPart = null;
-        if (tipoPedido.equals("T")) {  // Si el tipo de pago es "T", entonces hay una imagen
-            if (imageUri != null) {  // Asumiendo que imageUri es la Uri de la imagen seleccionada
-                Log.d("RealizarPagoActivity", "La imagen seleccionada existe en la siguiente ruta: " + imageUri);
-                File file = new File(getRealPathFromURI(imageUri));  // Obtener el archivo real desde la Uri
-                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-                imagenPart = MultipartBody.Part.createFormData("imagen", file.getName(), requestFile);
-
-                // Log para verificar si la imagen está presente
-                Log.d("RealizarPagoActivity", "Imagen encontrada: " + file.getName());
-            } else {
-                // Log si no se encuentra la imagen
-                Log.d("RealizarPagoActivity", "Imagen no encontrada");
-            }
+        // Crear RequestBody para la imagen base64
+        RequestBody imagenBase64RB = null;
+        if (imagenBase64 != null && !imagenBase64.isEmpty()) {
+            imagenBase64RB = RequestBody.create(MediaType.parse("text/plain"), imagenBase64);
         }
 
         // Hacer la solicitud para realizar el pedido
@@ -492,7 +474,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
                 fechaHoraRB,
                 fechaMinutosRB,
                 detallesPedidoJsonRB,
-                imagenPart
+                imagenBase64RB
         ).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -513,26 +495,6 @@ public class RealizarPagoActivity extends AppCompatActivity {
             }
         });
     }
-
-
-    private String getRealPathFromURI(Uri contentUri) {
-        String filePath = null;
-        try {
-            Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
-                    int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-                    filePath = cursor.getString(index);
-                    Log.d("RealizarPagoActivity", "Ruta del archivo de imagen: " + filePath);
-                }
-                cursor.close();
-            }
-        } catch (Exception e) {
-            Log.e("RealizarPagoActivity", "Error al obtener la ruta real de la imagen", e);
-        }
-        return filePath;
-    }
-
 
     // Método para obtener el arreglo de bytes de una imagen a partir de su URI
     private byte[] getImageBytes(Uri imageUri) throws IOException {

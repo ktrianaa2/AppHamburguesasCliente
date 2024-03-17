@@ -33,12 +33,15 @@ public class Pedido {
     @SerializedName("fecha_minutos")
     private String fechaMinutos;
 
+    @SerializedName("imagen_base64")
+    private String imagenBase64;
+
     @SerializedName("detalles_pedido")
     private DetallesPedido detallesPedido;
 
     public Pedido(int idCuenta, int puntos, double precio, String tipoPedido, String metodoPago,
                   int sucursal, String latitud, String longitud, String fechaHora, String fechaMinutos,
-                  DetallesPedido detallesPedido) {
+                  String imagenBase64, DetallesPedido detallesPedido) {
         this.idCuenta = idCuenta;
         this.puntos = puntos;
         this.precio = precio;
@@ -49,6 +52,7 @@ public class Pedido {
         this.longitud = longitud;
         this.fechaHora = fechaHora;
         this.fechaMinutos = fechaMinutos;
+        this.imagenBase64 = imagenBase64;
         this.detallesPedido = detallesPedido;
     }
 
@@ -97,7 +101,7 @@ public class Pedido {
     }
 
     public void setIdSucursal(int idSucursal) {
-        this.sucursal = sucursal;
+        this.sucursal = idSucursal;
     }
 
     public String getLatitud() {
@@ -132,6 +136,14 @@ public class Pedido {
         this.fechaMinutos = fechaMinutos;
     }
 
+    public String getImagenBase64() {
+        return imagenBase64;
+    }
+
+    public void setImagenBase64(String imagenBase64) {
+        this.imagenBase64 = imagenBase64;
+    }
+
     public DetallesPedido getDetallesPedido() {
         return detallesPedido;
     }
@@ -153,6 +165,7 @@ public class Pedido {
                 ", longitud='" + longitud + '\'' +
                 ", fechaHora='" + fechaHora + '\'' +
                 ", fechaMinutos='" + fechaMinutos + '\'' +
+                ", imagenBase64='" + imagenBase64 + '\'' +
                 ", detallesPedido=" + detallesPedido +
                 '}';
     }

@@ -78,7 +78,7 @@ public interface ApiService {
             @Part("fecha_hora") RequestBody fechaHora,
             @Part("fecha_minutos") RequestBody fechaMinutos,
             @Part("detalles_pedido") RequestBody detallesPedidoJson,
-            @Part MultipartBody.Part imagen // Cambiado a Part
+            @Part("imagen_base64") RequestBody imagenBase64
     );
 
     @FormUrlEncoded
