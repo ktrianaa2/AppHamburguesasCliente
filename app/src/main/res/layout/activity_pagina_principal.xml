@@ -20,13 +20,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="30dp"
-        app:menu="@menu/menu_bottom"
         app:itemRippleColor="@color/black"
         app:labelVisibilityMode="unlabeled"
         app:itemIconSize="30dp"
         android:background="@drawable/nav_bg"
         app:itemIconTint="@drawable/item_selector"
         app:elevation="4dp"/>
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
