@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -20,7 +19,6 @@ import com.example.apphamburguesascliente.Adaptadores.CarritoAdaptador;
 import com.example.apphamburguesascliente.Modelos.CarritoModelo;
 import com.example.apphamburguesascliente.Modelos.DetalleProducto;
 import com.example.apphamburguesascliente.Modelos.DetallesPedido;
-import com.example.apphamburguesascliente.Modelos.Pedido;
 
 import java.util.ArrayList;
 import java.util.List;

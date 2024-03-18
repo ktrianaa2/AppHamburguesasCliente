@@ -26,9 +26,12 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.apphamburguesascliente.Api.ApiClient;
 import com.example.apphamburguesascliente.Interfaces.ApiService;
+import com.example.apphamburguesascliente.Modelos.CarritoModelo;
 import com.example.apphamburguesascliente.Modelos.DetallesPedido;
 import com.example.apphamburguesascliente.Modelos.Pedido;
 import com.example.apphamburguesascliente.Modelos.Sucursal;
@@ -61,6 +64,9 @@ public class RealizarPagoActivity extends AppCompatActivity {
     private int selectedMinute = 0;
     private Uri imageUri;
     Spinner ubicacionesSpinner;
+    private int idSucursalSeleccionada = -1; // Inicializa con un valor no válido
+    private List<Sucursal> sucursales = new ArrayList<>(); // Declaración de la lista
+    List<CarritoModelo.Producto> listaDeProductos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +83,8 @@ public class RealizarPagoActivity extends AppCompatActivity {
         metodosPagoSpinner.setAdapter(adapter);
 
         ubicacionesSpinner = findViewById(R.id.ubicacionesSpinner); // Asegúrate de que este ID sea correcto.
+
+        listaDeProductos = new ArrayList<>(); // Aquí se inicializa la lista
 
         // Configurar el Spinner con las opciones de sucursales
         List<String> opcionesSucursales = new ArrayList<>();
@@ -96,8 +104,6 @@ public class RealizarPagoActivity extends AppCompatActivity {
                     PagoTransferenciaFragment pagoTransferenciaFragment = (PagoTransferenciaFragment) fragment;
                     imageUri = pagoTransferenciaFragment.getImageUri();
                     Log.d("RealizarPagoActivity", "URI de la imagen: " + (imageUri != null ? imageUri.toString() : "null"));
-
-                    // Lógica de realizarPago() y demás debe estar aquí dentro del if
                     realizarPago();
                 } else if (fragment instanceof PagoEfectivoFragment) {
                     // Aquí manejas el caso cuando el fragmento es PagoEfectivoFragment
@@ -139,47 +145,15 @@ public class RealizarPagoActivity extends AppCompatActivity {
         RadioButton radioButtonDomicilio = findViewById(R.id.radioButtonOptionDomicilio);
         radioButtonRetiro.setChecked(true);
 
-        // Dentro de onCreate() después de la configuración del RadioGroup y RadioButton
-        radioButtonDomicilio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        radioButtonRetiro.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    String[] opcionesDomicilio = {"Casa", "Trabajo", "Otro"};
-                    ArrayAdapter<String> domicilioAdapter = new ArrayAdapter<>(RealizarPagoActivity.this, android.R.layout.simple_spinner_item, opcionesDomicilio);
-                    domicilioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    ubicacionesSpinner.setAdapter(domicilioAdapter);
+                    cargarSucursalesEnSpinner();
                 }
             }
         });
 
-        // Configurar el Spinner con las sucursales al inicio de la actividad
-        apiService.obtenerSucursales().enqueue(new Callback<SucursalResponse>() {
-            @Override
-            public void onResponse(Call<SucursalResponse> call, Response<SucursalResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Sucursal> sucursales = response.body().getSucursalList();
-                    if (sucursales != null) {
-                        List<String> opcionesRetiro = new ArrayList<>();
-                        for (Sucursal sucursal : sucursales) {
-                            opcionesRetiro.add(sucursal.getRazonSocial());
-                            Log.e("Pago", "Sucursal: " + sucursal.getRazonSocial());
-                        }
-                        ArrayAdapter<String> retiroAdapter = new ArrayAdapter<>(RealizarPagoActivity.this, android.R.layout.simple_spinner_item, opcionesRetiro);
-                        retiroAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        ubicacionesSpinner.setAdapter(retiroAdapter);
-                    }
-                } else {
-                    Log.e("Pago", "Error al obtener la lista de sucursales: " + response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SucursalResponse> call, Throwable t) {
-                Log.e("Pago", "Error al obtener la lista de sucursales", t);
-            }
-        });
-
-        // Manejar el cambio de ubicaciones cuando se selecciona "A Domicilio"
         radioButtonDomicilio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -246,10 +220,56 @@ public class RealizarPagoActivity extends AppCompatActivity {
                         }
                         @Override
                         public void onNothingSelected(AdapterView<?> parentView) {
-                            // No es necesario hacer nada aquí
                         }
                     });
                 }
+            }
+        });
+
+        // Configurar el Spinner con las sucursales al inicio de la actividad
+        apiService.obtenerSucursales().enqueue(new Callback<SucursalResponse>() {
+            @Override
+            public void onResponse(Call<SucursalResponse> call, Response<SucursalResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    sucursales = response.body().getSucursalList(); // Actualiza la lista sucursales
+                    cargarSucursalesEnSpinner();
+                } else {
+                    Log.e("Pago", "Error al obtener la lista de sucursales: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SucursalResponse> call, Throwable t) {
+                Log.e("Pago", "Error al obtener la lista de sucursales", t);
+            }
+        });
+
+    }
+
+    private void cargarSucursalesEnSpinner() {
+        List<String> opcionesRetiro = new ArrayList<>();
+        for (Sucursal sucursal : sucursales) {
+            opcionesRetiro.add(sucursal.getRazonSocial());
+        }
+        ArrayAdapter<String> retiroAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, opcionesRetiro);
+        retiroAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ubicacionesSpinner.setAdapter(retiroAdapter);
+        ubicacionesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String nombreSucursal = parent.getItemAtPosition(position).toString();
+                for (Sucursal sucursal : sucursales) {
+                    if (sucursal.getRazonSocial().equals(nombreSucursal)) {
+                        idSucursalSeleccionada = sucursal.getIdSucursal(); // Actualiza idSucursalSeleccionada
+                        Log.d("Pago", "ID de la Sucursal seleccionada: " + idSucursalSeleccionada);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // No es necesario hacer nada aquí
             }
         });
     }
@@ -267,33 +287,25 @@ public class RealizarPagoActivity extends AppCompatActivity {
         }
     }
     public void realizarPago() {
-        // Obtén los datos necesarios para realizar el pago
         Intent intent = getIntent();
         int idCliente = intent.getIntExtra("idCliente", -1);
         int totalPuntos = intent.getIntExtra("totalPuntos", 0);
         double totalAPagar = intent.getDoubleExtra("totalAPagar", 0.0);
         DetallesPedido detallesPedidoObjeto = (DetallesPedido) intent.getSerializableExtra("detallesPedidoObjeto");
-        final String[] imageBase64 = {null};  // Declarar un array de tamaño 1
-        if (detallesPedidoObjeto != null) {
-            // Crear Gson object
-            Gson gson = new Gson();
+        final String[] imageBase64 = {null};
 
+        if (detallesPedidoObjeto != null) {
+            Gson gson = new Gson();
             if (imageUri != null) {
                 try {
-                    // Obtener el arreglo de bytes de la imagen seleccionada
                     byte[] imageBytes = getImageBytes(imageUri);
-
-                    // Convertir los bytes de la imagen a Base64 y guardar en el array
                     imageBase64[0] = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-
-                    // Imprimir el contenido de la imagen en el Logcat en formato Base64
-                    Log.d("RealizarPagoActivity", "Imagen en Base64: " + imageBase64[0]);
                 } catch (IOException e) {
                     Log.e("RealizarPagoActivity", "Error al transformar la imagen a bytes", e);
                 }
             }
-            // Convertir detallesPedidoObjeto a JSON String
             String detallesPedidoJson = gson.toJson(detallesPedidoObjeto);
+
             if (idCuentaUsuario != -1) {
                 apiService.obtenerUsuario(String.valueOf(idCuentaUsuario)).enqueue(new Callback<UserResponse>() {
                     @Override
@@ -302,7 +314,6 @@ public class RealizarPagoActivity extends AppCompatActivity {
                         if (usuarioResponse != null) {
                             User usuario = usuarioResponse.getUsuario();
                             if (usuario != null) {
-                                // Aquí obtienes la ubicación según la opción seleccionada en el Spinner
                                 String latitud = "";
                                 String longitud = "";
 
@@ -332,26 +343,28 @@ public class RealizarPagoActivity extends AppCompatActivity {
                                         }
                                         break;
                                 }
-
                                 Log.d("Pago", "Latitud: " + latitud + ", Longitud: " + longitud);
-
-                                // Obtener el tipo de pedido seleccionado (R para retiro, D para domicilio)
                                 RadioGroup radioGroup = findViewById(R.id.radioGroup);
                                 String tipoPedido;
                                 if (radioGroup.getCheckedRadioButtonId() == R.id.radioButtonOptionRetiro) {
                                     tipoPedido = "R";
+                                    Spinner metodosPagoSpinner = findViewById(R.id.metodosPagoSpinner);
+                                    String metodoPago = metodosPagoSpinner.getSelectedItem().toString().substring(0, 1);
+                                    Log.d("Pago", "Método de Pago: " + metodoPago);
+
+                                    if (idSucursalSeleccionada != -1) { // Asegúrate de que tenga un valor válido
+                                        realizarPedido(totalPuntos, totalAPagar, tipoPedido, metodoPago, idSucursalSeleccionada, "", "", detallesPedidoObjeto, detallesPedidoJson, imageBase64[0]);
+                                    } else {
+                                        Log.e("Pago", "ID de sucursal inválido: " + idSucursalSeleccionada);
+                                    }
                                 } else {
                                     tipoPedido = "D";
+                                    Spinner metodosPagoSpinner = findViewById(R.id.metodosPagoSpinner);
+                                    String metodoPago = metodosPagoSpinner.getSelectedItem().toString().substring(0, 1);
+                                    Log.d("Pago", "Método de Pago: " + metodoPago);
+
+                                    obtenerSucursal(totalPuntos, totalAPagar, tipoPedido, metodoPago, latitud, longitud, detallesPedidoObjeto, detallesPedidoJson, imageBase64[0]);
                                 }
-                                Log.d("Pago", "Tipo de Pedido: " + tipoPedido);
-
-                                // Obtener el método de pago seleccionado (E para efectivo, T para transferencia, F para fraccionado)
-                                Spinner metodosPagoSpinner = findViewById(R.id.metodosPagoSpinner);
-                                String metodoPago = metodosPagoSpinner.getSelectedItem().toString().substring(0, 1);
-                                Log.d("Pago", "Método de Pago: " + metodoPago);
-
-                                // Hacer la solicitud para obtener la sucursal
-                                obtenerSucursal(totalPuntos, totalAPagar, tipoPedido, metodoPago, latitud, longitud, detallesPedidoObjeto, detallesPedidoJson, imageBase64[0]);
                             } else {
                                 Log.e("Pago", "Usuario no disponible en la respuesta");
                             }
@@ -359,7 +372,6 @@ public class RealizarPagoActivity extends AppCompatActivity {
                             Log.e("Pago", "Respuesta de usuario nula");
                         }
                     }
-
                     @Override
                     public void onFailure(Call<UserResponse> call, Throwable t) {
                         Log.e("Pago", "Error al obtener la ubicación del usuario", t);
@@ -468,6 +480,11 @@ public class RealizarPagoActivity extends AppCompatActivity {
                     Log.d("Pago", "Solicitud de pedido exitosa");
                     Toast.makeText(RealizarPagoActivity.this, "Pedido realizado exitosamente", Toast.LENGTH_LONG).show();
 
+                    Intent intent = new Intent(RealizarPagoActivity.this, PaginaPrincipalActivity.class);
+                    intent.putExtra("idCliente", idCuentaUsuario); // Pasar el idCuenta
+                    startActivity(intent);
+                    limpiarCarrito();
+                    finish();
                 } else {
                     // Error en la solicitud
                     Log.e("Pago", "Error al realizar el pedido: " + response.message());
@@ -478,6 +495,17 @@ public class RealizarPagoActivity extends AppCompatActivity {
                 Log.e("Pago", "Error al realizar el pedido", t);
             }
         });
+    }
+    private void limpiarCarrito() {
+        CarritoModelo carritoModelo = CarritoModelo.getInstance();
+        carritoModelo.limpiarCarrito();
+        listaDeProductos.clear();
+
+        // Reemplazar el fragmento actual por el fragmento vacío
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragmentContainer, new CarritoVacioFragment());
+        transaction.commit();
     }
 
     // Método para obtener el arreglo de bytes de una imagen a partir de su URI
