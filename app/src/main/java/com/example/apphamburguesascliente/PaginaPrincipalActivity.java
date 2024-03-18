@@ -20,7 +20,7 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
     BottomNavigationView bottomNav;
 
     FragmentTransaction transaction;
-    Fragment fragmentInicio, fragmentCarritoC, fragmentPerfil;
+    Fragment fragmentInicio, fragmentCarritoC, fragmentPerfil, fragmentNotificaciones;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,45 +34,44 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
 
         fragmentInicio = new IniciooFragment();
         fragmentPerfil = new PerfillFragment();
+        fragmentNotificaciones = new NotificacionesFragment();
 
         // Iniciar con el fragmento de inicio sin importar el estado de inicio de sesión.
         getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, fragmentInicio).commit();
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    int itemId = item.getItemId();
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            int itemId = item.getItemId();
+            transaction = getSupportFragmentManager().beginTransaction();
 
-                    transaction = getSupportFragmentManager().beginTransaction();
-
-                    if (itemId == R.id.item_inicio) {
-                        transaction.replace(R.id.fragmentContainer, fragmentInicio);
-                    } else if (itemId == R.id.item_carrito) {
-                        if (idCliente == -1) {
-                            // Si idCliente es -1, cargar el NoIdClienteFragment para carrito
-                            transaction.replace(R.id.fragmentContainer, new NoIdClienteFragment());
-                        } else {
-                            fragmentCarritoC = new CarritoCFragment();
-                            Bundle bundle = new Bundle();
-                            bundle.putInt("idCliente", idCliente); // Pasar el idCliente al fragmento
-                            fragmentCarritoC.setArguments(bundle);
-                            transaction.replace(R.id.fragmentContainer, fragmentCarritoC);
-                        }
-                    } else if (itemId == R.id.item_perfil) {
-                        if (idCliente == -1) {
-                            // Si idCliente es -1, cargar el NoIdClienteFragment para perfil
-                            transaction.replace(R.id.fragmentContainer, new NoIdClienteFragment());
-                        } else {
-                            // Reemplazar con el fragmento PerfillFragment si el idCliente no es -1
-                            transaction.replace(R.id.fragmentContainer, fragmentPerfil);
-                        }
-                    }
-
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-                    return true;
+            if (itemId == R.id.item_inicio) {
+                transaction.replace(R.id.fragmentContainer, fragmentInicio);
+            } else if (itemId == R.id.item_carrito) {
+                if (idCliente == -1) {
+                    // Si idCliente es -1, cargar el NoIdClienteFragment para carrito
+                    transaction.replace(R.id.fragmentContainer, new NoIdClienteFragment());
+                } else {
+                    fragmentCarritoC = new CarritoCFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("idCliente", idCliente); // Pasar el idCliente al fragmento
+                    fragmentCarritoC.setArguments(bundle);
+                    transaction.replace(R.id.fragmentContainer, fragmentCarritoC);
                 }
-            };
+            } else if (itemId == R.id.item_perfil) {
+                if (idCliente == -1) {
+                    // Si idCliente es -1, cargar el NoIdClienteFragment para perfil
+                    transaction.replace(R.id.fragmentContainer, new NoIdClienteFragment());
+                } else {
+                    // Reemplazar con el fragmento PerfillFragment si el idCliente no es -1
+                    transaction.replace(R.id.fragmentContainer, fragmentPerfil);
+                }
+            }
+
+            transaction.addToBackStack(null);
+            transaction.commit();
+            return true;
+        }
+    };
 }
