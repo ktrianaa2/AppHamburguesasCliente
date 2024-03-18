@@ -60,7 +60,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
     private int selectedHour = 0;
     private int selectedMinute = 0;
     private Uri imageUri;
-    private Spinner ubicacionesSpinner;
+    Spinner ubicacionesSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +75,14 @@ public class RealizarPagoActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, opcionesMetodoPago);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         metodosPagoSpinner.setAdapter(adapter);
+
+        ubicacionesSpinner = findViewById(R.id.ubicacionesSpinner); // Asegúrate de que este ID sea correcto.
+
+        // Configurar el Spinner con las opciones de sucursales
+        List<String> opcionesSucursales = new ArrayList<>();
+        ArrayAdapter<String> sucursalesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, opcionesSucursales);
+        sucursalesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ubicacionesSpinner.setAdapter(sucursalesAdapter);
 
         SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         idCuentaUsuario = sharedPreferences.getInt("id_cuenta", -1); // -1 es un valor por defecto en caso de que no se encuentre nada// Obtener el idCliente de los argumentos
@@ -131,17 +139,43 @@ public class RealizarPagoActivity extends AppCompatActivity {
         RadioButton radioButtonDomicilio = findViewById(R.id.radioButtonOptionDomicilio);
         radioButtonRetiro.setChecked(true);
 
-        // Manejar el cambio de ubicaciones cuando se selecciona "A Retirar"
-        ubicacionesSpinner = findViewById(R.id.ubicacionesSpinner);
-        radioButtonRetiro.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        // Dentro de onCreate() después de la configuración del RadioGroup y RadioButton
+        radioButtonDomicilio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    String[] opcionesRetiro = {"Ubicación 1", "Ubicación 2", "Ubicación 3"};
-                    ArrayAdapter<String> retiroAdapter = new ArrayAdapter<>(RealizarPagoActivity.this, android.R.layout.simple_spinner_item, opcionesRetiro);
-                    retiroAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    ubicacionesSpinner.setAdapter(retiroAdapter);
+                    String[] opcionesDomicilio = {"Casa", "Trabajo", "Otro"};
+                    ArrayAdapter<String> domicilioAdapter = new ArrayAdapter<>(RealizarPagoActivity.this, android.R.layout.simple_spinner_item, opcionesDomicilio);
+                    domicilioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    ubicacionesSpinner.setAdapter(domicilioAdapter);
                 }
+            }
+        });
+
+        // Configurar el Spinner con las sucursales al inicio de la actividad
+        apiService.obtenerSucursales().enqueue(new Callback<SucursalResponse>() {
+            @Override
+            public void onResponse(Call<SucursalResponse> call, Response<SucursalResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Sucursal> sucursales = response.body().getSucursalList();
+                    if (sucursales != null) {
+                        List<String> opcionesRetiro = new ArrayList<>();
+                        for (Sucursal sucursal : sucursales) {
+                            opcionesRetiro.add(sucursal.getRazonSocial());
+                            Log.e("Pago", "Sucursal: " + sucursal.getRazonSocial());
+                        }
+                        ArrayAdapter<String> retiroAdapter = new ArrayAdapter<>(RealizarPagoActivity.this, android.R.layout.simple_spinner_item, opcionesRetiro);
+                        retiroAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        ubicacionesSpinner.setAdapter(retiroAdapter);
+                    }
+                } else {
+                    Log.e("Pago", "Error al obtener la lista de sucursales: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SucursalResponse> call, Throwable t) {
+                Log.e("Pago", "Error al obtener la lista de sucursales", t);
             }
         });
 
@@ -218,13 +252,6 @@ public class RealizarPagoActivity extends AppCompatActivity {
                 }
             }
         });
-        // Cuando se crea la actividad, mostrar las ubicaciones para "A Retirar" si está seleccionado
-        if (radioButtonRetiro.isChecked()) {
-            String[] opcionesRetiro = {"Ubicación 1", "Ubicación 2", "Ubicación 3"};
-            ArrayAdapter<String> retiroAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, opcionesRetiro);
-            retiroAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            ubicacionesSpinner.setAdapter(retiroAdapter);
-        }
     }
     // Método para obtener el fragmento según la posición seleccionada en el Spinner
     private Fragment obtenerFragmentoSegunSeleccion(int position) {

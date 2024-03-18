@@ -95,5 +95,4 @@ public interface ApiService {
 
     @GET("sucursal/sucusarleslist/")
     Call<SucursalResponse> obtenerSucursales();
-
 }
