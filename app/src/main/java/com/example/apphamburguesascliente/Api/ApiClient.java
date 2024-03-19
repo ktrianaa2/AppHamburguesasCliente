@@ -6,7 +6,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-    private static final String BASE_URL = "https://9jpn4ctd-8000.use2.devtunnels.ms/";
+    private static final String BASE_URL = "https://wv7jhxv6-8000.brs.devtunnels.ms";
     private static ApiService apiService;
     private static final Object LOCK = new Object();
 
