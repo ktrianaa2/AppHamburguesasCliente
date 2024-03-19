@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+
 public class NotificacionesFragment extends Fragment {
 
     public NotificacionesFragment() {
@@ -14,9 +16,50 @@ public class NotificacionesFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notificaciones, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_notificaciones, container, false);
+
+        if (usuarioIncompleto()) {
+            loadFragment(new NotificacionesPerfilFragment());
+        } else if (ubicacionesNulas()) {
+            loadFragment(new NotificacionesUbicacionFragment());
+        } else if (pedidosPendientes()) {
+            loadFragment(new NotificacionesPedidosFragment());
+        } else if (usuarioIncompleto() & ubicacionesNulas()) {
+            loadFragment(new NotificacionesPerfilUbicacionesFragment());
+        } else if (usuarioIncompleto() & pedidosPendientes()) {
+            loadFragment(new NotificacionesPerfilPedidosFragment());
+        } else if (ubicacionesNulas() & pedidosPendientes()) {
+            loadFragment(new NotificacionesUbicacionesPedidosFragment());
+        } else if (usuarioIncompleto() & ubicacionesNulas() & pedidosPendientes()) {
+            loadFragment(new NotificacionesPedidosUbicacionPerfilFragment());
+        } else {
+            // Si no se cumple ninguna condición carga el fragmento vacío
+            loadFragment(new NotificacionesVacioFragment());
+        }
+
+        return view;
     }
+
+    // Método para cargar un fragmento en el contenedor
+    private void loadFragment(Fragment fragment) {
+        getChildFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
+    }
+
+    // Métodos hipotéticos para verificar condiciones
+    private boolean usuarioIncompleto() {
+        // Lógica para verificar si el usuario tiene el perfil incompleto
+        return false;
+    }
+
+    private boolean ubicacionesNulas() {
+        // Lógica para verificar si las ubicaciones del usuario están nulas
+        return false;
+    }
+
+    private boolean pedidosPendientes() {
+        // Lógica para verificar si hay pedidos pendientes del usuario
+        return false;
+    }
+
 }
