@@ -95,4 +95,15 @@ public interface ApiService {
 
     @GET("sucursal/sucusarleslist/")
     Call<SucursalResponse> obtenerSucursales();
+
+    @FormUrlEncoded
+    @POST("Login/editar_usuario/{id_cuenta}/")
+    Call<UserResponse> actualizarUsuario(
+            @Path("id_cuenta") String id_cuenta,
+            @Field("snombre") String snombre,
+            @Field("capellido") String capellido,
+            @Field("ctelefono") String ctelefono,
+            @Field("ruc_cedula") String ruc_cedula,
+            @Field("crazon_social") String crazon_social
+    );
 }

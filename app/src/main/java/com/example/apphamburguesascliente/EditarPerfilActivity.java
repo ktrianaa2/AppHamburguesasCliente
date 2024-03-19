@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -19,21 +20,29 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.apphamburguesascliente.Api.ApiClient;
+import com.example.apphamburguesascliente.Interfaces.ApiService;
+import com.example.apphamburguesascliente.Modelos.UserResponse;
+
 import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EditarPerfilActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
-
+    private int idCuentaUsuario;
     private ImageView imageView;
-    private EditText usernameEditText;
+    private EditText razonSocialText;
     private EditText nombreEditText;
     private EditText apellidoEditText;
     private EditText telefonoEditText;
     private EditText identificacionEditText;
     private EditText correoEditText;
-
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +51,15 @@ public class EditarPerfilActivity extends AppCompatActivity {
 
         // Inicializar vistas
         imageView = findViewById(R.id.imageView);
-        usernameEditText = findViewById(R.id.username);
+        razonSocialText = findViewById(R.id.razon_social);
         nombreEditText = findViewById(R.id.nombre);
         apellidoEditText = findViewById(R.id.apellido);
         telefonoEditText = findViewById(R.id.telefono);
         identificacionEditText = findViewById(R.id.identificaion);
         correoEditText = findViewById(R.id.cpassword);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+        idCuentaUsuario = sharedPreferences.getInt("id_cuenta", -1);
 
 
         // Botón de retroceso
@@ -105,16 +117,36 @@ public class EditarPerfilActivity extends AppCompatActivity {
         guardarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Valores de los campos de entrada
-                String username = usernameEditText.getText().toString();
-                String nombre = nombreEditText.getText().toString();
-                String apellido = apellidoEditText.getText().toString();
-                String telefono = telefonoEditText.getText().toString();
-                String identificacion = identificacionEditText.getText().toString();
-                String correo = correoEditText.getText().toString();
+                String crazon_social = razonSocialText.getText().toString();
+                String snombre = nombreEditText.getText().toString();
+                String capellido = apellidoEditText.getText().toString();
+                String ctelefono = telefonoEditText.getText().toString();
+                String ruc_cedula = identificacionEditText.getText().toString();
+                // Convertir idCuentaUsuario de int a String
+                String id_cuenta = String.valueOf(idCuentaUsuario);
 
-                // Realiza las acciones de guardado
-                // cierras la actividad
+                apiService = ApiClient.getInstance();
+                Call<UserResponse> call = apiService.actualizarUsuario(id_cuenta, snombre, capellido, ctelefono, ruc_cedula, crazon_social);
+
+                call.enqueue(new Callback<UserResponse>() {
+                    @Override
+                    public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                        if (response.isSuccessful()) {
+                            // Aquí manejas la respuesta exitosa, por ejemplo actualizando la UI o cerrando la actividad.
+                            Toast.makeText(EditarPerfilActivity.this, "Usuario actualizado con éxito", Toast.LENGTH_SHORT).show();
+                            finish(); // Cierra la actividad y regresa
+                        } else {
+                            // Manejo de errores, por ejemplo, mostrar un mensaje de error.
+                            Toast.makeText(EditarPerfilActivity.this, "Error al actualizar usuario", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserResponse> call, Throwable t) {
+                        // Manejo de fallo en la llamada a la API
+                        Toast.makeText(EditarPerfilActivity.this, "Fallo al conectar con el servidor", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
