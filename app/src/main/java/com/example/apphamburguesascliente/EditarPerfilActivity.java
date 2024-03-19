@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.apphamburguesascliente.Api.ApiClient;
 import com.example.apphamburguesascliente.Interfaces.ApiService;
+import com.example.apphamburguesascliente.Modelos.User;
 import com.example.apphamburguesascliente.Modelos.UserResponse;
 
 import java.io.IOException;
@@ -61,6 +62,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         idCuentaUsuario = sharedPreferences.getInt("id_cuenta", -1);
 
+        obtenerDatosUsuario();
 
         // Botón de retroceso
         ImageView imageViewFlecha = findViewById(R.id.flechaRetroceder);
@@ -117,33 +119,35 @@ public class EditarPerfilActivity extends AppCompatActivity {
         guardarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Obtener los datos editados y realizar la llamada a la API para actualizar
                 String crazon_social = razonSocialText.getText().toString();
                 String snombre = nombreEditText.getText().toString();
                 String capellido = apellidoEditText.getText().toString();
                 String ctelefono = telefonoEditText.getText().toString();
                 String ruc_cedula = identificacionEditText.getText().toString();
-                // Convertir idCuentaUsuario de int a String
                 String id_cuenta = String.valueOf(idCuentaUsuario);
 
+                // Realizar la llamada a la API para actualizar los datos del usuario
                 apiService = ApiClient.getInstance();
                 Call<UserResponse> call = apiService.actualizarUsuario(id_cuenta, snombre, capellido, ctelefono, ruc_cedula, crazon_social);
 
+                // Manejar la respuesta de la API
                 call.enqueue(new Callback<UserResponse>() {
                     @Override
                     public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                         if (response.isSuccessful()) {
-                            // Aquí manejas la respuesta exitosa, por ejemplo actualizando la UI o cerrando la actividad.
+                            // Manejar la respuesta exitosa
                             Toast.makeText(EditarPerfilActivity.this, "Usuario actualizado con éxito", Toast.LENGTH_SHORT).show();
                             finish(); // Cierra la actividad y regresa
                         } else {
-                            // Manejo de errores, por ejemplo, mostrar un mensaje de error.
+                            // Manejar errores de la API
                             Toast.makeText(EditarPerfilActivity.this, "Error al actualizar usuario", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<UserResponse> call, Throwable t) {
-                        // Manejo de fallo en la llamada a la API
+                        // Manejar fallos de conexión
                         Toast.makeText(EditarPerfilActivity.this, "Fallo al conectar con el servidor", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -209,6 +213,37 @@ public class EditarPerfilActivity extends AppCompatActivity {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imageView.setImageBitmap(imageBitmap);
         }
+    }
+    private void obtenerDatosUsuario() {
+        // Llamada a la API para obtener los datos del usuario
+        apiService = ApiClient.getInstance();
+        Call<UserResponse> call = apiService.obtenerUsuario(String.valueOf(idCuentaUsuario));
+
+        call.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.isSuccessful()) {
+                    // Obtener el usuario de la respuesta
+                    User usuario = response.body().getUsuario();
+
+                    // Llenar los campos de texto con los datos actuales del usuario
+                    razonSocialText.setText(usuario.getRazonSocial());
+                    nombreEditText.setText(usuario.getSnombre());
+                    apellidoEditText.setText(usuario.getCapellido());
+                    telefonoEditText.setText(usuario.getTelefono());
+                    identificacionEditText.setText(usuario.getRucCedula());
+                } else {
+                    // Manejar errores de la API
+                    Toast.makeText(EditarPerfilActivity.this, "Error al obtener los datos del usuario", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                // Manejar fallos de conexión
+                Toast.makeText(EditarPerfilActivity.this, "Fallo al conectar con el servidor", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
