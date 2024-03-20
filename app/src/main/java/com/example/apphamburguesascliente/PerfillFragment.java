@@ -40,7 +40,6 @@ public class PerfillFragment extends Fragment {
 
     private TextView txtUsuario;
     private TextView txtNombresUsuario;
-    private TextView txtMail;
     private TextView txtNumeroTelefono;
     private TextView txtRazonSocial;
     private TextView txtCedula;
@@ -54,7 +53,6 @@ public class PerfillFragment extends Fragment {
         // Encuentra las vistas
         txtUsuario = view.findViewById(R.id.txtUsuario);
         txtNombresUsuario = view.findViewById(R.id.txtNombresUsuario);
-        txtMail = view.findViewById(R.id.txtMail);
         txtNumeroTelefono = view.findViewById(R.id.txtNumeroTelefono);
         txtRazonSocial = view.findViewById(R.id.txtRazonSocial);
         txtCedula = view.findViewById(R.id.txtCedula);
