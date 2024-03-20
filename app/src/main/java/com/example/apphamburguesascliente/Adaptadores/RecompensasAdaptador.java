@@ -1,6 +1,9 @@
 package com.example.apphamburguesascliente.Adaptadores;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +55,21 @@ public class RecompensasAdaptador extends RecyclerView.Adapter<RecompensasAdapta
         }
 
         holder.puntosRecompensa.setText(recompensa.getPuntosRecompensaProducto());
+
+            ProductoModelo product = productos.get(position);
+
+
+            if (product.getImagen64() != null && !product.getImagen64().isEmpty()) {
+                Log.d("AvisosAdaptador", "Imagen Base64 recibida en posición " + position + ": " + product.getImagen64());
+                byte[] decodedString = Base64.decode(product.getImagen64(), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                holder.recompensaImagen.setImageBitmap(decodedByte);
+                Log.d("AvisosAdaptador", "Imagen cargada en posición: " + position);
+            } else {
+                holder.recompensaImagen.setImageResource(R.drawable.imagennotfound); // establece imagen predeterminada
+                Log.d("AvisosAdaptador", "No hay imagen en posición: " + position);
+            }
+
 
         holder.canjearButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -10,6 +10,8 @@ public class ProductoModelo {
     private int idProducto;
     private String nombreProducto;
     private String descripcionProducto;
+
+    private String imagen64;
     private double precioProducto;
     private int puntosProducto;
 
@@ -25,6 +27,7 @@ public class ProductoModelo {
                 producto.setNombreProducto(jsonProducto.get("nombreproducto").getAsString());
                 producto.setDescripcionProducto(jsonProducto.get("descripcionproducto").getAsString());
                 producto.setPrecioProducto(jsonProducto.get("preciounitario").getAsDouble());
+                producto.setImagen64(jsonProducto.get("imagenp").getAsString());
                 producto.setPuntosProducto(jsonProducto.has("puntosp") ? jsonProducto.get("puntosp").getAsInt() : 0);
 
                 listaProductos.add(producto);
@@ -58,6 +61,14 @@ public class ProductoModelo {
 
     public void setDescripcionProducto(String descripcionProducto) {
         this.descripcionProducto = descripcionProducto;
+    }
+
+    public String getImagen64() {
+        return imagen64;
+    }
+
+    public void setImagen64(String imagen64) {
+        this.imagen64 = imagen64;
     }
 
     public double getPrecioProducto() {

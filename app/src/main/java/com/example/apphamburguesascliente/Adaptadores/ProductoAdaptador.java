@@ -1,5 +1,9 @@
 package com.example.apphamburguesascliente.Adaptadores;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,8 +56,16 @@ public class ProductoAdaptador extends RecyclerView.Adapter<ProductoAdaptador.Pr
         holder.allMenuDescription.setText(product.getDescripcionProducto());
         holder.allMenuPrice.setText("$" + product.getPrecioProducto());
 
-        // Puedes configurar la imagen si tienes una
-        // holder.allMenuImage.setImageResource(product.getImageResource());
+        if (product.getImagen64() != null && !product.getImagen64().isEmpty()) {
+            Log.d("AvisosAdaptador", "Imagen Base64 recibida en posición " + position + ": " + product.getImagen64());
+            byte[] decodedString = Base64.decode(product.getImagen64(), Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            holder.allMenuImage.setImageBitmap(decodedByte);
+            Log.d("AvisosAdaptador", "Imagen cargada en posición: " + position);
+        } else {
+            holder.allMenuImage.setImageResource(R.drawable.imagennotfound); // establece imagen predeterminada
+            Log.d("AvisosAdaptador", "No hay imagen en posición: " + position);
+        }
 
         // Manejar clic en el elemento
         holder.itemView.setOnClickListener(v -> {
