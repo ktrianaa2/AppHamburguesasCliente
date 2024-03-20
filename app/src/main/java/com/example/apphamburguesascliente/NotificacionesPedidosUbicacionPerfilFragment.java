@@ -1,6 +1,9 @@
 package com.example.apphamburguesascliente;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -37,7 +40,14 @@ public class NotificacionesPedidosUbicacionPerfilFragment extends Fragment {
         vamosUbicacionesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // Obtener la ID de usuario
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MySharedPref", MODE_PRIVATE);
+                int idCuenta = sharedPreferences.getInt("id_cuenta", 0);
+
+                // Abrir la actividad de "Mis Ubicaciones" con la ID de usuario como extra
                 Intent intent = new Intent(getActivity(), MisUbicacionesActivity.class);
+                intent.putExtra("idUsuario", idCuenta);
                 startActivity(intent);
             }
         });
