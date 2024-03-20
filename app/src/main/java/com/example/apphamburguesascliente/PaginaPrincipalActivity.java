@@ -81,6 +81,10 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
                     transaction.replace(R.id.fragmentContainer, new NoIdClienteFragment());
                 } else {
                     // Reemplazar con el fragmento NotificacionesFragment si el idCliente no es -1
+                    fragmentNotificaciones = new NotificacionesFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("idCliente", idCliente);
+                    fragmentNotificaciones.setArguments(bundle);
                     transaction.replace(R.id.fragmentContainer, fragmentNotificaciones);
                 }
             }

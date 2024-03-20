@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.FrameLayout;
 
 public class NotificacionesFragment extends Fragment {
 
+    private int idCliente = -1;
     public NotificacionesFragment() {
         // Required empty public constructor
     }
@@ -18,6 +20,13 @@ public class NotificacionesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notificaciones, container, false);
+
+        // Obtener el idCliente de los argumentos
+        if (getArguments() != null) {
+            idCliente = getArguments().getInt("idCliente", -1);
+            // Mostrar el idCliente en Logcat
+            Log.d("NotificacionesFragment", "El idCliente es: " + idCliente);
+        }
 
         if (usuarioIncompleto()) {
             loadFragment(new NotificacionesPerfilFragment());
