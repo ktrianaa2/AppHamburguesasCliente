@@ -1,5 +1,6 @@
 package com.example.apphamburguesascliente.Interfaces;
 
+import com.example.apphamburguesascliente.Modelos.AvisosModelo;
 import com.example.apphamburguesascliente.Modelos.LoginRequest;
 import com.example.apphamburguesascliente.Modelos.LoginResponse;
 import com.example.apphamburguesascliente.Modelos.Pedido;
@@ -106,4 +107,7 @@ public interface ApiService {
             @Field("ruc_cedula") String ruc_cedula,
             @Field("crazon_social") String crazon_social
     );
+
+    @GET("avisos/avisos")
+    Call<List<AvisosModelo>> getAvisos();
 }

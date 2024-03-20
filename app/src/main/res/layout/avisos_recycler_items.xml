@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/llBottom"
+        android:layout_width="366dp"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/background_sucursales"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+
+            <TextView
+                android:id="@+id/descripcionAviso"
+                android:layout_width="271dp"
+                android:layout_height="91dp"
+                android:layout_marginTop="16dp"
+                android:text="Descripcion"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/imagenAviso"
+                app:layout_constraintStart_toStartOf="@+id/imagenAviso"
+                app:layout_constraintTop_toBottomOf="@+id/imagenAviso"
+                app:layout_constraintVertical_bias="0.629" />
+
+            <ImageView
+                android:id="@+id/imagenAviso"
+                android:layout_width="264dp"
+                android:layout_height="280dp"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/imagennotfound"
+                app:layout_constraintEnd_toEndOf="@+id/tituloAviso"
+                app:layout_constraintHorizontal_bias="0.533"
+                app:layout_constraintStart_toStartOf="@+id/tituloAviso"
+                app:layout_constraintTop_toBottomOf="@+id/tituloAviso" />
+
+            <TextView
+                android:id="@+id/tituloAviso"
+                android:layout_width="249dp"
+                android:layout_height="21dp"
+                android:layout_marginTop="28dp"
+                android:text="Titulo"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.504"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
