@@ -44,7 +44,8 @@ public class NotificacionesFragment extends Fragment {
             Log.d("NotificacionesFragment", "El idCliente es: " + idCliente);
         }
 
-        obtenerUsuario();
+        // Llamar al método para obtener el usuario con el ID correcto
+        obtenerUsuario(idCliente);
         return view;
     }
 
@@ -54,41 +55,18 @@ public class NotificacionesFragment extends Fragment {
     }
 
     // Método para obtener la información del usuario desde la API de forma asíncrona
-    private void obtenerUsuario() {
-        Call<UserResponse> call = apiService.obtenerUsuario(String.valueOf(idCliente));
-        call.enqueue(new Callback<UserResponse>() {
+    private void obtenerUsuario(int idCliente) {
+        ApiService apiService = ApiClient.getInstance();
+        Call<UserResponse> callUsuario = apiService.obtenerUsuario(String.valueOf(idCliente));
+        callUsuario.enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if (response.isSuccessful()) {
                     UserResponse userResponse = response.body();
                     if (userResponse != null && userResponse.getUsuario() != null) {
-
-                        boolean usuarioIncompleto = usuarioIncompleto(userResponse);
-                        boolean ubicacionesNulas = ubicacionesNulas(userResponse);
-                        boolean pedidosPendientes = pedidosPendientes();
-
-                        Log.d("NotificacionesFragment", "usuarioIncompleto: " + usuarioIncompleto);
-                        Log.d("NotificacionesFragment", "ubicacionesNulas: " + ubicacionesNulas);
-                        Log.d("NotificacionesFragment", "pedidosPendientes: " + pedidosPendientes);
-
-                        if (usuarioIncompleto && ubicacionesNulas && pedidosPendientes) {
-                            loadFragment(new NotificacionesPedidosUbicacionPerfilFragment());
-                        } else if (ubicacionesNulas && pedidosPendientes) {
-                            loadFragment(new NotificacionesUbicacionesPedidosFragment());
-                        } else if (usuarioIncompleto && pedidosPendientes) {
-                            loadFragment(new NotificacionesPerfilPedidosFragment());
-                        } else if (usuarioIncompleto && ubicacionesNulas) {
-                            loadFragment(new NotificacionesPerfilUbicacionesFragment());
-                        } else if (pedidosPendientes) {
-                            loadFragment(new NotificacionesPedidosFragment());
-                        } else if (ubicacionesNulas) {
-                            loadFragment(new NotificacionesUbicacionFragment());
-                        } else if (usuarioIncompleto) {
-                            loadFragment(new NotificacionesPerfilFragment());
-                        } else {
-                            // Si no se cumple ninguna condición carga el fragmento vacío
-                            loadFragment(new NotificacionesVacioFragment());
-                        }
+                        // Aquí puedes realizar las operaciones que necesites con el usuario obtenido
+                        // Por ejemplo, puedes llamar a métodos para procesar los datos del usuario
+                        procesarUsuario(userResponse);
                     } else {
                         Log.e("NotificacionesFragment", "La respuesta del servidor no contiene datos de usuario.");
                     }
@@ -104,8 +82,49 @@ public class NotificacionesFragment extends Fragment {
         });
     }
 
+    // Método para procesar el usuario obtenido
+    private void procesarUsuario(UserResponse userResponse) {
+        User user = userResponse.getUsuario();
 
+        // Aquí puedes realizar cualquier operación necesaria con el usuario obtenido
+        Log.d("NotificacionesFragment", "Usuario obtenido: " + user.toString());
 
+        // Luego, puedes llamar a los métodos para realizar las validaciones o cargar los fragmentos necesarios
+        boolean usuarioIncompleto = usuarioIncompleto(userResponse);
+        boolean ubicacionesNulas = ubicacionesNulas(userResponse);
+        boolean pedidosPendientes = pedidosPendientes();
+
+        Log.d("NotificacionesFragment", "usuarioIncompleto: " + usuarioIncompleto);
+        Log.d("NotificacionesFragment", "ubicacionesNulas: " + ubicacionesNulas);
+        Log.d("NotificacionesFragment", "pedidosPendientes: " + pedidosPendientes);
+
+        // Llamar al método para cargar el fragmento adecuado según las condiciones
+        cargarFragmento(usuarioIncompleto, ubicacionesNulas, pedidosPendientes);
+    }
+
+    // Método para cargar el fragmento adecuado según las condiciones
+    private void cargarFragmento(boolean usuarioIncompleto, boolean ubicacionesNulas, boolean pedidosPendientes) {
+        if (usuarioIncompleto && ubicacionesNulas && pedidosPendientes) {
+            loadFragment(new NotificacionesPedidosUbicacionPerfilFragment());
+        } else if (ubicacionesNulas && pedidosPendientes) {
+            loadFragment(new NotificacionesUbicacionesPedidosFragment());
+        } else if (usuarioIncompleto && pedidosPendientes) {
+            loadFragment(new NotificacionesPerfilPedidosFragment());
+        } else if (usuarioIncompleto && ubicacionesNulas) {
+            loadFragment(new NotificacionesPerfilUbicacionesFragment());
+        } else if (pedidosPendientes) {
+            loadFragment(new NotificacionesPedidosFragment());
+        } else if (ubicacionesNulas) {
+            loadFragment(new NotificacionesUbicacionFragment());
+        } else if (usuarioIncompleto) {
+            loadFragment(new NotificacionesPerfilFragment());
+        } else {
+            // Si no se cumple ninguna condición carga el fragmento vacío
+            loadFragment(new NotificacionesVacioFragment());
+        }
+    }
+
+    // Método para verificar si el usuario tiene datos incompletos
     private boolean usuarioIncompleto(UserResponse userResponse) {
         User user = userResponse.getUsuario();
         return user == null ||
@@ -116,14 +135,35 @@ public class NotificacionesFragment extends Fragment {
                 user.getRazonSocial() == null;
     }
 
+    // Método para verificar si todas las ubicaciones del usuario son nulas
     private boolean ubicacionesNulas(UserResponse userResponse) {
         User user = userResponse.getUsuario();
-        return user.getUbicacion1() == null ||
-                user.getUbicacion2() == null ||
-                user.getUbicacion3() == null;
+
+        int numUbi = 0;
+
+        if (user.getUbicacion1().getLatitud() != null) {
+            numUbi++;
+            Log.d("NotificacionesFragment", "Ubicación 1 no es nula: " + user.getUbicacion1().getLatitud());
+        } else {
+            Log.d("NotificacionesFragment", "Ubicación 1 es nula");
+        }
+
+        if (user.getUbicacion2().getLatitud() != null) {
+            numUbi++;
+            Log.d("NotificacionesFragment", "Ubicación 2 no es nula: " + user.getUbicacion2().getLatitud());
+        } else {
+            Log.d("NotificacionesFragment", "Ubicación 2 es nula");
+        }
+
+        if (user.getUbicacion3().getLatitud() != null) {
+            numUbi++;
+            Log.d("NotificacionesFragment", "Ubicación 3 no es nula: " + user.getUbicacion3().getLatitud());
+        } else {
+            Log.d("NotificacionesFragment", "Ubicación 3 es nula");
+        }
+
+        return numUbi == 0;
     }
-
-
 
     private boolean pedidosPendientes() {
         // Lógica para verificar si hay pedidos pendientes del usuario

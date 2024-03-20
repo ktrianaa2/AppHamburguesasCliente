@@ -38,6 +38,9 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
 
         // Iniciar con el fragmento de inicio sin importar el estado de inicio de sesión.
         fragmentInicio = new IniciooFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("idCliente", idCliente);
+        fragmentInicio.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, fragmentInicio).commit();
 
         // Inflar el menú según el estado de inicio de sesión
@@ -55,6 +58,10 @@ public class PaginaPrincipalActivity extends AppCompatActivity {
             transaction = getSupportFragmentManager().beginTransaction();
 
             if (itemId == R.id.item_inicio) {
+                fragmentInicio = new IniciooFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("idCliente", idCliente); // Pasar el idCliente al fragmento
+                fragmentInicio.setArguments(bundle);
                 transaction.replace(R.id.fragmentContainer, fragmentInicio);
             } else if (itemId == R.id.item_carrito) {
                 if (idCliente == -1) {

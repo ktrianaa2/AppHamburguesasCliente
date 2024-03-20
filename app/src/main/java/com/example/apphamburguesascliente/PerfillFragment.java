@@ -37,6 +37,7 @@ public class PerfillFragment extends Fragment {
     private int numeroUbicacionesConfiguradas = 0;
     private TextView txtNumeroUbicaciones;
 
+    private TextView txtPuntos;
 
     private TextView txtUsuario;
     private TextView txtNombresUsuario;
@@ -57,6 +58,7 @@ public class PerfillFragment extends Fragment {
         txtRazonSocial = view.findViewById(R.id.txtRazonSocial);
         txtCedula = view.findViewById(R.id.txtCedula);
         txtNumeroUbicaciones = view.findViewById(R.id.txtNumeroUbicaciones);
+        txtPuntos = view.findViewById(R.id.txtPuntos);
 
 
 
@@ -168,6 +170,7 @@ public class PerfillFragment extends Fragment {
         txtNumeroTelefono.setText(usuario.getTelefono());
         txtRazonSocial.setText(usuario.getRazonSocial() != null ? usuario.getRazonSocial() : "Sin información");
         txtCedula.setText(usuario.getRucCedula() != null ? usuario.getRucCedula() : "Sin información");
+        txtPuntos.setText(usuario.getCpuntos() != null ? usuario.getCpuntos() : "0");
 
         // Contar las ubicaciones configuradas
         contarUbicacionesConfiguradas(usuario);

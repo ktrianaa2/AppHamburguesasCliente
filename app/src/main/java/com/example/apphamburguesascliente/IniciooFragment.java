@@ -35,6 +35,8 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
     private RecyclerView allMenuRecycler;
     private ProductoAdaptador adaptador;
 
+    int idCliente = -1;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inicioo, container, false);
@@ -44,6 +46,13 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
         CardView cardEmpresa = view.findViewById(R.id.cardEmpresa);
         CardView cardRecompensas = view.findViewById(R.id.cardRecompensas);
         CardView cardAnuncios = view.findViewById(R.id.cardAnuncios);
+
+        // Obtener el idCliente de los argumentos
+        if (getArguments() != null) {
+            idCliente = getArguments().getInt("idCliente", -1);
+            // Mostrar el idCliente en Logcat
+            Log.d("InicioFragment", "El idCliente es: " + idCliente);
+        }
 
         cardEmpresa.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +66,7 @@ public class IniciooFragment extends Fragment implements ProductoAdaptador.OnIte
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), RecompensasActivity.class);
+                intent.putExtra("idCliente", idCliente);
                 startActivity(intent);
             }
         });

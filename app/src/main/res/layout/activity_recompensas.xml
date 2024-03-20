@@ -30,10 +30,24 @@
         app:layout_constraintStart_toEndOf="@+id/flechaRetroceder"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/txtPuntosT"
+        android:layout_width="366dp"
+        android:layout_height="62dp"
+        android:text="Tienes un total de 0 puntos"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/recompensasRecycler"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/flechaRetroceder"
+        app:layout_constraintTop_toBottomOf="@+id/txtTitulo"
+        app:layout_constraintVertical_bias="0.531" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recompensasRecycler"
-        android:layout_width="391dp"
-        android:layout_height="665dp"
+        android:layout_width="394dp"
+        android:layout_height="620dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

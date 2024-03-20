@@ -9,6 +9,8 @@ public class User {
     private String snombre;
     private String capellido;
     private String ruc_cedula;
+
+    private String cpuntos;
     private Ubicacion ubicacion1;
     private Ubicacion ubicacion2;
     private Ubicacion ubicacion3;
@@ -76,6 +78,15 @@ public class User {
     public void setRucCedula(String ruc_cedula) {
         this.ruc_cedula = ruc_cedula;
     }
+    public String getCpuntos() {
+        return cpuntos;
+    }
+
+    public void setCpuntos(String cpuntos) {
+        this.cpuntos = cpuntos;
+    }
+
+
 
     public Ubicacion getUbicacion1() {
         return ubicacion1;
