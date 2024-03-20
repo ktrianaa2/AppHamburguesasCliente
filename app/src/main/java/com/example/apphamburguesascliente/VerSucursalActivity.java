@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.apphamburguesascliente.Interfaces.DirectionsService;
+import com.example.apphamburguesascliente.Modelos.DirectionsResponse;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,16 +27,31 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
+import com.google.maps.android.PolyUtil;
+
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class VerSucursalActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private GoogleMap mMap;
     private List<Marker> markerList = new ArrayList<>();
+
+    //  sucursal
+    private double latitudS;
+    private double longitudS;
+    private LatLng SUCURSAL_LOCATION;
 
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -41,6 +59,10 @@ public class VerSucursalActivity extends AppCompatActivity implements OnMapReady
     private double currentLongitude; // Variable para almacenar la longitud actual
     private Marker currentMarker; // Marcador para la ubicación actual
     private Marker previousMarker; // Marcador para la ubicación anterior
+    private Marker sucursalMarker; // Marcador de la sucursal
+    private Polyline currentPolyline;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +73,23 @@ public class VerSucursalActivity extends AppCompatActivity implements OnMapReady
         if (intent != null) {
             int sucursalId = intent.getIntExtra("sucursal_id", -1);
             String sucursalNombre = intent.getStringExtra("sucursal_nombre");
-            double latitud = intent.getDoubleExtra("latitud", 0.0);
-            double longitud = intent.getDoubleExtra("longitud", 0.0);
+            latitudS = intent.getDoubleExtra("latitud", 0.0);
+            longitudS = intent.getDoubleExtra("longitud", 0.0);
 
             Log.d("VerSucursalActivity", "ID: " + sucursalId + ", Nombre: " + sucursalNombre +
-                    ", Latitud: " + latitud + ", Longitud: " + longitud);
+                    ", Latitud: " + latitudS + ", Longitud: " + longitudS);
 
             TextView txtTitulo2 = findViewById(R.id.txtTitulo2);
             txtTitulo2.setText(sucursalNombre);
+
+            SUCURSAL_LOCATION = new LatLng(latitudS, longitudS);
+
+            // Agregar el marcador de la sucursal a la lista de marcadores al iniciar el mapa
+            if (mMap != null && SUCURSAL_LOCATION != null) {
+                sucursalMarker = mMap.addMarker(new MarkerOptions().position(SUCURSAL_LOCATION).title("Ubicación de la sucursal"));
+                markerList.add(sucursalMarker);
+            }
+
 
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map);
@@ -99,17 +130,26 @@ public class VerSucursalActivity extends AppCompatActivity implements OnMapReady
                     LatLng sucursalLocation = null;
                     for (Marker marker : markerList) {
                         if (!marker.getTitle().equals("Ubicación de la sucursal")) {
-                            sucursalLocation = marker.getPosition();
+                            sucursalLocation = SUCURSAL_LOCATION;
                             break;
                         }
                     }
                     if (sucursalLocation != null) {
                         //  trazar la ruta desde la nueva ubicación a la sucursal
+                        LatLng currentLocation = currentMarker.getPosition();
+                        obtenerRuta(currentLocation, sucursalLocation);
                         Log.d("VerSucursalActivity", "Trazar ruta desde " + currentMarker.getTitle() + " hacia la sucursal");
                     }
                 }
             }
         });
+
+        // Agregar el marcador de la sucursal a la lista de marcadores al iniciar el mapa
+        if (mMap != null && SUCURSAL_LOCATION != null) {
+            sucursalMarker = mMap.addMarker(new MarkerOptions().position(SUCURSAL_LOCATION).title("Ubicación de la sucursal"));
+            markerList.add(sucursalMarker);
+        }
+
 
 
 
@@ -137,11 +177,12 @@ public class VerSucursalActivity extends AppCompatActivity implements OnMapReady
             LatLng ubicacion = new LatLng(latitud, longitud);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion, 15));
 
-            // Agregar un marcador en la ubicación
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(ubicacion);
-            markerOptions.title("Ubicación de la sucursal");
-            mMap.addMarker(markerOptions).setDraggable(false);
+
+            // Agregar el marcador de la sucursal a la lista de marcadores al iniciar el mapa
+            if (SUCURSAL_LOCATION != null) {
+                sucursalMarker = mMap.addMarker(new MarkerOptions().position(SUCURSAL_LOCATION).title("Ubicación de la sucursal"));
+                markerList.add(sucursalMarker);
+            }
         }
 
         mMap.setOnMapClickListener(this);
@@ -189,6 +230,12 @@ public class VerSucursalActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     public void onMapClick(LatLng latLng) {
+
+        // Eliminar la ruta anterior si existe
+        if (currentPolyline != null) {
+            currentPolyline.remove();
+        }
+
         // Eliminar la marca anterior si existe, pero solo si no es la ubicación de la sucursal
         if (currentMarker != null && !currentMarker.getTitle().equals("Ubicación de la sucursal")) {
             currentMarker.remove();
@@ -207,11 +254,74 @@ public class VerSucursalActivity extends AppCompatActivity implements OnMapReady
         mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
 
         // Agregar el marcador a la lista
-        markerList.add(currentMarker);
-
+        if (!markerList.contains(currentMarker)) {
+            markerList.add(currentMarker);
+        }
         // Imprimir en el Logcat
         Log.d("VerSucursalActivity", "Latitud (onMapClick): " + currentLatitude + ", Longitud (onMapClick): " + currentLongitude);
     }
 
+    private void obtenerRuta(LatLng origen, LatLng destino) {
+        String baseUrl = "https://maps.googleapis.com/maps/api/";
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        String rutaUrl = baseUrl + "directions/json?origin=" + origen.latitude + "," + origen.longitude + "&destination=" + destino.latitude + "," + destino.longitude + "&key=AIzaSyAn4V_mZEMc3VBnNHsfHSTEOvenJXYUz6Q";
+
+
+        DirectionsService service = retrofit.create(DirectionsService.class);
+        Call<DirectionsResponse> call = service.getDirections(
+                origen.latitude + "," + origen.longitude,
+                destino.latitude + "," + destino.longitude,
+                "AIzaSyAn4V_mZEMc3VBnNHsfHSTEOvenJXYUz6Q"
+        );
+
+        // Eliminar la ruta anterior si existe
+        if (currentPolyline != null) {
+            currentPolyline.remove();
+        }
+
+
+        call.enqueue(new Callback<DirectionsResponse>() {
+
+            @Override
+            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
+                if (response.isSuccessful()) {
+                    DirectionsResponse directionsResponse = response.body();
+                    dibujarRuta(directionsResponse);
+                    Log.d("VerSucursalActivity", "Ruta obtenida correctamente: " + rutaUrl);
+                } else {
+                    Log.d("VerSucursalActivity", "Error al obtener la ruta: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DirectionsResponse> call, Throwable t) {
+                Log.e("VerSucursalActivity", "Error en la solicitud: " + t.getMessage());
+            }
+        });
+    }
+
+    private void dibujarRuta(DirectionsResponse response) {
+        // Verificar si la respuesta contiene rutas
+        if (response != null && response.getRoutes() != null && response.getRoutes().size() > 0) {
+            // Obtener la polilínea de la primera ruta
+            String polyline = response.getRoutes().get(0).getOverviewPolyline().getPoints();
+
+            // Decodificar la polilínea en una lista de puntos LatLng
+            List<LatLng> puntos = PolyUtil.decode(polyline);
+
+            // Crear un objeto PolylineOptions para configurar las propiedades de la polilínea
+            PolylineOptions opcionesLinea = new PolylineOptions()
+                    .addAll(puntos)
+                    .width(10)
+                    .color(Color.BLUE); // Puedes cambiar el color si lo deseas
+
+            // Agregar la polilínea al mapa
+            currentPolyline = mMap.addPolyline(opcionesLinea);
+        }
+    }
 
 }
