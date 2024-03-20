@@ -20,6 +20,11 @@ import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.EmpresaInfo;
 import com.example.apphamburguesascliente.Modelos.RespuestaEmpresa;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -93,19 +98,40 @@ public class EmpresaActivity extends AppCompatActivity {
     }
 
     private void actualizarUI(EmpresaInfo info) {
-        ((TextView) findViewById(R.id.nombreEmpresaTextView)).setText(info.getNombre());
-        ((TextView) findViewById(R.id.direccionTextView)).setText(info.getDireccion());
-        ((TextView) findViewById(R.id.telefonoTextView)).setText(info.getTelefono());
-        ((TextView) findViewById(R.id.correoTextView)).setText(info.getCorreoElectronico());
-        ((TextView) findViewById(R.id.fechaFundacionTextView)).setText(info.getFechaFundacion());
-        ((TextView) findViewById(R.id.sitioWebTextView)).setText(info.getSitioWeb());
-        ((TextView) findViewById(R.id.esloganTextView)).setText(info.getEslogan());
+        if (info != null) {
+            StringBuilder textoConcatenado = new StringBuilder();
+            textoConcatenado.append("Somos ").append(info.getNombre()).append("\n");
+            textoConcatenado.append(info.getEslogan()).append("\n");
+            textoConcatenado.append("Nos puedes encontrar en ").append(info.getDireccion()).append("\n");
+            textoConcatenado.append("Contáctate con nosotros a través de ").append(info.getTelefono()).append("\n");
+            textoConcatenado.append("O por nuestro correo electrónico ").append("\n");
+            textoConcatenado.append(info.getCorreoElectronico());
 
-        if (info.getLogoBase64() != null && !info.getLogoBase64().isEmpty()) {
-            ImageView imageView = findViewById(R.id.imageView);
-            byte[] decodedString = Base64.decode(info.getLogoBase64(), Base64.DEFAULT);
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            imageView.setImageBitmap(decodedByte);
+            TextView textViewEmpresaInfo = findViewById(R.id.textInfo);
+            textViewEmpresaInfo.setText(textoConcatenado.toString());
+
+            TextView textViewEmpresaFecha = findViewById(R.id.textFecha);
+            textViewEmpresaFecha.setText("Haciendo las mejores hamburguesas desde " + formatearFecha(info.getFechaFundacion()));
+
+            if (info.getLogoBase64() != null && !info.getLogoBase64().isEmpty()) {
+                ImageView imageView = findViewById(R.id.imageView);
+                byte[] decodedString = Base64.decode(info.getLogoBase64(), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                imageView.setImageBitmap(decodedByte);
+            }
         }
     }
+
+    private String formatearFecha(String fecha) {
+        try {
+            SimpleDateFormat formatoOriginal = new SimpleDateFormat("yyyy-MM-dd");
+            Date fechaDate = formatoOriginal.parse(fecha);
+            SimpleDateFormat formatoDeseado = new SimpleDateFormat("dd 'de' MMMM 'del' yyyy", new Locale("es", "EC"));
+            return formatoDeseado.format(fechaDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return fecha; // Si ocurre un error, devuelve la fecha sin formato
+        }
+    }
+
 }
