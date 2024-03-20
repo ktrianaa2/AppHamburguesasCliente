@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginRight="8dp"
+    android:background="@drawable/recycler_bg2">
+
+    <ImageView
+        android:id="@+id/recompensaImagen"
+        android:layout_width="86dp"
+        android:layout_height="95dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/imagennotfound" />
+
+
+    <TextView
+        android:id="@+id/recompensaNombre"
+        android:layout_width="221dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Nombre del Producto"
+        app:layout_constraintEnd_toStartOf="@+id/puntosRecompensa"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/recompensaImagen"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/puntosRecompensatxt"
+        android:layout_width="60dp"
+        android:layout_height="21dp"
+        android:layout_marginEnd="4dp"
+        android:text="Puntos"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.21" />
+
+    <TextView
+        android:id="@+id/puntosRecompensa"
+        android:layout_width="24dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="0"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/puntosRecompensatxt"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/puntosRecompensatxt"
+        app:layout_constraintTop_toBottomOf="@+id/puntosRecompensatxt"
+        app:layout_constraintVertical_bias="0.391" />
+
+    <Button
+        android:id="@+id/canjearButton"
+        android:layout_width="91dp"
+        android:layout_height="42dp"
+        android:backgroundTint="#2196F3"
+        android:gravity="center"
+        android:text="Canjear"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/recompensaNombre"
+        app:layout_constraintStart_toStartOf="@+id/recompensaNombre"
+        app:layout_constraintTop_toBottomOf="@+id/recompensaNombre" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

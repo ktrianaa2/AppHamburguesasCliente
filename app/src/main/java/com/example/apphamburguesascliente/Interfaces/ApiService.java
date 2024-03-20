@@ -4,6 +4,7 @@ import com.example.apphamburguesascliente.Modelos.AvisosModelo;
 import com.example.apphamburguesascliente.Modelos.LoginRequest;
 import com.example.apphamburguesascliente.Modelos.LoginResponse;
 import com.example.apphamburguesascliente.Modelos.Pedido;
+import com.example.apphamburguesascliente.Modelos.RecompensasModelo;
 import com.example.apphamburguesascliente.Modelos.RegistroRequest;
 import com.example.apphamburguesascliente.Modelos.RegistroResponse;
 import com.example.apphamburguesascliente.Modelos.RespuestaEmpresa;
@@ -110,4 +111,8 @@ public interface ApiService {
 
     @GET("avisos/avisos/")
     Call<AvisosModelo> getAvisos();
+
+
+    @GET("Recompensas/lista_recompensas_producto/")
+    Call<RecompensasModelo> getRecompensas();
 }
