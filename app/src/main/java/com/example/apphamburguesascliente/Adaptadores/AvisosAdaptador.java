@@ -1,6 +1,10 @@
 package com.example.apphamburguesascliente.Adaptadores;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.apphamburguesascliente.Modelos.AvisosModelo;
 import com.example.apphamburguesascliente.R;
 
@@ -18,10 +21,10 @@ import java.util.List;
 
 public class AvisosAdaptador extends RecyclerView.Adapter<AvisosAdaptador.ViewHolder> {
 
-    private List<AvisosModelo> listaAvisos;
+    private List<AvisosModelo.Aviso> listaAvisos;
     private Context context;
 
-    public AvisosAdaptador(List<AvisosModelo> listaAvisos, Context context) {
+    public AvisosAdaptador(List<AvisosModelo.Aviso> listaAvisos, Context context) {
         this.listaAvisos = listaAvisos;
         this.context = context;
     }
@@ -33,19 +36,30 @@ public class AvisosAdaptador extends RecyclerView.Adapter<AvisosAdaptador.ViewHo
         return new ViewHolder(vista);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        AvisosModelo aviso = listaAvisos.get(position);
+        AvisosModelo.Aviso aviso = listaAvisos.get(position);
         holder.tituloAviso.setText(aviso.getTitulo());
         holder.descripcionAviso.setText(aviso.getDescripcion());
 
-        // Cargar la imagen utilizando Glide
-        // Glide.with(context)
-        //        .load(aviso.getImagen()) // Aquí deberías pasar la URL o la ruta de la imagen
-        //        .placeholder(R.drawable.imagennotfound) // Opcional: imagen de carga mientras se carga la imagen real
-        //        .error(R.drawable.no_notificaciones) // Opcional: imagen de error si falla la carga de la imagen
-        //        .into(holder.imagenAviso);
+        Log.d("AvisosAdaptador", "Posición: " + position + ", Titulo: " + aviso.getTitulo() + ", Descripción: " + aviso.getDescripcion());
+
+        Log.d("AvisosAdaptador", "Cadena Base64 de imagen en posición " + position + ": " + aviso.getImagen());
+
+        if (aviso.getImagen() != null && !aviso.getImagen().isEmpty()) {
+            Log.d("AvisosAdaptador", "Imagen Base64 recibida en posición " + position + ": " + aviso.getImagen());
+            byte[] decodedString = Base64.decode(aviso.getImagen(), Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            holder.imagenAviso.setImageBitmap(decodedByte);
+            Log.d("AvisosAdaptador", "Imagen cargada en posición: " + position);
+        } else {
+            holder.imagenAviso.setImageResource(R.drawable.imagennotfound); // establece imagen predeterminada
+            Log.d("AvisosAdaptador", "No hay imagen en posición: " + position);
+        }
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -66,10 +80,15 @@ public class AvisosAdaptador extends RecyclerView.Adapter<AvisosAdaptador.ViewHo
         }
     }
 
-    public void actualizarDatos(List<AvisosModelo> nuevosDatos) {
-        listaAvisos.clear();
-        listaAvisos.addAll(nuevosDatos);
-        notifyDataSetChanged();
+    public void actualizarDatos(List<AvisosModelo.Aviso> nuevosDatos) {
+        if (nuevosDatos != null) {
+            listaAvisos.clear();
+            listaAvisos.addAll(nuevosDatos);
+            notifyDataSetChanged();
+        } else {
+            Log.e("AvisosAdaptador", "Los nuevos datos son nulos");
+        }
     }
+
 
 }

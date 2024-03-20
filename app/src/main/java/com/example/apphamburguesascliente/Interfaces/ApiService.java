@@ -108,6 +108,6 @@ public interface ApiService {
             @Field("crazon_social") String crazon_social
     );
 
-    @GET("avisos/avisos")
-    Call<List<AvisosModelo>> getAvisos();
+    @GET("avisos/avisos/")
+    Call<AvisosModelo> getAvisos();
 }

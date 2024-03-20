@@ -35,8 +35,8 @@ public class AnunciosActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.avisosRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adaptador = new AvisosAdaptador(new ArrayList<>(), this); // Inicializa el adaptador con una lista vacía
-        recyclerView.setAdapter(adaptador); // Configura el adaptador
+        adaptador = new AvisosAdaptador(new ArrayList<>(), this);
+        recyclerView.setAdapter(adaptador);
 
         ImageView imageViewFlecha = findViewById(R.id.flechaRetroceder);
 
@@ -51,21 +51,27 @@ public class AnunciosActivity extends AppCompatActivity {
         // Obtener la instancia de ApiService utilizando ApiClient
         ApiService apiService = ApiClient.getInstance();
 
-        Call<List<AvisosModelo>> call = apiService.getAvisos();
-        call.enqueue(new Callback<List<AvisosModelo>>() {
+        Call<AvisosModelo> call = apiService.getAvisos();
+        call.enqueue(new Callback<AvisosModelo>() {
             @Override
-            public void onResponse(Call<List<AvisosModelo>> call, Response<List<AvisosModelo>> response) {
+            public void onResponse(Call<AvisosModelo> call, Response<AvisosModelo> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(AnunciosActivity.this, "Error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    Log.e("AnunciosActivity", "Error: " + response.code());
                     return;
                 }
 
-                List<AvisosModelo> listaAvisos = response.body();
-                adaptador.actualizarDatos(listaAvisos); // Actualiza los datos en el adaptador
+                AvisosModelo avisosModelo = response.body();
+                List<AvisosModelo.Aviso> listaAvisos = avisosModelo.getAvisosPrincipales();
+                if (listaAvisos != null) {
+                    adaptador.actualizarDatos(listaAvisos);
+                    Log.d("AnunciosActivity", "Cantidad de objetos recibidos: " + listaAvisos.size());
+                } else {
+                    Log.e("AnunciosActivity", "La lista de avisos es nula");
+                }
             }
 
             @Override
-            public void onFailure(Call<List<AvisosModelo>> call, Throwable t) {
+            public void onFailure(Call<AvisosModelo> call, Throwable t) {
                 Log.e("AnunciosActivity", "Error al obtener los datos: " + t.getMessage());
             }
         });
