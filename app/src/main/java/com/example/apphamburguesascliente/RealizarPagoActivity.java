@@ -479,8 +479,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
                     // Éxito en la solicitud, procesar la respuesta si es necesario
                     Log.d("Pago", "Solicitud de pedido exitosa");
                     Toast.makeText(RealizarPagoActivity.this, "Pedido realizado exitosamente", Toast.LENGTH_LONG).show();
-
-                    Intent intent = new Intent(RealizarPagoActivity.this, PaginaPrincipalActivity.class);
+                    Intent intent = new Intent(RealizarPagoActivity.this, PagoConfirmadoActivity.class);
                     intent.putExtra("idCliente", idCuentaUsuario); // Pasar el idCuenta
                     startActivity(intent);
                     limpiarCarrito();

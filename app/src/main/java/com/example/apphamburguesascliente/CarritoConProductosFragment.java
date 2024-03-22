@@ -28,16 +28,18 @@ public class CarritoConProductosFragment extends Fragment implements OnProductAd
     private RecyclerView recyclerView;
     private CarritoAdaptador adaptador;
 
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.carrito_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adaptador = new CarritoAdaptador(new ArrayList<>());
+        CarritoCFragment carritoFragment = (CarritoCFragment) requireActivity().getSupportFragmentManager().findFragmentByTag("CarritoCFragmentTag");
 
         List<CarritoModelo.Producto> productosGuardados = obtenerProductosDesdeSharedPreferences();
-        adaptador = new CarritoAdaptador(productosGuardados);
+        adaptador = new CarritoAdaptador(productosGuardados, carritoFragment);
 
         adaptador.actualizarLista(productosGuardados);
 

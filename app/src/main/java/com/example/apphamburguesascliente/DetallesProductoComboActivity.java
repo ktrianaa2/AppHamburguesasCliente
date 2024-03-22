@@ -22,6 +22,8 @@ public class DetallesProductoComboActivity extends AppCompatActivity implements 
     String name, price, description;
     private CarritoAdaptador adaptador;
 
+    private CarritoCFragment fragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +36,7 @@ public class DetallesProductoComboActivity extends AppCompatActivity implements 
         name = intent.getStringExtra("name");
         price = intent.getStringExtra("price");
         description = intent.getStringExtra("description");
-        // Recoger los puntos del producto del Intent
-        int puntosProducto = intent.getIntExtra("points", 0); // Asegúrate de proporcionar un valor predeterminado
+        int puntosProducto = intent.getIntExtra("points", 0);
 
         double priceDouble = Double.parseDouble(price);
 
@@ -47,7 +48,10 @@ public class DetallesProductoComboActivity extends AppCompatActivity implements 
         itemPrice.setText("$ " + priceDouble);
         itemDescription.setText(description);
 
-        adaptador = new CarritoAdaptador(new ArrayList<>());
+        CarritoCFragment carritoFragment = (CarritoCFragment) getSupportFragmentManager().findFragmentByTag("CarritoCFragmentTag");
+        adaptador = new CarritoAdaptador(new ArrayList<>(), carritoFragment);
+
+
         // Añade el fragmento BotonAnadirAlCarritoFragment, asegurándote de pasar los puntosProducto como argumento
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -74,24 +78,6 @@ public class DetallesProductoComboActivity extends AppCompatActivity implements 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("productos", productosJson);
         editor.apply();
-    }
-
-    private void mostrarProductosCarrito() {
-        // Obtener la lista de productos del carrito
-        CarritoModelo carritoModel = CarritoModelo.getInstance();
-        List<CarritoModelo.Producto> productos = carritoModel.getProductos();
-
-        // Crear un adaptador o realizar la lógica necesaria para mostrar los productos en tu interfaz de usuario
-        // ...
-
-        // Puedes actualizar la interfaz según la lista de productos del carrito
-        // ...
-    }
-
-    private int generateProductId() {
-        // Lógica para generar un ID único para el producto (puedes implementar según tus necesidades)
-        // ...
-        return 0;
     }
 
 

@@ -36,7 +36,7 @@ public class OpcionesAnadirAlCarritoFragment extends Fragment {
         args.putString("name", nombreProducto);
         args.putDouble("price", precioProducto);
         args.putString("description", descripcionProducto);
-        args.putInt("points", puntosProducto); // Añadir puntosProducto a los argumentos
+        args.putInt("points", puntosProducto);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,8 +63,6 @@ public class OpcionesAnadirAlCarritoFragment extends Fragment {
         Button plusButton = view.findViewById(R.id.plusButton);
         Button addButton = view.findViewById(R.id.AnadirButton);
 
-        minusButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-        plusButton.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,8 +97,14 @@ public class OpcionesAnadirAlCarritoFragment extends Fragment {
                     String nombreProducto = getArguments().getString("name");
                     double precioProducto = getArguments().getDouble("price");
                     String descripcionProducto = getArguments().getString("description");
-                    int cantidad = Integer.parseInt(quantityEditText.getText().toString());
-                    int puntosProducto = getArguments().getInt("points"); // Recuperar puntosProducto de los argumentos
+                    int puntosProducto = getArguments().getInt("points");
+
+                    int cantidad;
+                    if (quantityEditText.getText().toString().isEmpty()) {
+                        cantidad = 1;
+                    } else {
+                        cantidad = Integer.parseInt(quantityEditText.getText().toString());
+                    }
 
                     // Imprimir los datos del producto en la consola, incluyendo la cantidad
                     Log.d("DetallesProducto Añadir Carrito", "Nombre: " + nombreProducto);

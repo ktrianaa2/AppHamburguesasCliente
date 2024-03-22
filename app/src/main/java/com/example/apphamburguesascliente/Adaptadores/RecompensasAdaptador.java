@@ -1,6 +1,7 @@
 package com.example.apphamburguesascliente.Adaptadores;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.apphamburguesascliente.DetallesProductoComboActivity;
 import com.example.apphamburguesascliente.Modelos.ProductoModelo;
 import com.example.apphamburguesascliente.Modelos.RecompensasModelo;
 import com.example.apphamburguesascliente.R;
@@ -74,7 +76,28 @@ public class RecompensasAdaptador extends RecyclerView.Adapter<RecompensasAdapta
         holder.canjearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Lógica para canjear la recompensa
+                RecompensasModelo.RecompensaProducto recompensa = recompensas.get(position);
+
+                // Obtener la posición del producto seleccionado
+                int productoSeleccionado = holder.getAdapterPosition();
+
+                // Obtener el ID del producto asociado a la recompensa seleccionada
+                int idProducto = recompensa.getIdProducto();
+
+                // Obtener el producto asociado al ID
+                ProductoModelo producto = productos.get(productoSeleccionado);
+
+                int puntos = Integer.parseInt(recompensa.getPuntosRecompensaProducto());
+
+                // Crear un Intent para abrir la actividad de detalles del producto
+                Intent intent = new Intent(context, DetallesProductoComboActivity.class);
+                intent.putExtra("idProducto", producto.getIdProducto());
+                intent.putExtra("name", producto.getNombreProducto());
+                intent.putExtra("price", "0.00");
+                intent.putExtra("description", producto.getDescripcionProducto());
+                intent.putExtra("points", puntos);
+                intent.putExtra("imagen", producto.getImagen64());
+                context.startActivity(intent);
             }
         });
     }
