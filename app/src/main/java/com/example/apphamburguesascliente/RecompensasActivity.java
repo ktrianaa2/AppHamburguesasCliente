@@ -58,7 +58,7 @@ public class RecompensasActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recompensasRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adaptador = new RecompensasAdaptador(new ArrayList<>(), new ArrayList<>(), this);
+        adaptador = new RecompensasAdaptador(new ArrayList<>(), new ArrayList<>(), this, idCliente);
 
         recyclerView.setAdapter(adaptador);
 

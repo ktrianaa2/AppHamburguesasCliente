@@ -12,27 +12,45 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.apphamburguesascliente.Api.ApiClient;
 import com.example.apphamburguesascliente.DetallesProductoComboActivity;
+import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.ProductoModelo;
 import com.example.apphamburguesascliente.Modelos.RecompensasModelo;
+import com.example.apphamburguesascliente.Modelos.User;
+import com.example.apphamburguesascliente.Modelos.UserResponse;
 import com.example.apphamburguesascliente.R;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RecompensasAdaptador extends RecyclerView.Adapter<RecompensasAdaptador.RecompensaViewHolder> {
 
     private List<RecompensasModelo.RecompensaProducto> recompensas;
     private List<ProductoModelo> productos;
+    private User usuario;
     private Context context;
 
-    public RecompensasAdaptador(List<RecompensasModelo.RecompensaProducto> recompensas, List<ProductoModelo> productos, Context context) {
+    private int puntosUsuario;
+
+
+    public RecompensasAdaptador(List<RecompensasModelo.RecompensaProducto> recompensas, List<ProductoModelo> productos, Context context, int idUsuario) {
         this.recompensas = recompensas;
         this.productos = productos;
         this.context = context;
+        obtenerUsuarioDesdeAPI(idUsuario);
     }
 
 
@@ -47,6 +65,7 @@ public class RecompensasAdaptador extends RecyclerView.Adapter<RecompensasAdapta
     @Override
     public void onBindViewHolder(@NonNull RecompensaViewHolder holder, int position) {
         RecompensasModelo.RecompensaProducto recompensa = recompensas.get(position);
+
 
         // Utiliza el ID del producto asociado para buscar y mostrar el nombre del producto
         String nombreProducto = obtenerNombreProducto(recompensa.getIdProducto());
@@ -76,30 +95,33 @@ public class RecompensasAdaptador extends RecyclerView.Adapter<RecompensasAdapta
         holder.canjearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecompensasModelo.RecompensaProducto recompensa = recompensas.get(position);
+                int adapterPosition = holder.getAdapterPosition(); // Obtener la posición del adaptador
 
-                // Obtener la posición del producto seleccionado
-                int productoSeleccionado = holder.getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION) { // Verificar si la posición es válida
+                    RecompensasModelo.RecompensaProducto recompensa = recompensas.get(adapterPosition);
+                    int puntosRequeridos = Integer.parseInt(recompensa.getPuntosRecompensaProducto());
 
-                // Obtener el ID del producto asociado a la recompensa seleccionada
-                int idProducto = recompensa.getIdProducto();
+                    if (puntosUsuario >= puntosRequeridos) {
+                        ProductoModelo producto = productos.get(adapterPosition);
+                        int puntos = Integer.parseInt(recompensa.getPuntosRecompensaProducto());
 
-                // Obtener el producto asociado al ID
-                ProductoModelo producto = productos.get(productoSeleccionado);
-
-                int puntos = Integer.parseInt(recompensa.getPuntosRecompensaProducto());
-
-                // Crear un Intent para abrir la actividad de detalles del producto
-                Intent intent = new Intent(context, DetallesProductoComboActivity.class);
-                intent.putExtra("idProducto", producto.getIdProducto());
-                intent.putExtra("name", producto.getNombreProducto());
-                intent.putExtra("price", "0.00");
-                intent.putExtra("description", producto.getDescripcionProducto());
-                intent.putExtra("points", puntos);
-                intent.putExtra("imagen", producto.getImagen64());
-                context.startActivity(intent);
+                        // Crear un Intent para abrir la actividad de detalles del producto
+                        Intent intent = new Intent(context, DetallesProductoComboActivity.class);
+                        intent.putExtra("idProducto", producto.getIdProducto());
+                        intent.putExtra("name", producto.getNombreProducto());
+                        intent.putExtra("price", "0.00");
+                        intent.putExtra("description", producto.getDescripcionProducto());
+                        intent.putExtra("points", puntos);
+                        intent.putExtra("imagen", producto.getImagen64());
+                        context.startActivity(intent);
+                    } else {
+                        // Si los puntos del usuario son insuficientes, mostrar un mensaje
+                        Toast.makeText(context, "No tienes suficientes puntos para canjear este producto", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
+
     }
 
     @Override
@@ -148,4 +170,40 @@ public class RecompensasAdaptador extends RecyclerView.Adapter<RecompensasAdapta
             canjearButton = itemView.findViewById(R.id.canjearButton);
         }
     }
+
+    private void obtenerUsuarioDesdeAPI(int idCliente) {
+        int idCuenta = idCliente;
+
+        if (idCuenta == -1) {
+            Log.e("Recompensas", "id_cuenta no encontrado en SharedPreferences.");
+            return; // No continuar si no tenemos un id_cuenta válido
+        }
+
+        ApiService apiService = ApiClient.getInstance();
+
+        Call<UserResponse> callUsuario = apiService.obtenerUsuario(String.valueOf(idCuenta));
+        callUsuario.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.isSuccessful()) {
+                    UserResponse userResponse = response.body();
+                    if (userResponse != null) {
+                        // Obtener los puntos del usuario y almacenarlos en la variable puntosUsuario
+                        puntosUsuario = Integer.parseInt(userResponse.getUsuario().getCpuntos());
+                        notifyDataSetChanged(); // Notificar al adaptador que los datos han cambiado
+                    } else {
+                        Log.e("Error", "Respuesta de usuario nula");
+                    }
+                } else {
+                    Log.e("Error", "Error al obtener los datos del usuario: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                Log.e("Error", "Error en la solicitud de obtención de usuario: " + t.getMessage());
+            }
+        });
+    }
+
 }

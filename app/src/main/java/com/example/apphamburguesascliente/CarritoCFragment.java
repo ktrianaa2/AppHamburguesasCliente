@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,17 +17,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.apphamburguesascliente.Adaptadores.CarritoAdaptador;
+import com.example.apphamburguesascliente.Api.ApiClient;
+import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.CarritoModelo;
 import com.example.apphamburguesascliente.Modelos.DetalleProducto;
 import com.example.apphamburguesascliente.Modelos.DetallesPedido;
+import com.example.apphamburguesascliente.Modelos.UserResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CarritoCFragment extends Fragment {
 
     private int numeroProductosEnCarrito = 0;
     private int idCliente = -1;
+
+    private int puntosUsuario;
 
     private double total = 0.00;
 
@@ -45,6 +55,7 @@ public class CarritoCFragment extends Fragment {
             idCliente = getArguments().getInt("idCliente", -1);
             // Mostrar el idCliente en Logcat
             Log.d("CarritoCFragment", "El idCliente es: " + idCliente);
+            obtenerUsuarioDesdeAPI(idCliente);
         }
     }
 
@@ -93,6 +104,7 @@ public class CarritoCFragment extends Fragment {
             int totalPuntos = adaptador.calcularTotalPuntos();
 
 
+
             // Configurar el botón "Vaciar Carrito"
             Button clearButton = view.findViewById(R.id.clearButton);
             clearButton.setOnClickListener(new View.OnClickListener() {
@@ -115,45 +127,58 @@ public class CarritoCFragment extends Fragment {
                 public void onClick(View v) {
                     // Verificar si la lista de productos no está vacía
                     if (!listaDeProductos.isEmpty()) {
-                        // Crear una lista para los detalles del pedido
-                        List<DetalleProducto> detallesPedido = new ArrayList<>();
+                        // Obtener el precio total
+                        double subtotal = adaptador.calcularPrecioTotal();
+                        double iva = subtotal * 0.12;
+                        double totalAPagar = subtotal + iva;
 
-                        // Recorrer la lista de productos y agregar cada uno como un DetalleProducto
-                        for (CarritoModelo.Producto producto : listaDeProductos) {
-                            DetalleProducto detalle = new DetalleProducto(
-                                    producto.getId(), // Asegúrate de que este método devuelve un String o cambia el tipo en DetalleProducto
-                                    producto.getCantidad(),
-                                    producto.getPrecio()
-                            );
-                            detallesPedido.add(detalle);
+                        // Calcular el total de puntos
+                        int totalPuntos = adaptador.calcularTotalPuntos();
 
-                            Log.d("Carrito Producto", "ID: " + producto.getId() +
-                                    ", Nombre: " + producto.getNombre() +
-                                    ", Precio: " + producto.getPrecio() +
-                                    ", Cantidad: " + producto.getCantidad());
-                        }
-
-                        // Crear el objeto DetallesPedido
-                        DetallesPedido detallesPedidoObjeto = new DetallesPedido(detallesPedido);
-
-                        // Crear intent para pasar datos a RealizarPagoActivity
-                        if (total < 0.01) {
-                            Intent intent = new Intent(getActivity(), RealizarPagoGratisActivity.class);
-                            intent.putExtra("idCliente", idCliente);
-                            intent.putExtra("totalPuntos", totalPuntos);
-                            intent.putExtra("totalAPagar", totalAPagar);
-                            intent.putExtra("detallesPedidoObjeto", detallesPedidoObjeto);
-                            Log.d("Carrito", "Detalles del Pedido: " + detallesPedidoObjeto);
-                            startActivity(intent);
-
+                        if ((totalPuntos + puntosUsuario) < 0) {
+                            Toast.makeText(getActivity(), "Esta compra te deja puntos en negativo", Toast.LENGTH_SHORT).show();
                         } else {
-                            Intent intent = new Intent(getActivity(), RealizarPagoActivity.class);
-                            intent.putExtra("idCliente", idCliente);
-                            intent.putExtra("totalPuntos", totalPuntos);
-                            intent.putExtra("totalAPagar", totalAPagar);
-                            intent.putExtra("detallesPedidoObjeto", detallesPedidoObjeto);
-                            Log.d("Carrito", "Detalles del Pedido: " + detallesPedidoObjeto);
-                            startActivity(intent);
+                            // Continuar con el proceso de pago
+                            // Crear una lista para los detalles del pedido
+                            List<DetalleProducto> detallesPedido = new ArrayList<>();
+
+                            // Recorrer la lista de productos y agregar cada uno como un DetalleProducto
+                            for (CarritoModelo.Producto producto : listaDeProductos) {
+                                DetalleProducto detalle = new DetalleProducto(
+                                        producto.getId(), // Asegúrate de que este método devuelve un String o cambia el tipo en DetalleProducto
+                                        producto.getCantidad(),
+                                        producto.getPrecio()
+                                );
+                                detallesPedido.add(detalle);
+
+                                Log.d("Carrito Producto", "ID: " + producto.getId() +
+                                        ", Nombre: " + producto.getNombre() +
+                                        ", Precio: " + producto.getPrecio() +
+                                        ", Cantidad: " + producto.getCantidad());
+                            }
+
+                            // Crear el objeto DetallesPedido
+                            DetallesPedido detallesPedidoObjeto = new DetallesPedido(detallesPedido);
+
+                            // Crear intent para pasar datos a RealizarPagoActivity
+                            if (total < 0.01) {
+                                Intent intent = new Intent(getActivity(), RealizarPagoGratisActivity.class);
+                                intent.putExtra("idCliente", idCliente);
+                                intent.putExtra("totalPuntos", totalPuntos);
+                                intent.putExtra("totalAPagar", totalAPagar);
+                                intent.putExtra("detallesPedidoObjeto", detallesPedidoObjeto);
+                                Log.d("Carrito", "Detalles del Pedido: " + detallesPedidoObjeto);
+                                startActivity(intent);
+
+                            } else {
+                                Intent intent = new Intent(getActivity(), RealizarPagoActivity.class);
+                                intent.putExtra("idCliente", idCliente);
+                                intent.putExtra("totalPuntos", totalPuntos);
+                                intent.putExtra("totalAPagar", totalAPagar);
+                                intent.putExtra("detallesPedidoObjeto", detallesPedidoObjeto);
+                                Log.d("Carrito", "Detalles del Pedido: " + detallesPedidoObjeto);
+                                startActivity(intent);
+                            }
                         }
 
                     } else {
@@ -242,5 +267,39 @@ public class CarritoCFragment extends Fragment {
     public void reloadData() {
         // Llamar al método para actualizar los datos
         actualizarDatos();
+    }
+
+    private void obtenerUsuarioDesdeAPI(int idCliente) {
+        int idCuenta = idCliente;
+
+        if (idCuenta == -1) {
+            Log.e("Recompensas", "id_cuenta no encontrado en SharedPreferences.");
+            return; // No continuar si no tenemos un id_cuenta válido
+        }
+
+        ApiService apiService = ApiClient.getInstance();
+
+        Call<UserResponse> callUsuario = apiService.obtenerUsuario(String.valueOf(idCuenta));
+        callUsuario.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.isSuccessful()) {
+                    UserResponse userResponse = response.body();
+                    if (userResponse != null) {
+                        // Obtener los puntos del usuario y almacenarlos en la variable puntosUsuario
+                        puntosUsuario = Integer.parseInt(userResponse.getUsuario().getCpuntos());
+                    } else {
+                        Log.e("Error", "Respuesta de usuario nula");
+                    }
+                } else {
+                    Log.e("Error", "Error al obtener los datos del usuario: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                Log.e("Error", "Error en la solicitud de obtención de usuario: " + t.getMessage());
+            }
+        });
     }
 }
