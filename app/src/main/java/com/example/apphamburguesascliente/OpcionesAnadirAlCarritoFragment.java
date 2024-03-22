@@ -67,7 +67,18 @@ public class OpcionesAnadirAlCarritoFragment extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((DetallesProductoComboActivity) requireActivity()).cambiarFragmento(new BotonAnadirAlCarritoFragment());
+                if (getArguments() != null) {
+                    String nombreProducto = getArguments().getString("name");
+                    double precioProducto = getArguments().getDouble("price");
+                    String descripcionProducto = getArguments().getString("description");
+                    int puntosProducto = getArguments().getInt("points");
+
+                    // Crear un nuevo fragmento BotonAnadirAlCarritoFragment y pasar los argumentos nuevamente
+                    Fragment botonAnadirFragment = BotonAnadirAlCarritoFragment.newInstance(nombreProducto, precioProducto, descripcionProducto, puntosProducto);
+                    ((DetallesProductoComboActivity) requireActivity()).cambiarFragmento(botonAnadirFragment);
+                } else {
+                    Log.e("OpcionesAnadirAlCarrito", "Bundle de argumentos es nulo");
+                }
             }
         });
 
@@ -78,8 +89,14 @@ public class OpcionesAnadirAlCarritoFragment extends Fragment {
                     quantity--;
                     quantityEditText.setText(String.valueOf(quantity));
                 } else {
-                    ((DetallesProductoComboActivity) requireActivity()).cambiarFragmento(new BotonAnadirAlCarritoFragment());
-                }
+                    String nombreProducto = getArguments().getString("name");
+                    double precioProducto = getArguments().getDouble("price");
+                    String descripcionProducto = getArguments().getString("description");
+                    int puntosProducto = getArguments().getInt("points");
+
+                    // Crear un nuevo fragmento BotonAnadirAlCarritoFragment y pasar los argumentos nuevamente
+                    Fragment botonAnadirFragment = BotonAnadirAlCarritoFragment.newInstance(nombreProducto, precioProducto, descripcionProducto, puntosProducto);
+                    ((DetallesProductoComboActivity) requireActivity()).cambiarFragmento(botonAnadirFragment);                }
             }
         });
 

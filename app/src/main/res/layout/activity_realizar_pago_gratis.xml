@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background2"
-    tools:context=".RealizarPagoActivity">
+    tools:context=".RealizarPagoGratisActivity">
 
     <ImageView
         android:id="@+id/flechaRetroceder"
@@ -63,16 +62,6 @@
 
     </LinearLayout>
 
-    <Spinner
-        android:id="@+id/metodosPagoSpinner"
-        android:layout_width="330dp"
-        android:layout_height="39dp"
-        android:background="#FFFFFF"
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="@+id/Layout1"
-        app:layout_constraintStart_toStartOf="@+id/Layout1"
-        app:layout_constraintTop_toBottomOf="@+id/Layout1" />
-
 
     <Spinner
         android:id="@+id/ubicacionesSpinner"
@@ -81,10 +70,10 @@
         android:layout_marginTop="8dp"
         android:background="#FFFFFF"
         android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="@+id/metodosPagoSpinner"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/metodosPagoSpinner"
-        app:layout_constraintTop_toBottomOf="@+id/metodosPagoSpinner" />
+        app:layout_constraintEnd_toEndOf="@+id/Layout1"
+        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Layout1" />
 
     <LinearLayout
         android:id="@+id/layoutfragment"
@@ -96,8 +85,9 @@
         app:layout_constraintStart_toStartOf="@+id/ubicacionesSpinner"
         app:layout_constraintTop_toBottomOf="@+id/ubicacionesSpinner">
 
-        <FrameLayout
-            android:id="@+id/fragmentContainer"
+        <ImageView
+            android:id="@+id/imagen"
+            android:src="@drawable/recompensas"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -156,5 +146,6 @@
             android:gravity="center"
             android:text="Pagar" />
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

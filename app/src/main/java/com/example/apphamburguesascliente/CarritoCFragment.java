@@ -28,6 +28,8 @@ public class CarritoCFragment extends Fragment {
     private int numeroProductosEnCarrito = 0;
     private int idCliente = -1;
 
+    private double total = 0.00;
+
     View view;
 
     public CarritoCFragment() {
@@ -135,13 +137,25 @@ public class CarritoCFragment extends Fragment {
                         DetallesPedido detallesPedidoObjeto = new DetallesPedido(detallesPedido);
 
                         // Crear intent para pasar datos a RealizarPagoActivity
-                        Intent intent = new Intent(getActivity(), RealizarPagoActivity.class);
-                        intent.putExtra("idCliente", idCliente);
-                        intent.putExtra("totalPuntos", totalPuntos);
-                        intent.putExtra("totalAPagar", totalAPagar);
-                        intent.putExtra("detallesPedidoObjeto", detallesPedidoObjeto);
-                        Log.d("Carrito", "Detalles del Pedido: " + detallesPedidoObjeto);
-                        startActivity(intent);
+                        if (total < 0.01) {
+                            Intent intent = new Intent(getActivity(), RealizarPagoGratisActivity.class);
+                            intent.putExtra("idCliente", idCliente);
+                            intent.putExtra("totalPuntos", totalPuntos);
+                            intent.putExtra("totalAPagar", totalAPagar);
+                            intent.putExtra("detallesPedidoObjeto", detallesPedidoObjeto);
+                            Log.d("Carrito", "Detalles del Pedido: " + detallesPedidoObjeto);
+                            startActivity(intent);
+
+                        } else {
+                            Intent intent = new Intent(getActivity(), RealizarPagoActivity.class);
+                            intent.putExtra("idCliente", idCliente);
+                            intent.putExtra("totalPuntos", totalPuntos);
+                            intent.putExtra("totalAPagar", totalAPagar);
+                            intent.putExtra("detallesPedidoObjeto", detallesPedidoObjeto);
+                            Log.d("Carrito", "Detalles del Pedido: " + detallesPedidoObjeto);
+                            startActivity(intent);
+                        }
+
                     } else {
                         Log.d("Carrito", "El carrito está vacío.");
                     }
@@ -201,7 +215,7 @@ public class CarritoCFragment extends Fragment {
 
             double subtotal = adaptador.calcularPrecioTotal();
             double iva = subtotal * 0.12;
-            double totalAPagar = subtotal + iva;
+            total = subtotal + iva;
 
             // Actualizar el txtSubTotal, txtIva y txtAPagar
             txtSubTotal.setText("Subtotal: $" + String.format("%.2f", subtotal));
@@ -210,7 +224,7 @@ public class CarritoCFragment extends Fragment {
             txtIva.setText("IVA: $" + String.format("%.2f", iva));
 
             TextView txtAPagar = view.findViewById(R.id.txtAPagar);
-            txtAPagar.setText("Total a pagar: $" + String.format("%.2f", totalAPagar));
+            txtAPagar.setText("Total a pagar: $" + String.format("%.2f", total));
 
             // Calcular el total de puntos y mostrarlo en txtPuntos
             int totalPuntos = adaptador.calcularTotalPuntos();

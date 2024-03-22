@@ -1,17 +1,14 @@
 package com.example.apphamburguesascliente;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -23,17 +20,12 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TimePicker;
 import android.widget.Toast;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.apphamburguesascliente.Api.ApiClient;
 import com.example.apphamburguesascliente.Interfaces.ApiService;
 import com.example.apphamburguesascliente.Modelos.CarritoModelo;
 import com.example.apphamburguesascliente.Modelos.DetallesPedido;
-import com.example.apphamburguesascliente.Modelos.Pedido;
 import com.example.apphamburguesascliente.Modelos.Sucursal;
 import com.example.apphamburguesascliente.Modelos.SucursalResponse;
 import com.example.apphamburguesascliente.Modelos.Ubicacion;
@@ -46,18 +38,18 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RealizarPagoActivity extends AppCompatActivity {
+public class RealizarPagoGratisActivity extends AppCompatActivity {
     private ApiService apiService;
     private int idCuentaUsuario;
     private int selectedHour = 0;
@@ -71,7 +63,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_realizar_pago);
+        setContentView(R.layout.activity_realizar_pago_gratis);
 
         ImageView imageViewFlecha = findViewById(R.id.flechaRetroceder);
 
@@ -85,12 +77,11 @@ public class RealizarPagoActivity extends AppCompatActivity {
 
         apiService = ApiClient.getInstance();
 
-        Spinner metodosPagoSpinner = findViewById(R.id.metodosPagoSpinner);
+
         String[] opcionesMetodoPago = {"Transferencia", "Efectivo", "Fraccionado"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, opcionesMetodoPago);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        metodosPagoSpinner.setAdapter(adapter);
 
         ubicacionesSpinner = findViewById(R.id.ubicacionesSpinner); // Asegúrate de que este ID sea correcto.
 
@@ -109,46 +100,11 @@ public class RealizarPagoActivity extends AppCompatActivity {
         btnPagar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-                if (fragment instanceof PagoTransferenciaFragment) {
-                    PagoTransferenciaFragment pagoTransferenciaFragment = (PagoTransferenciaFragment) fragment;
-                    imageUri = pagoTransferenciaFragment.getImageUri();
-                    Log.d("RealizarPagoActivity", "URI de la imagen: " + (imageUri != null ? imageUri.toString() : "null"));
+
                     realizarPago();
-                } else if (fragment instanceof PagoEfectivoFragment) {
-                    // Aquí manejas el caso cuando el fragmento es PagoEfectivoFragment
-                    Log.d("RealizarPagoActivity", "Pago en efectivo seleccionado, realizar el pago en efectivo");
-                    realizarPago();
-                } else {
-                    Log.e("RealizarPagoActivity", "El fragmento no es una instancia de PagoTransferenciaFragment ni PagoEfectivoFragment");
-                }
             }
         });
 
-        // Maneja la selección del Spinner
-        metodosPagoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // Obtiene el fragmento seleccionado
-                Fragment fragment = obtenerFragmentoSegunSeleccion(position);
-
-                // Reemplaza el fragmento actual con el nuevo fragmento
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainer, fragment)
-                        .commit();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // No es necesario hacer nada aquí
-            }
-        });
-
-        // Por defecto, muestra el fragmento de Transferencia
-        Fragment defaultFragment = obtenerFragmentoSegunSeleccion(0);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, defaultFragment)
-                .commit();
 
         // Establecer por defecto que el radioButtonOptionRetiro esté marcado
         RadioButton radioButtonRetiro = findViewById(R.id.radioButtonOptionRetiro);
@@ -169,7 +125,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     String[] opcionesDomicilio = {"Casa", "Trabajo", "Otro"};
-                    ArrayAdapter<String> domicilioAdapter = new ArrayAdapter<>(RealizarPagoActivity.this, android.R.layout.simple_spinner_item, opcionesDomicilio);
+                    ArrayAdapter<String> domicilioAdapter = new ArrayAdapter<>(RealizarPagoGratisActivity.this, android.R.layout.simple_spinner_item, opcionesDomicilio);
                     domicilioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     ubicacionesSpinner.setAdapter(domicilioAdapter);
                     ubicacionesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -283,19 +239,8 @@ public class RealizarPagoActivity extends AppCompatActivity {
             }
         });
     }
-    // Método para obtener el fragmento según la posición seleccionada en el Spinner
-    private Fragment obtenerFragmentoSegunSeleccion(int position) {
-        switch (position) {
-            case 0:
-                return new PagoTransferenciaFragment();
-            case 1:
-                return new PagoEfectivoFragment();
-            case 2:
-                return new PagoFranccionadoFragment();
-            default:
-                return new PagoTransferenciaFragment();
-        }
-    }
+
+
     public void realizarPago() {
         Intent intent = getIntent();
         int idCliente = intent.getIntExtra("idCliente", -1);
@@ -358,8 +303,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
                                 String tipoPedido;
                                 if (radioGroup.getCheckedRadioButtonId() == R.id.radioButtonOptionRetiro) {
                                     tipoPedido = "R";
-                                    Spinner metodosPagoSpinner = findViewById(R.id.metodosPagoSpinner);
-                                    String metodoPago = metodosPagoSpinner.getSelectedItem().toString().substring(0, 1);
+                                    String metodoPago = "E";
                                     Log.d("Pago", "Método de Pago: " + metodoPago);
 
                                     if (idSucursalSeleccionada != -1) { // Asegúrate de que tenga un valor válido
@@ -369,8 +313,7 @@ public class RealizarPagoActivity extends AppCompatActivity {
                                     }
                                 } else {
                                     tipoPedido = "D";
-                                    Spinner metodosPagoSpinner = findViewById(R.id.metodosPagoSpinner);
-                                    String metodoPago = metodosPagoSpinner.getSelectedItem().toString().substring(0, 1);
+                                    String metodoPago = "E";
                                     Log.d("Pago", "Método de Pago: " + metodoPago);
 
                                     obtenerSucursal(totalPuntos, totalAPagar, tipoPedido, metodoPago, latitud, longitud, detallesPedidoObjeto, detallesPedidoJson, imageBase64[0]);
@@ -488,8 +431,8 @@ public class RealizarPagoActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     // Éxito en la solicitud, procesar la respuesta si es necesario
                     Log.d("Pago", "Solicitud de pedido exitosa");
-                    Toast.makeText(RealizarPagoActivity.this, "Pedido realizado exitosamente", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(RealizarPagoActivity.this, PagoConfirmadoActivity.class);
+                    Toast.makeText(RealizarPagoGratisActivity.this, "Pedido realizado exitosamente", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(RealizarPagoGratisActivity.this, PagoConfirmadoActivity.class);
                     intent.putExtra("idCliente", idCuentaUsuario); // Pasar el idCuenta
                     startActivity(intent);
                     limpiarCarrito();
@@ -509,12 +452,6 @@ public class RealizarPagoActivity extends AppCompatActivity {
         CarritoModelo carritoModelo = CarritoModelo.getInstance();
         carritoModelo.limpiarCarrito();
         listaDeProductos.clear();
-
-        // Reemplazar el fragmento actual por el fragmento vacío
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fragmentContainer, new CarritoVacioFragment());
-        transaction.commit();
     }
 
     // Método para obtener el arreglo de bytes de una imagen a partir de su URI

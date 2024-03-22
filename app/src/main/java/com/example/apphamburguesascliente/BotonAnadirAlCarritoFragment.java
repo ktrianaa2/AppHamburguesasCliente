@@ -22,7 +22,7 @@ public class BotonAnadirAlCarritoFragment extends Fragment {
         args.putString("name", nombreProducto);
         args.putDouble("price", precioProducto);
         args.putString("description", descripcionProducto);
-        args.putInt("points", puntosProducto); // Añadir puntosProducto a los argumentos
+        args.putInt("points", puntosProducto);
         fragment.setArguments(args);
         return fragment;
     }
@@ -35,6 +35,7 @@ public class BotonAnadirAlCarritoFragment extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 // Obtener los datos del producto
                 String nombreProducto = getArguments().getString("name");
                 double precioProducto = getArguments().getDouble("price");
