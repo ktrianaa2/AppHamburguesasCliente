@@ -114,17 +114,22 @@ public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapR
 
 
 
+
     private void guardarUbicacion() {
         if (currentLatitude != 0 && currentLongitude != 0) {
-            Ubicacion ubicacion = new Ubicacion();
-            ubicacion.setLatitud(String.valueOf(currentLatitude));
-            ubicacion.setLongitud(String.valueOf(currentLongitude));
+            if (isInQuevedo(currentLatitude, currentLongitude)) {
+                Ubicacion ubicacion = new Ubicacion();
+                ubicacion.setLatitud(String.valueOf(currentLatitude));
+                ubicacion.setLongitud(String.valueOf(currentLongitude));
 
-            // Agregar una línea de registro en el Logcat
-            Log.d("AnadirUbicacionActivity", "Guardando ubicación: Latitud " + currentLatitude + ", Longitud " + currentLongitude);
+                // Agregar una línea de registro en el Logcat
+                Log.d("AnadirUbicacionActivity", "Guardando ubicación: Latitud " + currentLatitude + ", Longitud " + currentLongitude);
 
-            // Obtener el usuario correspondiente
-            obtenerUsuarioPorId(idUsuario, ubicacion);
+                // Obtener el usuario correspondiente
+                obtenerUsuarioPorId(idUsuario, ubicacion);
+            } else {
+                Toast.makeText(this, "La ubicación seleccionada está fuera de Quevedo.", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(this, "Seleccione una ubicación primero", Toast.LENGTH_SHORT).show();
         }
@@ -298,6 +303,17 @@ public class AnadirUbicacionActivity extends AppCompatActivity implements OnMapR
 
         // Imprimir en el Logcat
         Log.d("AnadirUbicacionActivity", "Latitud: " + currentLatitude + ", Longitud: " + currentLongitude);
+    }
+
+    private boolean isInQuevedo(double latitude, double longitude) {
+        // Definir los límites geográficos de Quevedo
+        double minLat = -1.0543;
+        double maxLat = -1.0002;
+        double minLng = -79.5247;
+        double maxLng = -79.4227;
+
+        // Verificar si la ubicación está dentro de los límites del país
+        return (latitude >= minLat && latitude <= maxLat && longitude >= minLng && longitude <= maxLng);
     }
 
 }

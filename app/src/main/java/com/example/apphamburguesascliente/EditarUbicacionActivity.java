@@ -180,30 +180,37 @@ public class EditarUbicacionActivity extends AppCompatActivity implements OnMapR
     }
 
     private void guardarUbicacion() {
-        Ubicacion ubicacion = new Ubicacion();
-        ubicacion.setLatitud(String.valueOf(currentLatitude));
-        ubicacion.setLongitud(String.valueOf(currentLongitude));
+        if (currentLatitude != 0 && currentLongitude != 0) {
+            if (isInQuevedo(currentLatitude, currentLongitude)) {
+                Ubicacion ubicacion = new Ubicacion();
+                ubicacion.setLatitud(String.valueOf(currentLatitude));
+                ubicacion.setLongitud(String.valueOf(currentLongitude));
 
-        // Log para verificar la nueva ubicación
-        Log.d("EditarUbicacionActivity", "Nueva ubicación guardada - Latitud: " + currentLatitude + ", Longitud: " + currentLongitude);
+                // Log para verificar la nueva ubicación
+                Log.d("EditarUbicacionActivity", "Nueva ubicación guardada - Latitud: " + currentLatitude + ", Longitud: " + currentLongitude);
 
-        // Actualizar la ubicación en el servidor
-        switch (tipoUbicacion) {
-            case 1:
-                actualizarUsuario(idUsuario, ubicacion, null, null);
-                break;
-            case 2:
-                actualizarUsuario(idUsuario, null, ubicacion, null);
-                break;
-            case 3:
-                actualizarUsuario(idUsuario, null, null, ubicacion);
-                break;
-            default:
-                // Manejar caso inválido
-                break;
+                // Actualizar la ubicación en el servidor
+                switch (tipoUbicacion) {
+                    case 1:
+                        actualizarUsuario(idUsuario, ubicacion, null, null);
+                        break;
+                    case 2:
+                        actualizarUsuario(idUsuario, null, ubicacion, null);
+                        break;
+                    case 3:
+                        actualizarUsuario(idUsuario, null, null, ubicacion);
+                        break;
+                    default:
+                        // Manejar caso inválido
+                        break;
+                }
+            } else {
+                Toast.makeText(this, "La ubicación seleccionada está fuera de Quevedo.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Seleccione una ubicación primero", Toast.LENGTH_SHORT).show();
         }
     }
-
     private void actualizarUsuario(int idUsuario, Ubicacion ubicacion1, Ubicacion ubicacion2, Ubicacion ubicacion3) {
         // Realizar la llamada a la API para actualizar el usuario
         Call<UserResponse> call = apiService.actualizarUsuario(
@@ -250,5 +257,15 @@ public class EditarUbicacionActivity extends AppCompatActivity implements OnMapR
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15f));
     }
 
+    private boolean isInQuevedo(double latitude, double longitude) {
+        // Definir los límites geográficos de Quevedo
+        double minLat = -1.0543;
+        double maxLat = -1.0002;
+        double minLng = -79.5247;
+        double maxLng = -79.4227;
+
+        // Verificar si la ubicación está dentro de los límites del país
+        return (latitude >= minLat && latitude <= maxLat && longitude >= minLng && longitude <= maxLng);
+    }
 
 }
