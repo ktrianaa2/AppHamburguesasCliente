@@ -38,6 +38,8 @@ public class CarritoConProductosFragment extends Fragment implements OnProductAd
 
         CarritoCFragment carritoFragment = (CarritoCFragment) requireActivity().getSupportFragmentManager().findFragmentByTag("CarritoCFragmentTag");
 
+
+
         List<CarritoModelo.Producto> productosGuardados = obtenerProductosDesdeSharedPreferences();
         adaptador = new CarritoAdaptador(productosGuardados, carritoFragment);
 
@@ -70,7 +72,8 @@ public class CarritoConProductosFragment extends Fragment implements OnProductAd
     public void onProductAdded(String nombreProducto, double precioProducto, String descripcionProducto, int cantidad, int puntosProducto) {
         // Agregar el producto al carrito
         CarritoModelo carritoModel = CarritoModelo.getInstance();
-        CarritoModelo.Producto producto = new CarritoModelo.Producto(nombreProducto, 1, precioProducto, cantidad, puntosProducto);
+        String claveProducto = "1" + "_" + precioProducto;
+        CarritoModelo.Producto producto = new CarritoModelo.Producto(nombreProducto, 1, precioProducto, cantidad, puntosProducto, claveProducto);
         carritoModel.agregarProducto(producto);
 
         // Guardar la lista de productos en SharedPreferences

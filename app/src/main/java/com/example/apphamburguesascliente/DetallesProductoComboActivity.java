@@ -80,25 +80,37 @@ public class DetallesProductoComboActivity extends AppCompatActivity implements 
         editor.apply();
     }
 
-
     @Override
     public void onProductAdded(String nombreProducto, double precioProducto, String descripcionProducto, int cantidad, int puntosProducto) {
         // Agregar el producto al carrito
         CarritoModelo carritoModel = CarritoModelo.getInstance();
-        int productId = getIntent().getIntExtra("idProducto", 0); // Obtener el idProducto de los extras
-        CarritoModelo.Producto producto = new CarritoModelo.Producto(nombreProducto, productId, precioProducto, cantidad, puntosProducto);
+        int productId = getIntent().getIntExtra("idProducto", 0);
+        String claveProducto = productId + "_" + precioProducto;
+
+        // Verificar si el producto ya existe en el carrito
+        List<CarritoModelo.Producto> productosEnCarrito = carritoModel.getProductos();
+        for (CarritoModelo.Producto producto : productosEnCarrito) {
+            if (producto.getClave().equals(claveProducto)) {
+                // Si el producto ya existe, simplemente actualiza la cantidad
+                carritoModel.actualizarCantidadProducto(claveProducto, cantidad);
+                // Guardar la lista de productos en SharedPreferences
+                guardarProductosEnSharedPreferences(productosEnCarrito);
+                // Actualizar la interfaz de usuario
+                adaptador.actualizarLista(productosEnCarrito);
+                return;
+            }
+        }
+
+        // Si el producto no existe, agrégalo al carrito
+        CarritoModelo.Producto producto = new CarritoModelo.Producto(nombreProducto, productId, precioProducto, cantidad, puntosProducto, claveProducto);
         carritoModel.agregarProducto(producto);
 
         // Guardar la lista de productos en SharedPreferences
         guardarProductosEnSharedPreferences(carritoModel.getProductos());
-        // Imprimir en Logcat para verificar que se guardaron los datos correctamente
-        Log.d("Carrito", "Producto añadido: Nombre: " + producto.getNombre() + ", ID: " + producto.getId() + ", Precio: $" + producto.getPrecio());
 
-        List<CarritoModelo.Producto> productos = carritoModel.getProductos();
-        Log.d("Carrito", "Total de productos añadidos: " + productos.size());
-        for (CarritoModelo.Producto p : productos) {
-            Log.d("Carrito", "Nombre: " + p.getNombre() + ", ID: " + p.getId() + ", Precio: $" + p.getPrecio() + ", Puntos: " +p.getPuntos());
-        }
+        // Actualizar la interfaz de usuario
         adaptador.actualizarLista(carritoModel.getProductos());
     }
+
+
 }

@@ -21,17 +21,33 @@ public class CarritoModelo implements Serializable {
     }
 
     public void agregarProducto(Producto producto) {
-        // Verificar si el producto ya está en el carrito
+        // Verificar si el producto ya está en el carrito utilizando la clave
         for (Producto p : productos) {
-            if (p.getId() == producto.getId()) {
-                // El producto ya está en el carrito, actualizar la cantidad
-                p.setCantidad(p.getCantidad() + producto.getCantidad());
+            if (p.getClave().equals(producto.getClave())) {
+                // El producto ya está en el carrito, actualizar la cantidad utilizando el método actualizarCantidadProducto
+                actualizarCantidadProducto(p.getClave(), p.getCantidad() + producto.getCantidad());
                 return; // Salir del método
             }
         }
         // Si no se encontró el producto en el carrito, agregarlo
         productos.add(producto);
     }
+
+
+    public void actualizarCantidadProducto(String claveProducto, int nuevaCantidad) {
+        // Recorrer la lista de productos en el carrito
+        for (Producto producto : productos) {
+            // Verificar si la clave del producto coincide
+            if (producto.getClave().equals(claveProducto)) {
+                // Actualizar la cantidad del producto
+                producto.setCantidad(producto.getCantidad() + nuevaCantidad);
+                return; // Salir del método después de actualizar la cantidad
+            }
+        }
+        // Si no se encontró ningún producto con la clave dada, no hacer nada
+    }
+
+
 
     public List<Producto> getProductos() {
         return productos;
@@ -46,14 +62,17 @@ public class CarritoModelo implements Serializable {
         private int id;
         private double precio;
         private int cantidad;
-        private int puntos; // Añadir campo de puntos
+        private int puntos;
 
-        public Producto(String nombre, int id, double precio, int cantidad, int puntos) {
+        private String clave;
+
+        public Producto(String nombre, int id, double precio, int cantidad, int puntos, String clave) {
             this.nombre = nombre;
             this.id = id;
             this.precio = precio;
             this.cantidad = cantidad;
-            this.puntos = puntos; // Inicializar los puntos
+            this.puntos = puntos;
+            this.clave = clave;
         }
 
         public void setNombre(String nombre) {
@@ -96,5 +115,12 @@ public class CarritoModelo implements Serializable {
             this.puntos = puntos;
         }
 
+        public String getClave() {
+            return clave;
+        }
+
+        public void setClave(String clave) {
+            this.clave = clave;
+        }
     }
 }
